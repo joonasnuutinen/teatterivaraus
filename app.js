@@ -7,12 +7,13 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var config = require('./config');
 
 var app = express();
 
 // set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = ''; // change to config variable
+var mongoDB = config.mongoDB;
 mongoose.connect(mongoDB);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));

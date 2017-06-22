@@ -57,3 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
+# Express configuration file
+config.js
