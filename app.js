@@ -4,19 +4,42 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var dotenv = require('dotenv');
+var session = require('express-session');
+var passwordless = require('passwordless');
+var MongoStore = require('passwordless-mongostore');
+var email = require('emailjs');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var config = require('./config');
+// var config = require('./config');
 
 var app = express();
 
+dotenv.load();
+
 // set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = config.mongoDB;
+var mongoDB = process.env.MONGODB_URL;
 mongoose.connect(mongoDB);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+// setup emailjs server
+var smtpServer = email.server.connect({
+  user: process.env.SMTP_USER,
+  password: process.env.SMTP_PASSWORD,
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  tls: true
+});
+
+// setup passwordless
+passwordless.init(new MongoStore(mongoDB));
+passwordless.addDelivery(function(token, uid, recipient, callback) {
+  var host = process.env.SITE_URL;
+  // TODO: jatka tästä
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
