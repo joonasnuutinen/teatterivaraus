@@ -15,7 +15,8 @@ var PlaySchema = Schema({
   },
   
   description: {
-    type: String
+    type: String,
+    default: ''
   }
 });
 

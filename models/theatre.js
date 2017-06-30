@@ -14,6 +14,14 @@ var TheatreSchema = Schema({
     required: true
   },
   
+  playName: {
+    type: String
+  },
+  
+  playDescription: {
+    type: String
+  },
+  
   password: {
     type: String,
     required: true

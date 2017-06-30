@@ -3,7 +3,16 @@ extends layout_app
 block content
   h1= title
   
+  if errors
+    each error in errors
+      p= error.msg
+  
   form(action='' method='POST')
     div
-      label(for='name') Näytelmän nimi
-      input#name(type='text' name='playName' value=(undefined===play ? '' : play.name))
+      label(for='play-name') Näytelmän nimi
+      input#play-name(type='text' name='playName' value=(undefined===theatre.playName ? '' : theatre.playName))
+    div
+      label(for='play-description') Näytelmän kuvaus
+      input#play-description(type='text' name='playDescription' value=(undefined===theatre.playDescription ? '' : theatre.playDescription))
+    div
+      input(type='submit' value='Tallenna')

@@ -1,4 +1,5 @@
 var Theatre = require('../models/theatre');
+//var Play = require('../models/play');
 var registerTitle = 'Rekisteröidy';
 
 // GET login
@@ -46,9 +47,40 @@ exports.registerPost = function(req, res, next) {
 };
 
 // GET settings
-exports.settings = function(req, res, next) {
-  res.render('settings', {title: 'Asetukset'});
+exports.settingsGet = function(req, res, next) {
+  res.render('settings', {title: 'Asetukset', theatre: req.user});
 };
+
+// POST settings
+exports.settingsPost = function(req, res, next) {
+  req.checkBody('playName', 'Kirjoita näytelmän nimi.').notEmpty();
+  
+  req.sanitize('playName').escape();
+  req.sanitize('playName').trim();
+  req.sanitize('playDescription').escape();
+  req.sanitize('playDescription').trim();
+  
+  var errors = req.validationErrors();
+  
+  var theatre = new Theatre({
+    name: req.user.name,
+    email: req.user.email,
+    playName: req.body.playName,
+    playDescription: req.body.playDescription,
+    _id: req.user._id
+  });
+  
+  if (errors) {
+    //console.log(errors);
+    res.render('settings', {title: 'Asetukset', theatre: theatre, errors: errors});
+    return;
+  }
+  
+  Theatre.findByIdAndUpdate(req.user._id, theatre, {}, function(err, updated) {
+    if (err) return next(err);
+    res.redirect('/app/asetukset');
+  });
+}
 
 /*
 // GET sent

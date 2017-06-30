@@ -62,7 +62,9 @@ router.get('/naytokset', isLoggedIn, showController.shows);
 router.get('/lippujen-hinnat', isLoggedIn, ticketClassController.ticketPrices);
 
 // SETTINGS ===================================
-router.get('/asetukset', isLoggedIn, theatreController.settings);
+router.get('/asetukset', isLoggedIn, theatreController.settingsGet);
+
+router.post('/asetukset', isLoggedIn, theatreController.settingsPost);
 
 // ========================================================
 // FUNCTIONS ==============================================
