@@ -1,0 +1,27 @@
+extends layout
+
+block content
+
+  h1= title
+
+  p Kirjaudu sisään kirjoittamalla käyttäjätilisi sähköpostiosoite alla olevaan kenttään. Saat kertakäyttöisen kirjautumislinkin sähköpostiin.
+  
+  if errors
+    each error in errors
+      p= error
+  
+  form(action='' method='POST')
+    div
+      label(for='email') Sähköposti
+      input(name='email' id='email' type='email' required='true')
+    div
+      label(for='password') Salasana
+      input(name='password' id='password' type='password' required='true')
+    div
+      input(type='submit' value='Kirjaudu')
+  
+  p
+    | Uusi käyttäjä?
+    |
+    a(href='/app/rekisteroidy') Rekisteröidy täällä
+    | .

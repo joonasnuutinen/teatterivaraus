@@ -1,0 +1,9 @@
+extends layout_app
+
+block content
+  h1= title
+  
+  form(action='' method='POST')
+    div
+      label(for='name') Näytelmän nimi
+      input#name(type='text' name='playName' value=(undefined===play ? '' : play.name))

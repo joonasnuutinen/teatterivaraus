@@ -1,0 +1,22 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+    script(src='/scripts/global.js')
+  body
+    ul.navigation
+      li
+        a(href='/app/varaukset') Varaukset
+      li
+        a(href='/app/varaustilanne') Varaustilanne
+      li
+        a(href='/app/naytokset') Näytökset
+      li
+        a(href='/app/lippujen-hinnat') Lippujen hinnat
+      li
+        a(href='/app/asetukset') Asetukset
+      li
+        a(href='/app/kirjaudu-ulos') Kirjaudu ulos
+    block content

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt-nodejs');
 
 var Schema = mongoose.Schema;
 
@@ -18,6 +19,18 @@ var TheatreSchema = Schema({
     required: true
   }
 });
+
+// METHODS ==========================================
+
+// generate hash
+TheatreSchema.methods.generateHash = function(password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
+// check if password is valid
+TheatreSchema.methods.validPassword = function(password) {
+  return bcrypt.compareSync(password, this.password);
+};
 
 // export model
 module.exports = mongoose.model('Theatre', TheatreSchema);

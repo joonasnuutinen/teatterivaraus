@@ -15,7 +15,7 @@ var TicketClassSchema = Schema({
   },
   
   name: {
-    type: String
+    type: String,
     required: true
   }
 });

@@ -5,14 +5,20 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var dotenv = require('dotenv');
-var session = require('express-session');
-var passwordless = require('passwordless');
-var MongoStore = require('passwordless-mongostore');
-var email = require('emailjs');
+var expressSession = require('express-session');
+//var passwordless = require('passwordless');
+//var MongoStore = require('passwordless-mongostore');
+//var email = require('emailjs');
+var flash = require('connect-flash');
+var expressValidator = require('express-validator');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-// var config = require('./config');
+var bookingApp = require('./routes/bookingApp');
+
+var User = require('./models/theatre');
 
 var app = express();
 
@@ -25,6 +31,23 @@ mongoose.connect(mongoDB);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+require('./config/passport')(passport);
+
+/*
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.findOne({email: username}, function(err, user) {
+      if (err) { return done(err); }
+      if (!user || !user.validPassword(password)) {
+        return done(null, false, {message: 'Virheellinen sähköposti tai salasana'});
+      }
+      return done(null, user);
+    });
+  }
+));
+*/
+
+/*
 // setup emailjs server
 var smtpServer = email.server.connect({
   user: process.env.SMTP_USER,
@@ -33,13 +56,28 @@ var smtpServer = email.server.connect({
   port: process.env.SMTP_PORT,
   tls: true
 });
+*/
 
+/*
 // setup passwordless
 passwordless.init(new MongoStore(mongoDB));
 passwordless.addDelivery(function(token, uid, recipient, callback) {
   var host = process.env.SITE_URL;
-  // TODO: jatka tästä
+  var emailBody = 'Hei,\n\nKirjaudu sisään käyttäjätilillesi klikkaamalla seuraavaa linkkiä:\n\n' + host + '?token=' + token + '&uid=' + encodeURIComponent(uid) + '\n\nYstävällisin terveisin\n\nTeatterivaraus';
+  // send out token
+  smtpServer.send({
+    text: emailBody,
+    from: 'Teatterivaraus',
+    to: recipient,
+    subject: 'Kirjaudu sisään'
+  }, function(err) {
+    if (err) {
+      console.log(err);
+    }
+    callback(err);
+  });
 });
+*/
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -50,11 +88,30 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// configure passport
+app.use(expressSession({
+  secret: process.env.SESSION_SECRET,
+  saveUninitialized: false,
+  resave: false,
+  cookie: {maxAge: 60*60*24*365*10}
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+/*
+// passwordless middleware
+app.use(passwordless.sessionSupport());
+app.use(passwordless.acceptToken( { successRedirect: '/app' } ));
+*/
+
 app.use('/', index);
 app.use('/users', users);
+app.use('/app', bookingApp);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
