@@ -1,6 +1,19 @@
 $(document).ready(function() {
-  populateRows();
-  userEvents();
+  var labels = {
+    ticketClass: {
+      price: {
+        label: 'Lipun hinta',
+        unit: '€'
+      },
+      name: {
+        label: 'Lippuluokan nimi',
+        placeholder: 'esim. Opiskelijat'
+      }
+    }
+  };
+  var schemaLabels = labels[$('.rows').attr('data-schema')];
+  populateRows(schemaLabels);
+  userEvents(schemaLabels);
 });
 
 function addRow() {
@@ -69,7 +82,7 @@ function showFields(show) {
   }
 }
 
-function userEvents() {
+function userEvents(schemaLabels) {
   $('.add-row').on('click', function() {
     addRow();
   });
@@ -83,7 +96,7 @@ function userEvents() {
   });
   
   $('.rows').on('click', '.edit-row', function() {
-    editRow($(this).parent().attr('id'));
+    editRow($(this).parent().attr('id'), schemaLabels);
   });
   
   $('.rows').on('click', '.delete-row', function() {
@@ -99,13 +112,17 @@ function userEvents() {
   });
 }
 
-function populateRows() {
-  $.getJSON('lippujen-hinnat/json', function(data) {
+function populateRows(schemaLabels) {
+  $.getJSON(document.location.pathname + '/json', function(data) {
+    var columns = $('.rows').attr('data-columns-view').split(' ');
     var allRows = '';
-    $.each(data, function(key, item) {
+    data.forEach(function(item) {
       allRows += '<div class="row" id="' + item._id + '">';
-      allRows += '<span class="name">' + item.name + '</span>';
-      allRows += '<span class="price">' + item.price + '</span> €';
+      
+      columns.forEach(function(column) {
+        allRows += '<span class="' + column + '">' + item[column] + '</span>';
+      });
+      
       allRows += '<button class="edit-row">Muokkaa</button>';
       allRows += '<button class="delete-row">Poista</button>';
       allRows += '<button class="save-edit hidden">Tallenna</button>';
@@ -116,20 +133,31 @@ function populateRows() {
   });
 }
 
-function editRow(id) {
-  var fieldHtml = '';
-  var row = $('#' + id);
-  row.children('span').each(function() {
-    fieldHtml += '<input type="text" class="edited-field" data-name="' + $(this).attr('class') + '" value="' + $(this).text() + '">';
-    $(this).remove();
-  });
-  
-  row.prepend(fieldHtml);
-  
-  row.children('.save-edit, .cancel-edit').removeClass('hidden');
-  row.children('.edit-row, .delete-row').addClass('hidden');
-  $('.edit-row, .add-row, .delete-row').prop('disabled', true);
-  
+function editRow(id, schemaLabels) {
+  $.getJSON(document.location.pathname + '/' + id, function(data) {
+    var fieldHtml = '';
+    var row = $('#' + id);
+    var columns = $('.rows').attr('data-columns-edit').split(' ');
+    
+    columns.forEach(function(column) {
+      fieldHtml += '<div>';
+      fieldHtml += '<label>';
+      fieldHtml += schemaLabels[column].label;
+      fieldHtml += '</label>';
+      fieldHtml += '<input type="text" class="edited-field" data-name="' + column + '" value="' + data[column] + '" placeholder="';
+      fieldHtml += (schemaLabels[column].placeholder === undefined) ? '' : schemaLabels[column].placeholder;
+      fieldHtml += '">';
+      fieldHtml += (schemaLabels[column].unit === undefined) ? '' : ' ' + schemaLabels[column].unit;
+      fieldHtml += '</div>';
+    });
+    
+    row.children('span').remove();    
+    row.prepend(fieldHtml);
+    
+    row.children('.save-edit, .cancel-edit').removeClass('hidden');
+    row.children('.edit-row, .delete-row').addClass('hidden');
+    $('.edit-row, .add-row, .delete-row').prop('disabled', true);
+  });  
 }
 
 function saveEdit(id) {
@@ -145,7 +173,7 @@ function saveEdit(id) {
     dataType: 'JSON'
   }).done(function(response) {
     if (response.errors.length === 0) {
-      cancelRow();
+      cancelEdit(id);
       populateRows();
     } else {
       var errors = '';
@@ -155,11 +183,10 @@ function saveEdit(id) {
       $('.errors').html(errors);
     }
   });
-  
-  cancelEdit(id);
 }
 
 function cancelEdit(id) {
   populateRows();
+  $('.errors').html('');
   $('.add-row').prop('disabled', false);
 }

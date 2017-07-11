@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
+var currency = '€';
+
 var TicketClassSchema = Schema({
   price: {
     type: Number,
@@ -19,6 +21,16 @@ var TicketClassSchema = Schema({
     required: true
   }
 });
+
+// virtual for price with symbol
+TicketClassSchema
+  .virtual('priceWithSymbol')
+  .get(function() {
+    return this.price.toString() + ' ' + currency;
+  });
+
+// show virtuals
+TicketClassSchema.set('toJSON', {virtuals: true});
 
 // export model
 module.exports = mongoose.model('TicketClass', TicketClassSchema);

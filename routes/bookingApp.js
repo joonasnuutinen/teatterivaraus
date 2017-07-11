@@ -58,16 +58,20 @@ router.get('/varaustilanne', isLoggedIn, reservationController.stats);
 // SHOWS
 router.get('/naytokset', isLoggedIn, showController.shows);
 
+router.get('/naytokset/json', isLoggedIn, showController.getJSON);
+
 // TICKETCLASS
 router.get('/lippujen-hinnat', isLoggedIn, ticketClassController.ticketPrices);
 
 router.post('/lippujen-hinnat', isLoggedIn, ticketClassController.newTicketPost);
 
+router.get('/lippujen-hinnat/json', isLoggedIn, ticketClassController.ticketPricesJSON);
+
+router.get('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.getById);
+
 router.delete('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.delete);
 
 router.put('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.put);
-
-router.get('/lippujen-hinnat/json', isLoggedIn, ticketClassController.ticketPricesJSON);
 
 // SETTINGS ===================================
 router.get('/asetukset', isLoggedIn, theatreController.settingsGet);

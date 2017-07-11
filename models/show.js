@@ -12,9 +12,9 @@ var ShowSchema = Schema({
     type: String
   },
   
-  play: {
+  theatre: {
     type: Schema.ObjectId,
-    ref: 'Play',
+    ref: 'Theatre',
     required: true
   }
 });

@@ -14,8 +14,8 @@ block content
       |
       | €
   div
-    input(type='button' class='add-row' data-db='ticketClass' value='Lisää uusi')
-    input(type='button' class='save-row hidden' data-db='ticketClass' value='Tallenna')
-    input(type='button' class='cancel-row hidden' data-db='ticketClass' value='Peruuta')
+    input(type='button' class='add-row' value='Lisää uusi')
+    input(type='button' class='save-row hidden' value='Tallenna')
+    input(type='button' class='cancel-row hidden' value='Peruuta')
   
-  .rows
+  .rows(data-schema='ticketClass' data-columns-view='name priceWithSymbol' data-columns-edit='name price')

@@ -45,11 +45,20 @@ exports.newTicketPost = function(req, res, next) {
 
 // ticket prices JSON get
 exports.ticketPricesJSON = function(req, res, next) {
-  TicketClass.find({theatre: req.user._id}, 'name price')
+  TicketClass.find({theatre: req.user._id}, 'name price priceWithSymbol')
     .sort([['price', 'descending']])
     .exec(function(err, ticketClasses) {
       if (err) return next(err);
       res.json(ticketClasses);
+    });
+};
+
+// GET one ticket class by id via AJAX
+exports.getById = function(req, res, next) {
+  TicketClass.findById(req.params.id, 'name price')
+    .exec(function(err, data) {
+      if (err) return next(err);
+      res.json(data);
     });
 };
 
