@@ -52,28 +52,30 @@ router.post('/rekisteroidy', passport.authenticate('local-signup', {
   failureFlash: true
 }));
 
-// STATS ======================================
+// STATS =============================================================
 router.get('/varaustilanne', isLoggedIn, reservationController.stats);
 
-// SHOWS
+// SHOWS =============================================================
 router.get('/naytokset', isLoggedIn, showController.shows);
+router.post('/naytokset', isLoggedIn, showController.post);
 
 router.get('/naytokset/json', isLoggedIn, showController.getJSON);
 
+router.get('/naytokset/:id', isLoggedIn, showController.getById);
+router.put('/naytokset/:id', isLoggedIn, showController.put);
+router.delete('/naytokset/:id', isLoggedIn, showController.delete);
+
 // TICKETCLASS
 router.get('/lippujen-hinnat', isLoggedIn, ticketClassController.ticketPrices);
-
 router.post('/lippujen-hinnat', isLoggedIn, ticketClassController.newTicketPost);
 
 router.get('/lippujen-hinnat/json', isLoggedIn, ticketClassController.ticketPricesJSON);
 
 router.get('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.getById);
-
 router.delete('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.delete);
-
 router.put('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.put);
 
-// SETTINGS ===================================
+// SETTINGS =========================================================
 router.get('/asetukset', isLoggedIn, theatreController.settingsGet);
 
 router.post('/asetukset', isLoggedIn, theatreController.settingsPost);

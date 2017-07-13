@@ -1,0 +1,9 @@
+extends layout_app
+
+block content
+  h1= title
+  
+  .content(data-schema=options.schema data-columns-view=options.columnsView data-columns-edit=options.columnsEdit)
+    .errors
+    .row#newRow
+    .rows

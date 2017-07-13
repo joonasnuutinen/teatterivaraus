@@ -2,30 +2,35 @@ var TicketClass = require('../models/ticketClass');
 
 // ticket prices
 exports.ticketPrices = function(req, res, next) {
-  res.render('ticketPrices', {title: 'Lippujen hinnat'});
+  var options = {
+    schema: 'ticketClass',
+    columnsView: 'name priceWithSymbol',
+    columnsEdit: 'name price'
+  };
+  res.render('rows', {title: 'Lippujen hinnat', options: options});
 };
 
 // POST new class
 exports.newTicketPost = function(req, res, next) {
-  req.body.newClassPrice = req.body.newClassPrice.replace(',', '.');
+  req.body.newPrice = req.body.newPrice.replace(',', '.');
   
-  req.checkBody('newClassName', 'Lippuluokan nimi puuttuu.').notEmpty();
+  req.checkBody('newName', 'Lippuluokan nimi puuttuu.').notEmpty();
   
-  req.checkBody('newClassPrice', 'Lipun hinta puuttuu.').notEmpty();
-  req.checkBody('newClassPrice', 'Lipun hinta ei ole luku.').isFloat();
+  req.checkBody('newPrice', 'Lipun hinta puuttuu.').notEmpty();
+  req.checkBody('newPrice', 'Lipun hinta ei ole luku.').isFloat();
   
-  req.sanitize('newClassName').escape();
-  req.sanitize('newClassName').trim();
-  req.sanitize('newClassPrice').escape();
-  req.sanitize('newClassPrice').trim();
-  req.sanitize('newClassPrice').toFloat();
+  req.sanitize('newName').escape();
+  req.sanitize('newName').trim();
+  req.sanitize('newPrice').escape();
+  req.sanitize('newPrice').trim();
+  req.sanitize('newPrice').toFloat();
   
   req.getValidationResult().then(function(errors) {
     if (errors.isEmpty()) {
       var ticketClass = new TicketClass({
-        price: req.body.newClassPrice,
+        price: req.body.newPrice,
         theatre: req.user._id,
-        name: req.body.newClassName
+        name: req.body.newName
       });
   
       ticketClass.save(function(err) {
@@ -39,8 +44,6 @@ exports.newTicketPost = function(req, res, next) {
       });
     }
   });
-  
-  
 };
 
 // ticket prices JSON get
@@ -81,18 +84,18 @@ exports.delete = function(req, res, next) {
 
 // PUT to ticket class via AJAX
 exports.put = function(req, res, next) {
-  req.body.price = req.body.price.replace(',', '.');
+  req.body.editedPrice = req.body.editedPrice.replace(',', '.');
   
-  req.checkBody('name', 'Lippuluokan nimi puuttuu.').notEmpty();
+  req.checkBody('editedName', 'Lippuluokan nimi puuttuu.').notEmpty();
   
-  req.checkBody('price', 'Lipun hinta puuttuu.').notEmpty();
-  req.checkBody('price', 'Lipun hinta ei ole luku.').isFloat();
+  req.checkBody('editedPrice', 'Lipun hinta puuttuu.').notEmpty();
+  req.checkBody('editedPrice', 'Lipun hinta ei ole luku.').isFloat();
   
-  req.sanitize('name').escape();
-  req.sanitize('name').trim();
-  req.sanitize('price').escape();
-  req.sanitize('price').trim();
-  req.sanitize('price').toFloat();
+  req.sanitize('editedName').escape();
+  req.sanitize('editedName').trim();
+  req.sanitize('editedPrice').escape();
+  req.sanitize('editedPrice').trim();
+  req.sanitize('editedPrice').toFloat();
   
   req.getValidationResult().then(function(errors) {
     var message = {
@@ -101,9 +104,9 @@ exports.put = function(req, res, next) {
     
     if (errors.isEmpty()) {
       var ticketClass = new TicketClass({
-        price: req.body.price,
+        price: req.body.editedPrice,
         theatre: req.user._id,
-        name: req.body.name,
+        name: req.body.editedName,
         _id: req.params.id
       });
   
@@ -118,5 +121,4 @@ exports.put = function(req, res, next) {
     
     res.send(message);
   });
-  
 };
