@@ -27,6 +27,12 @@ TicketClassSchema
   .virtual('priceWithSymbol')
   .get(function() {
     return this.price.toString() + ' ' + currency;
+});
+
+// virtual for full name
+TicketClassSchema.virtual('fullName')
+  .get(function() {
+    return this.name + ' ' + this.priceWithSymbol;
   });
 
 // show virtuals

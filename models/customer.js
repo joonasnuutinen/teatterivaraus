@@ -3,12 +3,12 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var CustomerSchema = Schema({
-  first_name: {
+  firstName: {
     type: String,
     required: true
   },
   
-  last_name: {
+  lastName: {
     type: String,
     required: true
   },
@@ -32,8 +32,11 @@ var CustomerSchema = Schema({
 CustomerSchema
   .virtual('name')
   .get(function() {
-    return this.first_name + ' ' + this.last_name;
-  });
+    return this.last_name + ' ' + this.first_name;
+});
+
+// show virtuals
+CustomerSchema.set('toJSON', {virtuals: true});
 
 // export model
 module.exports = mongoose.model('Customer', CustomerSchema);  

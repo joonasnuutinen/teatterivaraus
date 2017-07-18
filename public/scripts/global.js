@@ -43,6 +43,30 @@ $(document).ready(function() {
         label: 'Kellonaika',
         placeholder: 'hh.mm'
       }
+    },
+    
+    reservation: {
+      added: {
+        label: 'Lisätty'
+      },
+      lastName: {
+        label: 'Sukunimi'
+      },
+      firstName: {
+        label: 'Etunimi'
+      },
+      email: {
+        label: 'Sähköposti'
+      },
+      phone: {
+        label: 'Puhelin'
+      },
+      show: {
+        label: 'Näytös'
+      },
+      additionalInfo: {
+        label: 'Lisätietoja'
+      }
     }
   };
   
@@ -206,18 +230,36 @@ function showForm(id, data, schemaOptions, idPrefix) {
   var columns = $('.content').attr('data-columns-edit').split(' ');
   
   columns.forEach(function(column) {
-    var inputId = idPrefix + capital(column);
-    fieldHtml += '<div class="form-group">';
-    fieldHtml += '<label for="' + inputId + '">';
-    fieldHtml += schemaOptions[column].label;
-    fieldHtml += '</label>';
-    fieldHtml += '<input type="text" class="edited-field" id="' + inputId + '" value="';
-    fieldHtml += (data === null) ? '' : data[column];
-    fieldHtml += '" placeholder="';
-    fieldHtml += (schemaOptions[column].placeholder === undefined) ? '' : schemaOptions[column].placeholder;
-    fieldHtml += '">';
-    fieldHtml += (schemaOptions[column].unit === undefined) ? '' : ' ' + schemaOptions[column].unit;
-    fieldHtml += '</div>';
+    if (column === 'ticketClasses') {
+      fieldHtml += '<div class="ticket-classes"></div>';
+      $.getJSON('/app/lippujen-hinnat/json', function(ticketClasses) {
+        var ticketClassHtml = '';
+        ticketClasses.forEach(function(ticketClass) {
+          var inputId = 'newTicketClass_' + ticketClass._id;
+          ticketClassHtml += '<div class="form-group">';
+          ticketClassHtml += '<label for="' + inputId + '">';
+          ticketClassHtml += ticketClass.fullName;
+          ticketClassHtml += '</label>';
+          ticketClassHtml += '<input type="number" min="0" class="edited-field" id="' + inputId + '" value="';
+          ticketClassHtml += (data === null) ? '0' : data.subReservations[ticketClass._id].amount;
+          ticketClassHtml += '"> kpl</div>';
+        });
+        $('.ticket-classes').html(ticketClassHtml);
+      });
+    } else {
+      var inputId = idPrefix + capital(column);
+      fieldHtml += '<div class="form-group">';
+      fieldHtml += '<label for="' + inputId + '">';
+      fieldHtml += schemaOptions[column].label;
+      fieldHtml += '</label>';
+      fieldHtml += '<input type="text" class="edited-field" id="' + inputId + '" value="';
+      fieldHtml += (data === null) ? '' : data[column];
+      fieldHtml += '" placeholder="';
+      fieldHtml += (schemaOptions[column].placeholder === undefined) ? '' : schemaOptions[column].placeholder;
+      fieldHtml += '">';
+      fieldHtml += (schemaOptions[column].unit === undefined) ? '' : ' ' + schemaOptions[column].unit;
+      fieldHtml += '</div>';
+    }
   });
   
   $('#' + id + ' > .fields').html(fieldHtml);

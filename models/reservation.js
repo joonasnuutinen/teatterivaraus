@@ -9,14 +9,33 @@ var ReservationSchema = Schema({
     required: true
   },
   
+  show: {
+    type: Schema.ObjectId,
+    ref: 'Show',
+    required: true
+  },
+  
   added: {
     type: Date,
-    default: Date.now
+    default: Date.now()
   },
   
   additionalInfo: {
     type: String
+  },
+  
+  theatre: {
+    type: Schema.ObjectId,
+    ref: 'Theatre',
+    required: true
   }
+});
+
+// virtual for reservations
+ReservationSchema.virtual('subReservations', {
+  ref: 'SubReservation',
+  localField: '_id',
+  foreignField: 'reservation'
 });
 
 // export model

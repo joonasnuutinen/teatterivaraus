@@ -22,8 +22,14 @@ var register = '/app/rekisteroidy';
 /* GET bookingApp home */
 router.get('/', isLoggedIn, reservationController.index);
 
-/* GET reservations */
 router.get('/varaukset', isLoggedIn, reservationController.reservations);
+//router.post('/varaukset', isLoggedIn, reservationController.post);
+
+router.get('/varaukset/json', isLoggedIn, reservationController.getJSON);
+
+//router.get('/varaukset/:id', isLoggedIn, reservationController.getById);
+//router.put('/varaukset/:id', isLoggedIn, reservationController.put);
+//router.delete('/varaukset/:id', isLoggedIn, reservationController.delete);
 
 // THEATRE =================================
 

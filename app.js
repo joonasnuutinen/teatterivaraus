@@ -93,16 +93,20 @@ app.use(expressValidator({
   customValidators: {
     isFinnishDate: function(value) {
       var dateArray = value.split('.');
-      if (dateArray.length !== 3) {
+      var re = /^\d?\d\.\d?\d\.\d\d\d\d$/;
+      
+      if (value.search(re) === -1 || dateArray.length !== 3) {
         return false;
       }
       var year = dateArray[2];
       var month = addLeadingZero(dateArray[1]);
       var day = addLeadingZero(dateArray[0]);
-      return validator.isDate(year + '-' + month + '-' + day);
+      var dateString = year + '-' + month + '-' + day;
+      //console.log(dateString);
+      return ! isNaN(Date.parse(dateString));
     },
     isFinnishTime: function(value) {
-      var re = /(0?[0-9])|(1[0-9])|(2[0-3])(\.[0-5][0-9])?/;
+      var re = /^(?:(?:[0]?[0-9])|(?:[1][0-9])|(?:[2][0-3]))(?:\.[0-5][0-9])?$/;
       return value.search(re) !== -1;
     }
   }

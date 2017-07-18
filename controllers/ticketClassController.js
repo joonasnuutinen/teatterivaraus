@@ -48,7 +48,7 @@ exports.newTicketPost = function(req, res, next) {
 
 // ticket prices JSON get
 exports.ticketPricesJSON = function(req, res, next) {
-  TicketClass.find({theatre: req.user._id}, 'name price priceWithSymbol')
+  TicketClass.find({theatre: req.user._id})
     .sort([['price', 'descending']])
     .exec(function(err, ticketClasses) {
       if (err) return next(err);
@@ -106,8 +106,7 @@ exports.put = function(req, res, next) {
       var ticketClass = new TicketClass({
         price: req.body.editedPrice,
         theatre: req.user._id,
-        name: req.body.editedName,
-        _id: req.params.id
+        name: req.body.editedName
       });
   
       TicketClass.findByIdAndUpdate(req.params.id, ticketClass, {}, function(err) {
