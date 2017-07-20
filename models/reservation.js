@@ -1,12 +1,25 @@
 var mongoose = require('mongoose');
+var moment = require('moment');
+var TicketClass = require('./ticketClass');
 
 var Schema = mongoose.Schema;
 
 var ReservationSchema = Schema({
-  customer: {
-    type: Schema.ObjectId,
-    ref: 'Customer',
+  lastName: {
+    type: String,
     required: true
+  },
+  
+  firstName: {
+    type: String,
+  },
+  
+  email: {
+    type: String
+  },
+  
+  phone: {
+    type: String
   },
   
   show: {
@@ -21,22 +34,53 @@ var ReservationSchema = Schema({
   },
   
   additionalInfo: {
-    type: String
+    type: String,
+    default: ''
   },
   
   theatre: {
     type: Schema.ObjectId,
     ref: 'Theatre',
     required: true
-  }
+  },
+  
+  tickets: [{
+    ticketClass: {
+      type: Schema.ObjectId,
+      ref: 'TicketClass',
+      required: true
+    },
+    
+    amount: {
+      type: Number,
+      min: 0,
+      default: 0
+    }
+  }]
 });
 
+// virtual for full name
+ReservationSchema.virtual('fullName')
+  .get(function() {
+    return this.lastName + ' ' + this.firstName;
+});
+
+// virtual for pretty date
+ReservationSchema.virtual('addedPretty').get(function() {
+  return moment(this.added).format('D.M.YYYY [klo] H.mm');
+});
+
+/*
 // virtual for reservations
 ReservationSchema.virtual('subReservations', {
   ref: 'SubReservation',
   localField: '_id',
   foreignField: 'reservation'
 });
+*/
+
+// show virtuals
+ReservationSchema.set('toJSON', {virtuals: true});
 
 // export model
 module.exports = mongoose.model('Reservation', ReservationSchema);

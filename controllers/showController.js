@@ -5,7 +5,7 @@ var Show = require('../models/show');
 exports.shows = function(req, res, next) {
   var options = {
     schema: 'show',
-    columnsView: 'beginsPretty info',
+    columnsView: 'beginsPretty',
     columnsEdit: 'date time info'
   };
   res.render('rows', {title: 'Näytökset', options: options});

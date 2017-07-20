@@ -68,7 +68,7 @@ ShowSchema
   .virtual('beginsPretty')
   .get(function() {
     var weekdays = ['su', 'ma', 'ti', 'ke', 'to', 'pe', 'la'];
-    return weekdays[this.weekday] + ' ' + moment(this.begins).format('D.M.YYYY [klo] H.mm');
+    return weekdays[this.weekday] + ' ' + moment(this.begins).format('D.M.YYYY [klo] H.mm') + ' ' + this.info;
 });
 
 // virtual for date
