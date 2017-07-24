@@ -1,5 +1,6 @@
 var moment = require('moment-timezone');
 var Show = require('../models/show');
+var Reservation = require('../models/reservation');
 
 // GET shows
 exports.shows = function(req, res, next) {
@@ -117,17 +118,24 @@ exports.put = function(req, res, next) {
 
 // DELETE show via AJAX
 exports.delete = function(req, res, next) {
-  Show.findByIdAndRemove(req.params.id, function(err) {
+  Reservation.count({show: req.params.id}, function(err, count) {
     var message = {
       errors: []
-    };
-    
-    if (err) {
+    }; 
+    if (err) return next(err);
+    if (count !== 0) {
       message.errors.push({
-        msg: 'Näytöksen poisto epäonnistui, yritä uudelleen.'
+        msg: 'Tähän näytökseen on varauksia. Voit poistaa näytöksen vasta kun kaikki sen varaukset on poistettu tai vaihdettu toiselle päivälle.'
+      });
+    } else {
+      Show.findByIdAndRemove(req.params.id, function(err) {        
+        if (err) {
+          message.errors.push({
+            msg: 'Näytöksen poisto epäonnistui, yritä uudelleen.'
+          });
+        }
       });
     }
-    
     res.send(message);
   });
 };

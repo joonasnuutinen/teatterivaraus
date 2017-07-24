@@ -78,6 +78,7 @@ $(document).ready(function() {
     var schemaOptions = options[$('.content').attr('data-schema')];
     resetContent(schemaOptions);
     userEvents(schemaOptions);
+    initFilter();
   }
 });
 
@@ -95,8 +96,17 @@ function resetContent(schemaOptions) {
   
   $('#newRow').html(newRowHtml);
   
-  // populate existing data and add edit buttons to rows
-  $.getJSON(document.location.pathname + '/json', function(data) {
+  populateRows(schemaOptions);
+}
+
+// populate data
+function populateRows(schemaOptions) {
+  var params = {
+    keyword: $('#keyword').val(),
+    show: $('#filter').val()
+  };
+  var url = createUrl('json', params);
+  $.getJSON(url, function(data) {
     var columns = $('.content').attr('data-columns-view').split(' ');
     var allRows = '';
     data.forEach(function(item) {
@@ -112,13 +122,15 @@ function resetContent(schemaOptions) {
           var price = 0.00;
           var amount = 0;
           item.tickets.forEach(function(ticket) {
+            var thisPrice = (ticket.ticketClass === null) ? 0 : ticket.ticketClass.price;
             amount += ticket.amount;
-            price += ticket.amount * ticket.ticketClass.price;
+            price += ticket.amount * thisPrice;
             /*allRows += '<div class="ticket">';
             allRows += ticket.ticketClass.fullName + ': ' + ticket.amount + ' ' + schemaOptions.tickets.unit;
             allRows += '</div>';*/
           });
-          allRows += '<div class="tickets">' + amount + ' lippua, ' + price + ' €</div>';
+          var unit = (amount == 1) ? 'lippu' : 'lippua';
+          allRows += '<div class="tickets">' + amount + ' ' + unit + ', ' + price + ' €</div>';
         } else if(item[column]) {
           allRows += '<div class="' + column + '">' + item[column] + '</div>';
         }
@@ -137,6 +149,11 @@ function resetContent(schemaOptions) {
   });
 }
 
+// initialize filter
+function initFilter() {
+  populateSelect('#filter');
+}
+
 // add listeners to user events
 function userEvents(schemaOptions) {  
   $('.content').on('click', '.edit-row', function() {
@@ -153,6 +170,14 @@ function userEvents(schemaOptions) {
   
   $('.content').on('click', '.cancel-row', function() {
     cancelEdit($(this).parent().attr('id'), schemaOptions);
+  });
+  
+  $('#keyword').on('input', function() {
+    populateRows(schemaOptions);
+  });
+  
+  $('#filter').on('input', function() {
+    populateRows(schemaOptions);
   });
 }
 
@@ -179,10 +204,12 @@ function editRow(id, schemaOptions) {
   row.children('.save-row, .cancel-row').removeClass('hidden');
   row.children('.edit-row, .delete-row').addClass('hidden');
   $('.edit-row, .add-row, .delete-row').prop('disabled', true);
+  $('.errors').html('');
 }
 
 // delete row
 function deleteRow(id, schemaOptions) {
+  $('.errors').html('');
   var confirmation = confirm('Haluatko varmasti poistaa rivin lopullisesti?');
   
   if (confirmation) {
@@ -191,9 +218,13 @@ function deleteRow(id, schemaOptions) {
       url: document.location.pathname + '/' + id
     }).done(function(response) {
       if (response.errors.length === 0) {
-        resetContent(schemaOptions);
+        cancelEdit(id, schemaOptions);
       } else {
-        $('.errors').html(errors[0].msg);
+        var errors = '';
+        response.errors.forEach(function(error) {
+          errors += error.msg + '<br>';
+        });
+        $('.errors').html(errors);
       }
     });
   }
@@ -274,17 +305,8 @@ function showForm(id, data, schemaOptions, idPrefix) {
       fieldHtml += schemaOptions.show.label;
       fieldHtml += '</label>';
       fieldHtml += '<select class="edited-field show-select" id="' + selectId + '"></select></div>';
-      $.getJSON('/app/naytokset/json', function(shows) {
-        shows.forEach(function(show) {
-          var optionObject = document.createElement('option');
-          optionObject.setAttribute('value', show._id);
-          optionObject.text = show.beginsPretty;
-          $('.show-select')[0].add(optionObject);
-        });
-        if (data !== null) {
-          $('.show-select')[0].value = data.show;
-        }
-      });
+      
+      populateSelect('.show-select', data);
     } else {
       var inputId = idPrefix + capital(column);
       fieldHtml += '<div class="form-group">';
@@ -304,7 +326,34 @@ function showForm(id, data, schemaOptions, idPrefix) {
   $('#' + id + ' > .fields').html(fieldHtml);
 }
 
+// populate select item with shows
+function populateSelect(selector, data) {
+  $.getJSON('/app/naytokset/json', function(shows) {
+    shows.forEach(function(show) {
+      var optionObject = document.createElement('option');
+      optionObject.setAttribute('value', show._id);
+      optionObject.text = show.beginsPretty;
+      $(selector)[0].add(optionObject);
+    });
+    if (data) {
+      $(selector)[0].value = data.show;
+    }
+  });
+}
+
 // capitalize first letter of string
 function capital(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// create AJAX url
+function createUrl(subPath, paramObject) {
+  var url = document.location.pathname + '/' + subPath;
+  if (paramObject) {
+    url += '?';
+    for (var param in paramObject) {
+      url += param + '=' + paramObject[param] + '&';
+    }
+  }
+  return url;
 }

@@ -11,17 +11,25 @@ exports.reservations = function(req, res, next) {
   var options = {
     schema: 'reservation',
     columnsView: 'fullName show tickets additionalInfo',
-    columnsEdit: 'lastName firstName email phone show ticketClasses additionalInfo'
+    columnsEdit: 'lastName firstName email phone show ticketClasses additionalInfo',
+    search: true
   };
   res.render('rows', {title: 'Varaukset', options: options});
 };
 
 // GET reservations JSON
 exports.getJSON = function(req, res, next) {
+  var show = (req.query.show) ? req.query.show : '';
   Reservation.find({theatre: req.user._id})
     .populate('show tickets.ticketClass')
     .exec(function(err, reservations) {
       if (err) return next(err);      
+      reservations = reservations.filter(function(reservation) {
+        var re = new RegExp(req.query.keyword, 'i');
+        var matchesShowFilter = (req.query.show == '' || req.query.show == reservation.show._id);
+        return matchesShowFilter && reservation.fullName.search(re) != -1;
+      });
+      
       reservations.sort(function(a, b) {
         var aString = a.fullName.toUpperCase();
         var bString = b.fullName.toUpperCase();

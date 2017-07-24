@@ -1,4 +1,5 @@
 var TicketClass = require('../models/ticketClass');
+var Reservation = require('../models/reservation');
 
 // ticket prices
 exports.ticketPrices = function(req, res, next) {
@@ -67,17 +68,43 @@ exports.getById = function(req, res, next) {
 
 // DELETE ticket class via AJAX
 exports.delete = function(req, res, next) {
-  TicketClass.findByIdAndRemove(req.params.id, function(err) {
+  Reservation.find({theatre: req.user._id}, 'tickets').exec(function(err, reservations) {
+    var foundTicketClass = false;
     var message = {
       errors: []
     };
-    
-    if (err) {
-      message.errors.push({
-        msg: 'Lippuluokan poisto epäonnistui, yritä uudelleen.'
-      });
+    if (err) return next(err);
+    for (var i = 0; i < reservations.length; i++) {
+      var tickets = reservations[i].tickets;
+      for (var j = 0; j < tickets.length; j++) {
+        var ticket = tickets[j];
+        console.log(ticket);
+        console.log(req.params.id);
+        console.log(ticket.ticketClass == req.params.id);
+        console.log('==========================='); // tutki, miksi ei löydy
+        if (ticket.ticketClass == req.params.id && ticket.amount !== 0) {
+          foundTicketClass = true;
+          break;
+        }
+      }
+      if (foundTicketClass) {
+        break;
+      }
     }
     
+    if (foundTicketClass) {
+      message.errors.push({
+        msg: 'Tälle lipputyypille on varauksia. Voit poistaa lipputyypin vasta kun kaikki sen varaukset on poistettu tai vaihdettu toisenlaisiin lippuihin.'
+      });
+    } else {
+      TicketClass.findByIdAndRemove(req.params.id, function(err) {
+        if (err) {
+          message.errors.push({
+            msg: 'Lippuluokan poisto epäonnistui, yritä uudelleen.'
+          });
+        }
+      });
+    }
     res.send(message);
   });
 };
