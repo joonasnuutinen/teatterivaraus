@@ -70,6 +70,19 @@ ReservationSchema.virtual('addedPretty').get(function() {
   return moment(this.added).format('D.M.YYYY [klo] H.mm');
 });
 
+// virtual for price
+ReservationSchema.virtual('total').get(function() {
+  var total = {
+    tickets: 0,
+    price: 0
+  };
+  this.tickets.forEach(function(ticket) {
+    total.tickets += ticket.amount;
+    total.price += ticket.amount * ticket.ticketClass.price;
+  });
+  return total;
+});
+
 /*
 // virtual for reservations
 ReservationSchema.virtual('subReservations', {

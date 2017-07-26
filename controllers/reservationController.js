@@ -12,21 +12,22 @@ exports.reservations = function(req, res, next) {
     schema: 'reservation',
     columnsView: 'fullName show tickets additionalInfo',
     columnsEdit: 'lastName firstName email phone show ticketClasses additionalInfo',
-    search: true
+    filterAndPrint: true
   };
   res.render('rows', {title: 'Varaukset', options: options});
 };
 
 // GET reservations JSON
 exports.getJSON = function(req, res, next) {
-  var show = (req.query.show) ? req.query.show : '';
   Reservation.find({theatre: req.user._id})
     .populate('show tickets.ticketClass')
     .exec(function(err, reservations) {
       if (err) return next(err);      
       reservations = reservations.filter(function(reservation) {
-        var re = new RegExp(req.query.keyword, 'i');
-        var matchesShowFilter = (req.query.show == '' || req.query.show == reservation.show._id);
+        var show = (req.query.show) ? req.query.show : '';
+        var keyword = (req.query.keyword) ? req.query.keyword : '';
+        var re = new RegExp(keyword, 'i');
+        var matchesShowFilter = (show == '' || show == reservation.show._id);
         return matchesShowFilter && reservation.fullName.search(re) != -1;
       });
       
@@ -201,4 +202,9 @@ exports.delete = function(req, res, next) {
 // GET stats
 exports.stats = function(req, res, next) {
   res.render('stats', {title: 'Varaustilanne'});
+};
+
+// print reservations
+exports.print = function(req, res, next) {
+  res.send('Printing ' + req.params.id + '...');
 };

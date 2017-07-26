@@ -26,6 +26,7 @@ router.get('/varaukset', isLoggedIn, reservationController.reservations);
 router.post('/varaukset', isLoggedIn, reservationController.post);
 
 router.get('/varaukset/json', isLoggedIn, reservationController.getJSON);
+router.get('/varaukset/tulosta/:id', isLoggedIn, reservationController.print);
 
 router.get('/varaukset/:id', isLoggedIn, reservationController.getById);
 router.put('/varaukset/:id', isLoggedIn, reservationController.put);

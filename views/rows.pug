@@ -4,14 +4,20 @@ block content
   h1= title
   
   .content(data-schema=options.schema data-columns-view=options.columnsView data-columns-edit=options.columnsEdit)
-    if(options.search)
+    
+    if(options.filterAndPrint)
+      .form-group
+        button#print.hidden Tulosta
+      
       #search.form-group
         label(for='keyword') Hae nimellä
         input#keyword(type='search')
+      
       .form-group
         label(for='filter') Suodata
         select#filter
           option(value='') Kaikki näytökset
+      
     .errors
     .row#newRow
     .rows

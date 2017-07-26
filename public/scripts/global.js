@@ -119,16 +119,8 @@ function populateRows(schemaOptions) {
           allRows += (item.show !== null) ? item.show.beginsPretty : 'POISTETTU NÄYTÖS';
           allRows += '</div>';
         } else if (column === 'tickets') {
-          var price = 0.00;
-          var amount = 0;
-          item.tickets.forEach(function(ticket) {
-            var thisPrice = (ticket.ticketClass === null) ? 0 : ticket.ticketClass.price;
-            amount += ticket.amount;
-            price += ticket.amount * thisPrice;
-            /*allRows += '<div class="ticket">';
-            allRows += ticket.ticketClass.fullName + ': ' + ticket.amount + ' ' + schemaOptions.tickets.unit;
-            allRows += '</div>';*/
-          });
+          var price = item.total.price;
+          var amount = item.total.tickets;
           var unit = (amount == 1) ? 'lippu' : 'lippua';
           allRows += '<div class="tickets">' + amount + ' ' + unit + ', ' + price + ' €</div>';
         } else if(item[column]) {
@@ -177,7 +169,17 @@ function userEvents(schemaOptions) {
   });
   
   $('#filter').on('input', function() {
+    var printButton = $('#print');
+    if ($(this).val() === '') {
+      printButton.addClass('hidden');
+    } else {
+      printButton.removeClass('hidden');
+    }
     populateRows(schemaOptions);
+  });
+  
+  $('#print').on('click', function() {
+    printReservations();
   });
 }
 
@@ -269,6 +271,12 @@ function cancelEdit(id, schemaOptions) {
   resetContent(schemaOptions);
   $('.errors').html('');
   $('.add-row').prop('disabled', false);
+}
+
+// print reservations
+function printReservations() {
+  var selectedShowName = $('#filter')[0].selectedOptions[0].innerText;
+  console.log('Printing ' + selectedShowName + '...');
 }
 
 // ================================================================
