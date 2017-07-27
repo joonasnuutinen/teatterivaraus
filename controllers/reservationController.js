@@ -1,3 +1,4 @@
+var async = require('async');
 var Reservation = require('../models/reservation');
 var TicketClass = require('../models/ticketClass');
 
@@ -210,7 +211,6 @@ exports.print = function(req, res, next) {
     .populate('show tickets.ticketClass')
     .exec(function(err, data) {
       if (err) return next(err);
-      console.log(data);
       res.render('printReservations', {title: 'Tuloste', data: data});
   });
 };

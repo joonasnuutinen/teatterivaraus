@@ -33,7 +33,9 @@ TicketClassSchema
 TicketClassSchema.virtual('fullName')
   .get(function() {
     return this.name + ' ' + this.priceWithSymbol;
-  });
+});
+
+// virtual for 
 
 // show virtuals
 TicketClassSchema.set('toJSON', {virtuals: true});
