@@ -42,7 +42,7 @@ exports.getJSON = function(req, res, next) {
   });
 };
 
-// GET one show in JSON format
+// GET one reservation in JSON format
 exports.getById = function(req, res, next) {
   Reservation.findById(req.params.id)
     .exec(function(err, data) {
@@ -206,5 +206,11 @@ exports.stats = function(req, res, next) {
 
 // print reservations
 exports.print = function(req, res, next) {
-  res.send('Printing ' + req.params.id + '...');
+  Reservation.find({show: req.params.id})
+    .populate('show tickets.ticketClass')
+    .exec(function(err, data) {
+      if (err) return next(err);
+      console.log(data);
+      res.render('printReservations', {title: 'Tuloste', data: data});
+  });
 };

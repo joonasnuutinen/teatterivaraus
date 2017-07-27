@@ -275,8 +275,10 @@ function cancelEdit(id, schemaOptions) {
 
 // print reservations
 function printReservations() {
+  var selectedShowId = $('#filter').val();
   var selectedShowName = $('#filter')[0].selectedOptions[0].innerText;
-  console.log('Printing ' + selectedShowName + '...');
+  var printUrl = '/app/varaukset/tulosta/' + selectedShowId;
+  window.open(printUrl, '_blank');
 }
 
 // ================================================================
