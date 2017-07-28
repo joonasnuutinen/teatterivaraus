@@ -4,22 +4,21 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/print.css')
   
-  body
-    - var counter = 0;
-    - var rowsPerPage = 35;
-    
-    each val, index in data
-      if (counter === 0)
-        <div class="page">
-          <table>
-            <tr>
-              <td
-        - counter = 0;
-      
-      .page
-        - var i = 1;
-        table
-          while i <= 37
+  body    
+    table
+      thead
+        tr
+          th(colspan='4')= show.beginsPretty
+        tr
+          th Nimi
+          th Varaukset
+          th Lisätietoja
+          th Hinta
+        
+        tbody
+          each val in reservations
             tr
-              td= i
-            - i++;
+              td= val.fullName
+              td!= val.total.code
+              td= val.additionalInfo
+              td= val.total.priceString

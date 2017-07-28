@@ -78,7 +78,7 @@ $(document).ready(function() {
     var schemaOptions = options[$('.content').attr('data-schema')];
     resetContent(schemaOptions);
     userEvents(schemaOptions);
-    initFilter();
+    if ($('#filter').length > 0) initFilter();
   }
 });
 
@@ -119,10 +119,10 @@ function populateRows(schemaOptions) {
           allRows += (item.show !== null) ? item.show.beginsPretty : 'POISTETTU NÄYTÖS';
           allRows += '</div>';
         } else if (column === 'tickets') {
-          var price = item.total.price;
+          var price = item.total.priceString;
           var amount = item.total.tickets;
           var unit = (amount == 1) ? 'lippu' : 'lippua';
-          allRows += '<div class="tickets">' + amount + ' ' + unit + ', ' + price + ' €</div>';
+          allRows += '<div class="tickets">' + amount + ' ' + unit + ', ' + price + '</div>';
         } else if(item[column]) {
           allRows += '<div class="' + column + '">' + item[column] + '</div>';
         }
@@ -303,7 +303,7 @@ function showForm(id, data, schemaOptions, idPrefix) {
           ticketClassHtml += '</label>';
           ticketClassHtml += '<input type="number" min="0" class="edited-field" id="' + inputId + '" value="';
           
-          ticketClassHtml += (data === null) ? '0' : data.tickets[index].amount;
+          ticketClassHtml += (data.tickets[index]) ? data.tickets[index].amount : '0';
           ticketClassHtml += '"> kpl</div>';
         });
         $('.ticket-classes').html(ticketClassHtml);

@@ -35,7 +35,10 @@ TicketClassSchema.virtual('fullName')
     return this.name + ' ' + this.priceWithSymbol;
 });
 
-// virtual for 
+// virtual for ticketClass code
+TicketClassSchema.virtual('code').get(function() {
+  return this.name.substr(0, 2).toUpperCase() + ' ' + this.priceWithSymbol;
+});
 
 // show virtuals
 TicketClassSchema.set('toJSON', {virtuals: true});

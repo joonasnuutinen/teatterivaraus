@@ -3,17 +3,11 @@ html, body {
   padding: 0;
   font-size: 12pt;
   box-sizing: border-box;
+  /*width: 297mm;*/
 }
 
-.page {
-  position: relative;
-  height: 210mm;
-  width: 297mm;
-  display: block;
-  page-break-after: auto;
-  padding: 19mm;
-  overflow: hidden;
-  border: 1px solid green;
+body {
+  margin: 19mm;
 }
 
 table {
@@ -26,9 +20,7 @@ table, th, td {
 }
 
 @media print {
-  .page {
+  body {
     margin: 0;
-    height: 100%;
-    width: 100%;
   }
 }

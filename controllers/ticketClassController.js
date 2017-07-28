@@ -133,9 +133,10 @@ exports.put = function(req, res, next) {
       var ticketClass = new TicketClass({
         price: req.body.editedPrice,
         theatre: req.user._id,
-        name: req.body.editedName
+        name: req.body.editedName,
+        _id: req.params.id
       });
-  
+      
       TicketClass.findByIdAndUpdate(req.params.id, ticketClass, {}, function(err) {
         if (err) {
           message.errors.push('Muokkaus epäonnistui, yritä uudelleen.');

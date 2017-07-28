@@ -70,16 +70,30 @@ ReservationSchema.virtual('addedPretty').get(function() {
   return moment(this.added).format('D.M.YYYY [klo] H.mm');
 });
 
-// virtual for price
+// virtual for total object
 ReservationSchema.virtual('total').get(function() {
+  var codeArray = [];
   var total = {
     tickets: 0,
-    price: 0
+    price: 0,
+    priceString: '',
+    code: ''
   };
   this.tickets.forEach(function(ticket) {
-    total.tickets += ticket.amount;
-    total.price += ticket.amount * ticket.ticketClass.price;
+    var amount = ticket.amount;
+    var ticketClass = ticket.ticketClass;
+    
+    total.tickets += amount;
+    total.price += amount * ticketClass.price;
+    
+    if (amount !== 0) {
+      codeArray.push(amount.toString() + ' × ' + ticketClass.fullName);
+    }
   });
+  
+  total.priceString = total.price.toString() + ' €';
+  total.code = codeArray.join('<br>');
+  
   return total;
 });
 
