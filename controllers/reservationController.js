@@ -5,6 +5,7 @@ var fs = require('fs');
 var Reservation = require('../models/reservation');
 var TicketClass = require('../models/ticketClass');
 var Show = require('../models/show');
+var Theatre = require('../models/theatre');
 
 // GET app index page
 exports.index = function(req, res, next) {
@@ -245,4 +246,138 @@ exports.printPdf = function(req, res, next) {
       stream.pipe(fs.createWriteStream('./tuloste.pdf'));
     });
   });
+};
+
+// GET customer reservation form
+exports.customerGet = function(req, res, next) {
+  var theatreId = req.params.theatreId;
+  
+  async.parallel({
+    theatre: function(callback) {
+      Theatre.findById(theatreId)
+        .populate('theatre')
+        .exec(callback);
+    },
+    
+    shows: function(callback) {
+      Show.find({theatre: theatreId})
+        .sort([['begins', 'ascending']])
+        .exec(callback);
+    },
+    
+    ticketClasses: function(callback) {
+      TicketClass.find({theatre: theatreId})
+        .sort([['price', 'descending']])
+        .exec(callback);
+    }
+  }, function(err, results) {
+    if (err) return next(err);
+    
+    var title = results.theatre.name + ': ' + results.theatre.playName + ' - Teatterivaraus';
+    
+    res.render('customerReservation', {
+      title: title,
+      theatre: results.theatre,
+      shows: results.shows,
+      ticketClasses: results.ticketClasses
+    });
+  });
+};
+
+// POST customer reservation form
+exports.customerPost = function(req, res, next) {
+  var tickets = [];
+  
+  for (var field in req.body) {
+    var re = /ticketClass_(\w+)/;
+    var match = field.match(re);
+    if (match !== null) {
+      req.sanitize(field).escape();
+      req.sanitize(field).trim();
+      req.sanitize(field).toInt();
+      tickets.push({
+        ticketClass: match[1],
+        amount: req.body[field]
+      });
+    }
+  }
+  
+  req.checkBody('lastName', 'Sukunimi puuttuu.').notEmpty();
+  req.checkBody('email', 'Virheellinen sähköposti.').optional({checkFalsy: true}).isEmail();
+  
+  req.sanitize('lastName').escape();
+  req.sanitize('lastName').trim();
+  req.sanitize('firstName').escape();
+  req.sanitize('firstName').trim();
+  req.sanitize('email').escape();
+  req.sanitize('email').trim();
+  req.sanitize('phone').escape();
+  req.sanitize('phone').trim();
+  req.sanitize('additionalInfo').escape();
+  req.sanitize('additionalInfo').trim();
+  
+  req.getValidationResult().then(function(errors) {
+    if (errors.isEmpty()) {
+      var reservation = new Reservation({
+        lastName: req.body.lastName,
+        firstName: req.body.firstName,
+        email: req.body.email,
+        phone: req.body.phone,
+        show: req.body.show,
+        info: req.body.additionalInfo,
+        theatre: req.params.theatreId,
+        tickets: tickets
+      });
+      
+      reservation.markModified('tickets'); // TODO: tickets don't get saved!
+      
+      reservation.save(function(err) {
+        if (err) return next(err);
+        res.redirect('/varaus-onnistui');
+        
+      });
+    } else {
+      var errors = errors.useFirstErrorOnly().array();
+      var theatreId = req.params.theatreId;
+      
+      async.parallel({
+        theatre: function(callback) {
+          Theatre.findById(theatreId)
+            .populate('theatre')
+            .exec(callback);
+        },
+        
+        shows: function(callback) {
+          Show.find({theatre: theatreId})
+            .sort([['begins', 'ascending']])
+            .exec(callback);
+        },
+        
+        ticketClasses: function(callback) {
+          TicketClass.find({theatre: theatreId})
+            .sort([['price', 'descending']])
+            .exec(callback);
+        }
+      }, function(err, results) {
+        if (err) return next(err);
+        
+        var title = results.theatre.name + ': ' + results.theatre.playName + ' - Teatterivaraus';
+        
+        res.render('customerReservation', {
+          title: title,
+          theatre: results.theatre,
+          shows: results.shows,
+          ticketClasses: results.ticketClasses,
+          preFill: reservation,
+          errors: errors
+        });
+      });
+    }
+  });
+}
+
+// GET public form
+exports.publicForm = function(req, res, next) {
+  var formUrl = '/' + req.user._id;
+  res.redirect(formUrl);
 };

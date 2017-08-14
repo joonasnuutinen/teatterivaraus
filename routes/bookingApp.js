@@ -88,6 +88,9 @@ router.get('/asetukset', isLoggedIn, theatreController.settingsGet);
 
 router.post('/asetukset', isLoggedIn, theatreController.settingsPost);
 
+// PUBLIC Form
+router.get('/lomake', isLoggedIn, reservationController.publicForm);
+
 // ========================================================
 // FUNCTIONS ==============================================
 // ========================================================

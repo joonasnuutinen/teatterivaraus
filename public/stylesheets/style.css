@@ -10,3 +10,7 @@ a {
 .hidden {
   display: none;
 }
+
+.ticketClass {
+  text-align: right;
+}

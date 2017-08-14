@@ -131,9 +131,9 @@ app.use(passwordless.sessionSupport());
 app.use(passwordless.acceptToken( { successRedirect: '/app' } ));
 */
 
+app.use('/app', bookingApp);
 app.use('/', index);
 app.use('/users', users);
-app.use('/app', bookingApp);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
