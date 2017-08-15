@@ -71,7 +71,6 @@ exports.settingsPost = function(req, res, next) {
   });
   
   if (errors) {
-    //console.log(errors);
     res.render('settings', {title: 'Asetukset', theatre: theatre, errors: errors});
     return;
   }
@@ -81,6 +80,16 @@ exports.settingsPost = function(req, res, next) {
     res.redirect('/app/asetukset');
   });
 }
+
+// GET JSON
+exports.json = function(req, res, next) {
+  Theatre.findById(req.params.theatreId, 'name playName playDescription shows ticketClasses')
+    .populate('shows ticketClasses')
+    .exec(function(err, results) {
+      if (err) return next(err);
+      res.json(results);
+    });
+};
 
 /*
 // GET sent

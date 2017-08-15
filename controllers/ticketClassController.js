@@ -8,7 +8,7 @@ exports.ticketPrices = function(req, res, next) {
     columnsView: 'name priceWithSymbol',
     columnsEdit: 'name price'
   };
-  res.render('rows', {title: 'Lippujen hinnat', options: options});
+  res.render('rows', {title: 'Lippujen hinnat', options: options, theatre: req.user});
 };
 
 // POST new class

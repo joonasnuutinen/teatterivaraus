@@ -18,9 +18,9 @@ exports.reservations = function(req, res, next) {
     schema: 'reservation',
     columnsView: 'fullName show tickets additionalInfo',
     columnsEdit: 'lastName firstName email phone show ticketClasses additionalInfo',
-    filterAndPrint: true
+    filterAndPrint: true,
   };
-  res.render('rows', {title: 'Varaukset', options: options});
+  res.render('rows', {title: 'Varaukset', options: options, theatre: req.user});
 };
 
 // GET reservations JSON
@@ -252,34 +252,20 @@ exports.printPdf = function(req, res, next) {
 exports.customerGet = function(req, res, next) {
   var theatreId = req.params.theatreId;
   
-  async.parallel({
-    theatre: function(callback) {
-      Theatre.findById(theatreId)
-        .populate('theatre')
-        .exec(callback);
-    },
-    
-    shows: function(callback) {
-      Show.find({theatre: theatreId})
-        .sort([['begins', 'ascending']])
-        .exec(callback);
-    },
-    
-    ticketClasses: function(callback) {
-      TicketClass.find({theatre: theatreId})
-        .sort([['price', 'descending']])
-        .exec(callback);
-    }
-  }, function(err, results) {
+  Theatre.findById(theatreId).exec(function(err, theatre) {
     if (err) return next(err);
     
-    var title = results.theatre.name + ': ' + results.theatre.playName + ' - Teatterivaraus';
+    var title = theatre.name + ': ' + theatre.playName + ' - Teatterivaraus';
+    
+    var options = {
+      schema: 'reservation',
+      columnsEdit: 'firstName lastName email phone show ticketClasses additionalInfo',
+    };
     
     res.render('customerReservation', {
       title: title,
-      theatre: results.theatre,
-      shows: results.shows,
-      ticketClasses: results.ticketClasses
+      theatre: theatre,
+      options: options
     });
   });
 };
@@ -289,9 +275,9 @@ exports.customerPost = function(req, res, next) {
   var tickets = [];
   
   for (var field in req.body) {
-    var re = /ticketClass_(\w+)/;
+    var re = /newTicketClass_(\w+)/;
     var match = field.match(re);
-    if (match !== null) {
+    if (match) {
       req.sanitize(field).escape();
       req.sanitize(field).trim();
       req.sanitize(field).toInt();
@@ -302,77 +288,52 @@ exports.customerPost = function(req, res, next) {
     }
   }
   
-  req.checkBody('lastName', 'Sukunimi puuttuu.').notEmpty();
-  req.checkBody('email', 'Virheellinen sähköposti.').optional({checkFalsy: true}).isEmail();
+  req.checkBody('newFirstName', 'Etunimi puuttuu.').notEmpty();
+  req.checkBody('newLastName', 'Sukunimi puuttuu.').notEmpty();
+  req.checkBody('newEmail', 'Sähköposti puuttuu.').notEmpty();
+  req.checkBody('newEmail', 'Virheellinen sähköposti.').isEmail();
   
-  req.sanitize('lastName').escape();
-  req.sanitize('lastName').trim();
-  req.sanitize('firstName').escape();
-  req.sanitize('firstName').trim();
-  req.sanitize('email').escape();
-  req.sanitize('email').trim();
-  req.sanitize('phone').escape();
-  req.sanitize('phone').trim();
-  req.sanitize('additionalInfo').escape();
-  req.sanitize('additionalInfo').trim();
+  req.sanitize('newLastName').escape();
+  req.sanitize('newLastName').trim();
+  req.sanitize('newFirstName').escape();
+  req.sanitize('newFirstName').trim();
+  req.sanitize('newEmail').escape();
+  req.sanitize('newEmail').trim();
+  req.sanitize('newPhone').escape();
+  req.sanitize('newPhone').trim();
+  req.sanitize('newAdditionalInfo').escape();
+  req.sanitize('newAdditionalInfo').trim();
   
   req.getValidationResult().then(function(errors) {
+    var message = {
+      errors: []
+    };
+    
     if (errors.isEmpty()) {
+      console.log(tickets);
       var reservation = new Reservation({
-        lastName: req.body.lastName,
-        firstName: req.body.firstName,
-        email: req.body.email,
-        phone: req.body.phone,
-        show: req.body.show,
-        info: req.body.additionalInfo,
+        lastName: req.body.newLastName,
+        firstName: req.body.newFirstName,
+        email: req.body.newEmail,
+        phone: req.body.newPhone,
+        show: req.body.newShow,
+        info: req.body.newAdditionalInfo,
         theatre: req.params.theatreId,
         tickets: tickets
       });
       
-      reservation.markModified('tickets'); // TODO: tickets don't get saved!
+      reservation.markModified('tickets');
       
       reservation.save(function(err) {
-        if (err) return next(err);
-        res.redirect('/varaus-onnistui');
-        
+        if (err) {
+          message.errors.push('Varaus epäonnistui, yritä uudelleen.');
+        }
       });
     } else {
-      var errors = errors.useFirstErrorOnly().array();
-      var theatreId = req.params.theatreId;
-      
-      async.parallel({
-        theatre: function(callback) {
-          Theatre.findById(theatreId)
-            .populate('theatre')
-            .exec(callback);
-        },
-        
-        shows: function(callback) {
-          Show.find({theatre: theatreId})
-            .sort([['begins', 'ascending']])
-            .exec(callback);
-        },
-        
-        ticketClasses: function(callback) {
-          TicketClass.find({theatre: theatreId})
-            .sort([['price', 'descending']])
-            .exec(callback);
-        }
-      }, function(err, results) {
-        if (err) return next(err);
-        
-        var title = results.theatre.name + ': ' + results.theatre.playName + ' - Teatterivaraus';
-        
-        res.render('customerReservation', {
-          title: title,
-          theatre: results.theatre,
-          shows: results.shows,
-          ticketClasses: results.ticketClasses,
-          preFill: reservation,
-          errors: errors
-        });
-      });
+      message.errors = message.errors.concat(errors.useFirstErrorOnly().array());
     }
+    
+    res.send(message);
   });
 }
 

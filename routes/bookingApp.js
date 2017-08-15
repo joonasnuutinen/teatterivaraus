@@ -16,6 +16,7 @@ var ticketClassController = require('../controllers/ticketClassController');
 
 var login = '/app/kirjaudu';
 var register = '/app/rekisteroidy';
+var redirectUrl = '/app/varaukset';
 
 // RESERVATIONS =============================
 
@@ -41,7 +42,7 @@ router.get('/kirjaudu', theatreController.loginGet);
 /* POST login */
 router.post('/kirjaudu',
   passport.authenticate('local-login', {
-    successRedirect: '/app/varaukset',
+    successRedirect: redirectUrl,
     failureRedirect: login,
     failureFlash: true
   })
@@ -55,8 +56,8 @@ router.get('/rekisteroidy', theatreController.registerGet);
 
 /* POST register */
 router.post('/rekisteroidy', passport.authenticate('local-signup', {
-  successRedirect: '/app/varaukset',
-  failureRedirect: '/app/rekisteroidy',
+  successRedirect: redirectUrl,
+  failureRedirect: register,
   failureFlash: true
 }));
 
@@ -98,8 +99,8 @@ function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  
-  res.redirect('/app/kirjaudu');
+
+  res.redirect(login);
 }
 
 module.exports = router;

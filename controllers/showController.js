@@ -7,9 +7,9 @@ exports.shows = function(req, res, next) {
   var options = {
     schema: 'show',
     columnsView: 'beginsPretty',
-    columnsEdit: 'date time info'
+    columnsEdit: 'date time info',
   };
-  res.render('rows', {title: 'Näytökset', options: options});
+  res.render('rows', {title: 'Näytökset', options: options, theatre: req.user});
 };
 
 // POST new show

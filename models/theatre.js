@@ -28,6 +28,25 @@ var TheatreSchema = Schema({
   }
 });
 
+// VIRTUALS =========================================
+
+// shows
+TheatreSchema.virtual('shows', {
+  ref: 'Show',
+  localField: '_id',
+  foreignField: 'theatre'
+});
+
+// ticketClasses
+TheatreSchema.virtual('ticketClasses', {
+  ref: 'TicketClass',
+  localField: '_id',
+  foreignField: 'theatre'
+});
+
+// show virtuals
+TheatreSchema.set('toJSON', {virtuals: true});
+
 // METHODS ==========================================
 
 // generate hash

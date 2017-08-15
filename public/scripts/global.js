@@ -1,242 +1,169 @@
-$(document).ready(function() {
-  // options for different schemas
-  var options = {
-    ticketClass: {
-      price: {
-        label: 'Lipun hinta',
-        unit: '€'
-      },
-      name: {
-        label: 'Lippuluokan nimi',
-        placeholder: 'esim. Opiskelijat'
-      }
-    },
-    
-    show: {
-      begins: {
-        label: 'Näytöksen alkamisaika'
-      },
-      info: {
-        label: 'Näytöksen kuvaus (valinnainen)',
-        placeholder: 'esim. Valaistu yönäytös'
-      },
-      year: {
-        label: 'Vuosi'
-      },
-      month: {
-        label: 'Kuukausi'
-      },
-      day: {
-        label: 'Päivä'
-      },
-      hour: {
-        label: 'Tunti'
-      },
-      minute: {
-        label: 'Minuutti'
-      },
-      date: {
-        label: 'Esityspäivä',
-        placeholder: 'pp.kk.vvvv'
-      },
-      time: {
-        label: 'Kellonaika',
-        placeholder: 'hh.mm'
-      }
-    },
-    
-    reservation: {
-      added: {
-        label: 'Lisätty'
-      },
-      lastName: {
-        label: 'Sukunimi'
-      },
-      firstName: {
-        label: 'Etunimi'
-      },
-      email: {
-        label: 'Sähköposti'
-      },
-      phone: {
-        label: 'Puhelin'
-      },
-      show: {
-        label: 'Näytös'
-      },
-      additionalInfo: {
-        label: 'Lisätietoja'
-      },
-      tickets: {
-        unit: 'kpl'
-      }
-    }
-  };
-  
-  // if data-schema is provided, add content handling functionality
-  if ($('.content').attr('data-schema')) {
-    var schemaOptions = options[$('.content').attr('data-schema')];
-    resetContent(schemaOptions);
-    userEvents(schemaOptions);
-    if ($('#filter').length > 0) initFilter();
-  }
-});
+// ===================================================================
+// GLOBAL FUNCTIONS ==================================================
+// ===================================================================
 
-// ================================================================
-// INITIAL FUNCTIONS ==============================================
-// ================================================================
-
-// reset content to its initial view
-function resetContent(schemaOptions) {
-  // create new row div and buttons
-  var newRowHtml = '<div class="fields"></div>';
-  newRowHtml += '<button class="edit-row">Lisää uusi</button>';
-  newRowHtml += '<button class="save-row hidden">Tallenna</button>';
-  newRowHtml += '<button class="cancel-row hidden">Peruuta</button>';
+// create and show form
+function showForm(id, data, schemaOptions, idPrefix) {  
+  var fieldHtml = '';
+  var columns = $('.content').attr('data-columns-edit').split(' ');
+  var jsonUrl = '/' + $('.content').attr('data-theatre') + '.json';
   
-  $('#newRow').html(newRowHtml);
+  var fieldsDiv = document.createElement('div');
+  fieldsDiv.className = 'fields';
   
-  populateRows(schemaOptions);
-}
-
-// populate data
-function populateRows(schemaOptions) {
-  var params = {
-    keyword: $('#keyword').val(),
-    show: $('#filter').val()
-  };
-  var url = createUrl('json', params);
-  $.getJSON(url, function(data) {
-    var columns = $('.content').attr('data-columns-view').split(' ');
-    var allRows = '';
-    data.forEach(function(item) {
-      allRows += '<div class="row" id="' + item._id + '">';
-      allRows += '<div class="fields">';
+  $.getJSON(jsonUrl, function(theatre) {
+    columns.forEach(function(column) {
+      var formGroup;
       
-      columns.forEach(function(column) {
-        if (column === 'show') {
-          allRows += '<div class="show">';
-          allRows += (item.show !== null) ? item.show.beginsPretty : 'POISTETTU NÄYTÖS';
-          allRows += '</div>';
-        } else if (column === 'tickets') {
-          var price = item.total.priceString;
-          var amount = item.total.tickets;
-          var unit = (amount == 1) ? 'lippu' : 'lippua';
-          allRows += '<div class="tickets">' + amount + ' ' + unit + ', ' + price + '</div>';
-        } else if(item[column]) {
-          allRows += '<div class="' + column + '">' + item[column] + '</div>';
-        }
+      // add ticket class number inputs
+      if (column === 'ticketClasses') {
+        formGroup = createTicketClassGroup(data, schemaOptions, theatre.ticketClasses, idPrefix);
         
-      });
+      // add show select
+      } else if (column === 'show') {
+        formGroup = createShowGroup(data, schemaOptions, idPrefix, theatre.shows);
       
-      allRows += '</div>';
-      
-      allRows += '<button class="edit-row">Muokkaa</button>';
-      allRows += '<button class="delete-row">Poista</button>';
-      allRows += '<button class="save-row hidden">Tallenna</button>';
-      allRows += '<button class="cancel-row hidden">Peruuta</button>';
-      allRows += '</div>';
-    });
-    $('.rows').html(allRows);
-  });
-}
-
-// initialize filter
-function initFilter() {
-  populateSelect('#filter');
-}
-
-// add listeners to user events
-function userEvents(schemaOptions) {  
-  $('.content').on('click', '.edit-row', function() {
-    editRow($(this).parent().attr('id'), schemaOptions);
-  });
-  
-  $('.content').on('click', '.delete-row', function() {
-    deleteRow($(this).parent().attr('id'), schemaOptions);
-  });
-  
-  $('.content').on('click', '.save-row', function() {
-    saveEdit($(this).parent().attr('id'), schemaOptions);
-  });
-  
-  $('.content').on('click', '.cancel-row', function() {
-    cancelEdit($(this).parent().attr('id'), schemaOptions);
-  });
-  
-  $('#keyword').on('input', function() {
-    populateRows(schemaOptions);
-  });
-  
-  $('#filter').on('input', function() {
-    var printButton = $('#print');
-    if ($(this).val() === '') {
-      printButton.addClass('hidden');
-    } else {
-      printButton.removeClass('hidden');
-    }
-    populateRows(schemaOptions);
-  });
-  
-  $('#print').on('click', function() {
-    printReservations();
-  });
-}
-
-// ================================================================
-// USER EVENT FUNCTIONS ===========================================
-// ================================================================
-
-// create form for new or edited row
-function editRow(id, schemaOptions) {
-  switch (id) {
-    case 'newRow':
-      // show new form with no existing data
-      showForm(id, null, schemaOptions, 'new');
-      break;
-    default:
-      // populate row with its data
-      $.getJSON(document.location.pathname + '/' + id, function(data) {
-        showForm(id, data, schemaOptions, 'edited');
-      });
-  }
-  
-  // hide or disable buttons
-  var row = $('#' + id);
-  row.children('.save-row, .cancel-row').removeClass('hidden');
-  row.children('.edit-row, .delete-row').addClass('hidden');
-  $('.edit-row, .add-row, .delete-row').prop('disabled', true);
-  $('.errors').html('');
-}
-
-// delete row
-function deleteRow(id, schemaOptions) {
-  $('.errors').html('');
-  var confirmation = confirm('Haluatko varmasti poistaa rivin lopullisesti?');
-  
-  if (confirmation) {
-    $.ajax({
-      type: 'DELETE',
-      url: document.location.pathname + '/' + id
-    }).done(function(response) {
-      if (response.errors.length === 0) {
-        cancelEdit(id, schemaOptions);
+      // add text input
       } else {
-        var errors = '';
-        response.errors.forEach(function(error) {
-          errors += error.msg + '<br>';
-        });
-        $('.errors').html(errors);
+        formGroup = createTextGroup(data, schemaOptions, idPrefix, column);
       }
+      
+      fieldsDiv.appendChild(formGroup);
     });
+
+    $('#' + id + ' > .fields')[0].replaceWith(fieldsDiv);
+  });
+}
+
+// create form group for ticket classes
+function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
+  var ticketClassesDiv = document.createElement('div');
+  ticketClassesDiv.className = 'ticket-classes';
+  
+  ticketClasses.forEach(function(ticketClass, index) {
+    var inputId = idPrefix + 'TicketClass_' + ticketClass._id;
+    
+    var formGroupDiv = document.createElement('div');
+    formGroupDiv.className = 'form-group';
+    
+    var ticketClassLabel = document.createElement('label');
+    ticketClassLabel.setAttribute('for', inputId);
+    ticketClassLabel.textContent = ticketClass.fullName;
+    
+    var numberField;
+    
+    if (schemaOptions.tickets.input) {
+      numberField = document.createElement('input');
+      numberField.setAttribute('type', 'number');
+      numberField.min = '0';
+      numberField.value = data && data.tickets[index] ? data.tickets[index].amount : '0';
+    } else {
+      numberField = document.createElement('select');
+      
+      for (var i = 0; i <= 10; i++) {
+        var numberOption = document.createElement('option');
+        numberOption.value = i;
+        numberOption.text = i;
+        numberField.add(numberOption);
+      }
+    }
+    
+    numberField.className = 'edited-field';
+    numberField.id = inputId;
+ 
+    var unitSpan = document.createElement('span');
+    unitSpan.className = 'unit';
+    unitSpan.textContent = 'kpl';
+    
+    formGroupDiv.appendChild(ticketClassLabel);
+    formGroupDiv.appendChild(numberField);
+    formGroupDiv.appendChild(unitSpan);
+    
+    ticketClassesDiv.appendChild(formGroupDiv);
+  });
+  
+  return ticketClassesDiv;
+}
+
+// create form group for text input
+function createTextGroup(data, schemaOptions, idPrefix, column) {
+  var placeholder = schemaOptions[column].placeholder;
+  var unit = schemaOptions[column].unit;
+  var inputId = idPrefix + capital(column);
+  
+  var textDiv = document.createElement('div');
+  textDiv.className = 'form-group';
+  
+  var textLabel = document.createElement('label');
+  textLabel.setAttribute('for', inputId);
+  textLabel.textContent = schemaOptions[column].label;
+  
+  var textInput = document.createElement('input');
+  textInput.setAttribute('type', 'text');
+  textInput.className = 'edited-field';
+  textInput.id = inputId;
+  textInput.placeholder = placeholder ? placeholder : '';
+  textInput.value = data ? data[column] : '';
+  
+  var unitSpan = document.createElement('span');
+  unitSpan.className = 'unit';
+  unitSpan.textContent = unit ? unit : '';
+  
+  textDiv.appendChild(textLabel);
+  textDiv.appendChild(textInput);
+  textDiv.appendChild(unitSpan);
+  
+  return textDiv;
+}
+
+// create form group for show
+function createShowGroup(data, schemaOptions, idPrefix, shows) {
+  var selectId = idPrefix + 'Show';
+  
+  var showDiv = document.createElement('div');
+  showDiv.className = 'form-group';
+  
+  var showLabel = document.createElement('label');
+  showLabel.setAttribute('for', selectId);
+  showLabel.textContent = schemaOptions.show.label;
+  
+  var showSelect = document.createElement('select');
+  showSelect.className = 'edited-field show-select';
+  showSelect.id = selectId;
+  
+  showSelect = populateSelect(showSelect, data, shows);
+  
+  showDiv.appendChild(showLabel);
+  showDiv.appendChild(showSelect);
+  
+  return showDiv;
+}
+
+// populate select item with shows
+function populateSelect(node, data, shows) {
+  shows.forEach(function(show) {
+    var optionObject = document.createElement('option');
+    optionObject.value = show._id;
+    optionObject.text = show.beginsPretty;
+    node.add(optionObject);
+  });
+  
+  if (data) {
+    node.value = data.show;
   }
+  
+  return node;
+}
+
+// capitalize first letter of string
+function capital(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 // save row to database
-function saveEdit(id, schemaOptions) {
+function saveEdit(id, schemaOptions, ajaxUrl, callback) {
   var newData = {};
   var ajaxType = 'PUT';
-  var ajaxUrl = document.location.pathname + '/' + id;
   
   // if new row, AJAX type and url are different
   if (id === 'newRow') {
@@ -255,7 +182,7 @@ function saveEdit(id, schemaOptions) {
     dataType: 'JSON'
   }).done(function(response) {
     if (response.errors.length === 0) {
-      cancelEdit(id, schemaOptions);
+      callback(id, schemaOptions);
     } else {
       var errors = '';
       response.errors.forEach(function(error) {
@@ -264,106 +191,4 @@ function saveEdit(id, schemaOptions) {
       $('.errors').html(errors);
     }
   });
-}
-
-// cancel editing row
-function cancelEdit(id, schemaOptions) {
-  resetContent(schemaOptions);
-  $('.errors').html('');
-  $('.add-row').prop('disabled', false);
-}
-
-// print reservations
-function printReservations() {
-  var selectedShowId = $('#filter').val();
-  var selectedShowName = $('#filter')[0].selectedOptions[0].innerText;
-  var printUrl = '/app/varaukset/tulosta/' + selectedShowId;
-  window.open(printUrl, '_blank');
-}
-
-// ================================================================
-// OTHER FUNCTIONS ================================================
-// ================================================================
-
-// create and show form
-function showForm(id, data, schemaOptions, idPrefix) {
-  var fieldHtml = '';
-  var columns = $('.content').attr('data-columns-edit').split(' ');
-  
-  columns.forEach(function(column) {
-    if (column === 'ticketClasses') {
-      fieldHtml += '<div class="ticket-classes"></div>';
-      $.getJSON('/app/lippujen-hinnat/json', function(ticketClasses) {
-        var ticketClassHtml = '';
-        ticketClasses.forEach(function(ticketClass, index) {
-          var inputId = idPrefix + 'TicketClass_' + ticketClass._id;
-          ticketClassHtml += '<div class="form-group">';
-          ticketClassHtml += '<label for="' + inputId + '">';
-          ticketClassHtml += ticketClass.fullName;
-          ticketClassHtml += '</label>';
-          ticketClassHtml += '<input type="number" min="0" class="edited-field" id="' + inputId + '" value="';
-          
-          ticketClassHtml += (data.tickets[index]) ? data.tickets[index].amount : '0';
-          ticketClassHtml += '"> kpl</div>';
-        });
-        $('.ticket-classes').html(ticketClassHtml);
-      });
-    } else if (column === 'show') {
-      var selectId = idPrefix + 'Show';
-      fieldHtml += '<div class="form-group">';
-      fieldHtml += '<label for="' + selectId + '">';
-      fieldHtml += schemaOptions.show.label;
-      fieldHtml += '</label>';
-      fieldHtml += '<select class="edited-field show-select" id="' + selectId + '"></select></div>';
-      
-      populateSelect('.show-select', data);
-    } else {
-      var inputId = idPrefix + capital(column);
-      fieldHtml += '<div class="form-group">';
-      fieldHtml += '<label for="' + inputId + '">';
-      fieldHtml += schemaOptions[column].label;
-      fieldHtml += '</label>';
-      fieldHtml += '<input type="text" class="edited-field" id="' + inputId + '" value="';
-      fieldHtml += (data === null) ? '' : data[column];
-      fieldHtml += '" placeholder="';
-      fieldHtml += (typeof(schemaOptions[column].placeholder) === 'undefined') ? '' : schemaOptions[column].placeholder;
-      fieldHtml += '">';
-      fieldHtml += (typeof(schemaOptions[column].unit) === 'undefined') ? '' : ' ' + schemaOptions[column].unit;
-      fieldHtml += '</div>';
-    }
-  });
-  
-  $('#' + id + ' > .fields').html(fieldHtml);
-}
-
-// populate select item with shows
-function populateSelect(selector, data) {
-  $.getJSON('/app/naytokset/json', function(shows) {
-    shows.forEach(function(show) {
-      var optionObject = document.createElement('option');
-      optionObject.setAttribute('value', show._id);
-      optionObject.text = show.beginsPretty;
-      $(selector)[0].add(optionObject);
-    });
-    if (data) {
-      $(selector)[0].value = data.show;
-    }
-  });
-}
-
-// capitalize first letter of string
-function capital(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-// create AJAX url
-function createUrl(subPath, paramObject) {
-  var url = document.location.pathname + '/' + subPath;
-  if (paramObject) {
-    url += '?';
-    for (var param in paramObject) {
-      url += param + '=' + paramObject[param] + '&';
-    }
-  }
-  return url;
 }
