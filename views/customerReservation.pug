@@ -1,49 +1,16 @@
-extends layout
-
-block content
-  - var description = theatre.name + ': ' + theatre.playName;
-  h1 Lippuvaraus
-  span= description
-  
-  if errors
-    each error in errors
-      .error= error.msg
-  
-  form(action='' method='POST')
-    .form-group
-      label(for='firstName') Etunimi
-      input#firstName(type='text' name='firstName')
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+    script(src='/scripts/global.js')
+    script(src='/scripts/reservationFront.js')
+  body
+    - var description = theatre.name + ': ' + theatre.playName;
+    h1 Lippuvaraus
+    span= description
     
-    .form-group
-      label(for='lastName') Sukunimi
-      input#lastName(type='text' name='lastName')
-    
-    .form-group
-      label(for='email') Sähköposti
-      input#email(type='email' name='email')
-    
-    .form-group
-      label(for='phone') Puhelin
-      input#phone(type='text' name='phone')
-    
-    .form-group
-      label(for='show') Näytös
-      select#show(name='show')
-        each show in shows
-          option(value=show._id)= show.beginsPretty
-    
-    each ticketClass in ticketClasses
-      - var inputId = 'ticketClass_' + ticketClass._id;
-      .form-group
-        label(for=inputId)= ticketClass.fullName
-        select.ticketClass#inputId(name='inputId')
-          - var i = 0;
-          while i <= 10
-            option(value=i)= i++
-    
-    .form-group
-      label(for='additionalInfo') Lisätietoja
-      input#additionalInfo(type='text' name='additionalInfo')
-    
-    .form-group
-      input(type='submit' value='Varaa')
+    .content(data-schema=options.schema data-columns-edit=options.columnsEdit data-theatre=theatre._id)
+    .errors
+    .row#newRow
