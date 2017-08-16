@@ -66,7 +66,8 @@ $(function() {
         label: 'Näytös'
       },
       additionalInfo: {
-        label: 'Lisätietoja'
+        label: 'Lisätietoja',
+        textArea: true
       },
       tickets: {
         unit: 'kpl',
@@ -161,8 +162,7 @@ function userEvents(schemaOptions) {
   });
   
   $('.content').on('click', '.save-row', function() {
-    var ajaxUrl = document.location.pathname + '/' + id;
-    saveEdit($(this).parent().attr('id'), schemaOptions, ajaxUrl, cancelEdit);
+    saveEdit($(this).parent().attr('id'), schemaOptions, cancelEdit);
   });
   
   $('.content').on('click', '.cancel-row', function() {

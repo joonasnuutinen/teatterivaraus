@@ -2,10 +2,22 @@ var async = require('async');
 var request = require('request');
 var pdf = require('html-pdf');
 var fs = require('fs');
+var email = require('emailjs');
+var dotenv = require('dotenv');
 var Reservation = require('../models/reservation');
 var TicketClass = require('../models/ticketClass');
 var Show = require('../models/show');
 var Theatre = require('../models/theatre');
+
+dotenv.load();
+
+var smtpServer = email.server.connect({
+  user: process.env.SMTP_USER,
+  password: process.env.SMTP_PASSWORD,
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  tls: true
+});
 
 // GET app index page
 exports.index = function(req, res, next) {
@@ -51,6 +63,7 @@ exports.getJSON = function(req, res, next) {
 // GET one reservation in JSON format
 exports.getById = function(req, res, next) {
   Reservation.findById(req.params.id)
+    .populate('show tickets.ticketClass')
     .exec(function(err, data) {
       if (err) return next(err);
       res.json(data);
@@ -102,7 +115,7 @@ exports.post = function(req, res, next) {
         email: req.body.newEmail,
         phone: req.body.newPhone,
         show: req.body.newShow,
-        info: req.body.newInfo,
+        additionalInfo: req.body.newAdditionalInfo,
         theatre: req.user._id,
         tickets: tickets
       });
@@ -167,7 +180,7 @@ exports.put = function(req, res, next) {
         email: req.body.editedEmail,
         phone: req.body.editedPhone,
         show: req.body.editedShow,
-        info: req.body.editedInfo,
+        additionalInfo: req.body.editedAdditionalInfo,
         theatre: req.user._id,
         tickets: tickets,
         _id: req.params.id
@@ -310,14 +323,13 @@ exports.customerPost = function(req, res, next) {
     };
     
     if (errors.isEmpty()) {
-      console.log(tickets);
       var reservation = new Reservation({
         lastName: req.body.newLastName,
         firstName: req.body.newFirstName,
         email: req.body.newEmail,
         phone: req.body.newPhone,
         show: req.body.newShow,
-        info: req.body.newAdditionalInfo,
+        additionalInfo: req.body.newAdditionalInfo,
         theatre: req.params.theatreId,
         tickets: tickets
       });
@@ -327,6 +339,9 @@ exports.customerPost = function(req, res, next) {
       reservation.save(function(err) {
         if (err) {
           message.errors.push('Varaus epäonnistui, yritä uudelleen.');
+        } else {
+          //console.log(reservation);
+          sendEmailConfirmation(reservation._id);
         }
       });
     } else {
@@ -342,3 +357,72 @@ exports.publicForm = function(req, res, next) {
   var formUrl = '/' + req.user._id;
   res.redirect(formUrl);
 };
+
+// ===========================================================================
+// FUNCTIONS =================================================================
+// ===========================================================================
+
+function sendEmailConfirmation(id) {
+  Reservation.findById(id)
+    .populate('show theatre tickets.ticketClass')
+    .exec(function(err, reservation) {
+      if (err) return;
+      
+      // ---------------------------------------------------------------------
+      // email body starts ---------------------------------------------------
+      // ---------------------------------------------------------------------
+      var body = 'Kiitos varauksestasi!\n\n';
+      
+      body += 'Varauksen tiedot:\n\n';
+      
+      body += reservation.theatre.name + ': ' + reservation.theatre.playName + '\n';
+      body += reservation.show.beginsPretty + '\n\n';
+      
+      body += reservation.fullName + '\n';
+      body += reservation.email + '\n';
+      body += reservation.phone ? reservation.phone + '\n\n' : '\n';
+      
+      body += reservation.additionalInfo ? 'Lisätietoja: ' + reservation.additionalInfo + '\n\n' : '';
+      
+      body += reservation.total.code.replace(/<br>/g, '\n') + '\n\n';
+      
+      body += 'Yhteensä: ' + reservation.total.priceString + '\n\n';
+      // ---------------------------------------------------------------------
+      // email body ends -----------------------------------------------------
+      // ---------------------------------------------------------------------
+      
+      var message = {
+        text: body,
+        from: reservation.theatre.name + ' <' + reservation.theatre.email + '>',
+        to: reservation.email,
+        "reply-to": reservation.theatre.email,
+        subject: 'Lippuvarauksesi on vastaanotettu'
+      };
+      
+      smtpServer.send(message, function(err) {
+        if (err) console.log(err);
+      });
+      
+      if (reservation.additionalInfo) {
+        // -------------------------------------------------------------------
+        // email body starts -------------------------------------------------
+        // -------------------------------------------------------------------
+        var enquiryBody = reservation.additionalInfo + '\n\n';
+        
+        enquiryBody += '(Tämän viestin lähetti Teatterivarauksen automaattisuodatin.)';
+        // -------------------------------------------------------------------
+        // email body ends ---------------------------------------------------
+        // -------------------------------------------------------------------
+        
+        smtpServer.send({
+          text: enquiryBody,
+          from: reservation.firstName + ' ' + reservation.lastName + ' <' + reservation.email + '>',
+          to: reservation.theatre.email,
+          "reply-to": reservation.email,
+          subject: 'Teatterivaraus: Tiedustelu esityksestä ' + reservation.theatre.playName
+        }, function(err) {
+          if (err) console.log(err);
+        });
+      }
+    });
+}

@@ -16,7 +16,8 @@ $(function() {
       label: 'Näytös'
     },
     additionalInfo: {
-      label: 'Lisätietoja'
+      label: 'Lisätietoja',
+      textArea: true
     },
     tickets: {
       unit: 'kpl',
@@ -37,7 +38,7 @@ function resetView(schemaOptions) {
 // user events
 function userEvents(schemaOptions) {
   $('#newRow').on('click', '.save-row', function() {
-    saveEdit('newRow', schemaOptions, '', success);
+    saveEdit('newRow', schemaOptions, success);
   });
 }
 

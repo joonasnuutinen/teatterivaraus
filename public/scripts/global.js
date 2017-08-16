@@ -98,8 +98,15 @@ function createTextGroup(data, schemaOptions, idPrefix, column) {
   textLabel.setAttribute('for', inputId);
   textLabel.textContent = schemaOptions[column].label;
   
-  var textInput = document.createElement('input');
-  textInput.setAttribute('type', 'text');
+  var textInput;
+  
+  if (schemaOptions[column].textArea) {
+    textInput = document.createElement('TEXTAREA');
+  } else {
+    textInput = document.createElement('input');
+    textInput.setAttribute('type', 'text');
+  }
+
   textInput.className = 'edited-field';
   textInput.id = inputId;
   textInput.placeholder = placeholder ? placeholder : '';
@@ -139,6 +146,8 @@ function createShowGroup(data, schemaOptions, idPrefix, shows) {
   return showDiv;
 }
 
+// create form group for 
+
 // populate select item with shows
 function populateSelect(node, data, shows) {
   shows.forEach(function(show) {
@@ -161,9 +170,10 @@ function capital(string) {
 }
 
 // save row to database
-function saveEdit(id, schemaOptions, ajaxUrl, callback) {
+function saveEdit(id, schemaOptions, callback) {
   var newData = {};
   var ajaxType = 'PUT';
+  var ajaxUrl = document.location.pathname + '/' + id;
   
   // if new row, AJAX type and url are different
   if (id === 'newRow') {
