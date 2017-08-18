@@ -78,14 +78,16 @@ exports.post = function(req, res, next) {
     var re = /newTicketClass_(\w+)/;
     var match = field.match(re);
     if (match !== null) {
-      req.checkBody(field, 'Lippujen määrän on oltava kokonaisluku ja vähintään 0.').optional({checkFalsy: true}).isInt({min: 0});
+      req.checkBody(field, 'Lippujen määrän on oltava kokonaisluku ja vähintään 0.').isInt({min: 0});
       req.sanitize(field).escape();
       req.sanitize(field).trim();
       req.sanitize(field).toInt();
-      tickets.push({
-        ticketClass: match[1],
-        amount: req.body[field]
-      });
+      if (req.body[field] > 0) {
+        tickets.push({
+          ticketClass: match[1],
+          amount: req.body[field]
+        });
+      }
     }
   }
   
@@ -143,14 +145,16 @@ exports.put = function(req, res, next) {
     var re = /editedTicketClass_(\w+)/;
     var match = field.match(re);
     if (match !== null) {
-      req.checkBody(field, 'Lippujen määrän on oltava kokonaisluku ja vähintään 0.').optional({checkFalsy: true}).isInt({min: 0});
+      req.checkBody(field, 'Lippujen määrän on oltava kokonaisluku ja vähintään 0.').isInt({min: 0});
       req.sanitize(field).escape();
       req.sanitize(field).trim();
       req.sanitize(field).toInt();
-      tickets.push({
-        ticketClass: match[1],
-        amount: req.body[field]
-      });
+      if (req.body[field] > 0) {
+        tickets.push({
+          ticketClass: match[1],
+          amount: req.body[field]
+        });
+      }
     }
   }
   
@@ -221,6 +225,25 @@ exports.delete = function(req, res, next) {
 // GET stats
 exports.stats = function(req, res, next) {
   res.render('stats', {title: 'Varaustilanne'});
+};
+
+// get stats for one show
+exports.showStats = function(req, res, next) {
+  async.parallel({
+    reservations: function(callback) {
+      Reservation.find().exec(callback);
+    },
+    shows: function(callback) {
+      Show.find().sort([['begins', 'ascending']]);
+    },
+    ticketClasses: function(callback) {
+      TicketClass.find().sort([['price', 'descending'], ['name', 'ascending']]).exec(callback);
+    }, function(err, data) {
+      if (err) return next(err);
+      data.ticketClasses.forEach();
+    }
+  });
+  
 };
 
 // print reservations in html format

@@ -50,7 +50,7 @@ exports.newTicketPost = function(req, res, next) {
 // ticket prices JSON get
 exports.ticketPricesJSON = function(req, res, next) {
   TicketClass.find({theatre: req.user._id})
-    .sort([['price', 'descending']])
+    .sort([['price', 'descending'], ['name', 'ascending']])
     .exec(function(err, ticketClasses) {
       if (err) return next(err);
       res.json(ticketClasses);
@@ -78,10 +78,6 @@ exports.delete = function(req, res, next) {
       var tickets = reservations[i].tickets;
       for (var j = 0; j < tickets.length; j++) {
         var ticket = tickets[j];
-        console.log(ticket);
-        console.log(req.params.id);
-        console.log(ticket.ticketClass == req.params.id);
-        console.log('==========================='); // tutki, miksi ei löydy
         if (ticket.ticketClass == req.params.id && ticket.amount !== 0) {
           foundTicketClass = true;
           break;

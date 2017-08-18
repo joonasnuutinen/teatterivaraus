@@ -1,5 +1,7 @@
+var async = require('async');
 var Theatre = require('../models/theatre');
-//var Play = require('../models/play');
+var Show = require('../models/show');
+var TicketClass = require('../models/ticketClass');
 var registerTitle = 'Rekisteröidy';
 
 // GET login
@@ -83,12 +85,24 @@ exports.settingsPost = function(req, res, next) {
 
 // GET JSON
 exports.json = function(req, res, next) {
-  Theatre.findById(req.params.theatreId, 'name playName playDescription shows ticketClasses')
-    .populate('shows ticketClasses')
-    .exec(function(err, results) {
-      if (err) return next(err);
-      res.json(results);
-    });
+  async.parallel({
+    theatre: function(callback) {
+      Theatre.findById(req.params.theatreId, 'name playName playDescription').exec(callback);
+    },
+    shows: function(callback) {
+      Show.find({theatre: req.params.theatreId}).sort([['begins', 'ascending']]).exec(callback);
+    },
+    ticketClasses: function(callback) {
+      TicketClass.find({theatre: req.params.theatreId})
+        .sort([['price', 'descending'], ['name', 'ascending']])
+        .exec(callback);
+    }
+  }, function(err, data) {
+    if (err) return next(err);
+    data.theatre.shows = data.shows;
+    data.theatre.ticketClasses = data.ticketClasses;
+    res.json(data.theatre);
+  });
 };
 
 /*
