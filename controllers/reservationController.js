@@ -224,7 +224,37 @@ exports.delete = function(req, res, next) {
 
 // GET stats
 exports.stats = function(req, res, next) {
-  res.render('stats', {title: 'Varaustilanne'});
+  async.parallel({
+    reservations: function(callback) {
+      Reservation.find({theatre: req.user._id}).exec(callback);
+    },
+    shows: function(callback) {
+      Show.find({theatre: req.user._id})
+        .sort([['begins', 'ascending']])
+        .lean({virtuals: true})
+        .exec(callback);
+    }
+  }, function(err, data) {
+    if (err) return next(err);
+    var total = 0;
+    
+    data.shows.forEach(function(show) {
+      show.reservationCount = 0;
+    });
+    
+    data.reservations.forEach(function(reservation) {
+      var showId = reservation.show;
+      var ticketAmount = reservation.total.tickets;
+      var showIndex = data.shows.findIndex(function(show) {
+        return showId.equals(show._id);
+      });
+      
+      data.shows[showIndex].reservationCount += ticketAmount;
+      total += ticketAmount;
+    });
+    console.log(data.shows);
+    res.render('stats', {title: 'Varaustilanne', shows: data.shows, total: total});
+  });
 };
 
 // get stats for one show

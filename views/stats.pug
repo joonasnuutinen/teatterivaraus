@@ -2,3 +2,17 @@ extends layout_app
 
 block content
   h1= title
+  
+  table.table.table-responsive
+    thead.thead-default
+      tr
+        th Esitys
+        th Varauksia
+    tbody
+      each show in shows
+        tr
+          td= show.beginsPretty
+          td.text-right= show.reservationCount
+      tr.table-info
+        th(scope='row') Yhteensä
+        td.text-right= total

@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var moment = require('moment');
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
 
 var Schema = mongoose.Schema;
 
@@ -21,6 +22,7 @@ var ShowSchema = Schema({
   }
 });
 
+/*
 // virtual for year
 ShowSchema
   .virtual('year')
@@ -41,6 +43,7 @@ ShowSchema
   .get(function() {
     return moment(this.begins).format('D');
 });
+*/
 
 // virtual for weekday
 ShowSchema
@@ -49,6 +52,7 @@ ShowSchema
     return moment(this.begins).format('d');
 });
 
+/*
 // virtual for hour
 ShowSchema
   .virtual('hour')
@@ -62,12 +66,13 @@ ShowSchema
   .get(function() {
     return moment(this.begins).format('mm');
 });
+*/
 
 // virtual for pretty date
 ShowSchema
   .virtual('beginsPretty')
   .get(function() {
-    var weekdays = ['su', 'ma', 'ti', 'ke', 'to', 'pe', 'la'];
+    const weekdays = ['su', 'ma', 'ti', 'ke', 'to', 'pe', 'la'];
     return weekdays[this.weekday] + ' ' + moment(this.begins).format('D.M.YYYY [klo] H.mm') + ' ' + this.info;
 });
 
@@ -84,6 +89,9 @@ ShowSchema
   .get(function() {
     return moment(this.begins).format('H.mm');
 });
+
+ShowSchema.plugin(mongooseLeanVirtuals);
+
 
 // show virtuals
 ShowSchema.set('toJSON', {virtuals: true});
