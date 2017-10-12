@@ -14,6 +14,7 @@ var validator = require('validator');
 var expressValidator = require('express-validator');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var expressTitle = require('express-title');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -83,6 +84,12 @@ passwordless.addDelivery(function(token, uid, recipient, callback) {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+/*
+// title setup
+app.use(expressTitle('%title% - %base%'));
+app.set('title', 'Teatterivaraus');
+*/
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

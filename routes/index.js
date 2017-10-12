@@ -7,7 +7,7 @@ var theatreController = require('../controllers/theatreController');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Etusivu' });
 });
 
 // GET theatre JSON
