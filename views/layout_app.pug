@@ -2,27 +2,35 @@ doctype html
 html(lang='fi')
   meta(charset='utf-8')
   meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+  
   head
     title= title + ' - Teatterivaraus'
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css', integrity='sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M' crossorigin='anonymous')
     link(rel='stylesheet', href='/stylesheets/style.css')
+  
   body
-    ul.navigation
-      li
-        a(href='/app/varaukset') Varaukset
-      li
-        a(href='/app/varaustilanne') Varaustilanne
-      li
-        a(href='/app/naytokset') Näytökset
-      li
-        a(href='/app/lippujen-hinnat') Lippujen hinnat
-      li
-        a(href='/app/asetukset') Asetukset
-      li
-        a(href='/app/lomake' target='_blank') Julkinen varauslomake
-      li
-        a(href='/app/kirjaudu-ulos') Kirjaudu ulos
-    block content
+    header
+      nav.navbar.navbar-expand-md.navbar-dark.bg-dark
+        a.navbar-brand(href='/app') Teatterivaraus
+        button.navbar-toggler(type='button' data-toggle='collapse' data-target='#sidebar' aria-controls='sidebar' aria-expanded='false' aria-label='Avaa tai sulje valikko')
+          span.navbar-toggler-icon
+        
+        .navbar-nav.ml-auto.d-none.d-md-flex
+          a.nav-item.nav-link(href='/app/kirjaudu-ulos') Kirjaudu ulos
+    
+    .container-fluid
+      .row
+        .sidebar-col.col-12.col-md-3.col-xl-2.pl-0.bg-dark
+          nav.collapse.d-md-block#sidebar
+            each navItem in [{title: 'Varaukset', href: '/app/varaukset'}, {title: 'Varaustilanne', href: '/app/varaustilanne'}, {title: 'Näytökset', href: '/app/naytokset'}, {title: 'Lippujen hinnat', href: '/app/lippujen-hinnat'}, {title: 'Asetukset', href: '/app/asetukset'}]
+              - var isActive = (navItem.title == title)
+              - var className = (isActive ? 'nav-link active' : 'nav-link')
+              a(class=className href=navItem.href)= navItem.title
+            
+            a.nav-link(href='/app/lomake' target='_blank') Julkinen varauslomake
+            a.nav-link.d-md-none(href='/app/kirjaudu-ulos') Kirjaudu ulos
+        .col
+          block content
     
     script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f' crossorigin='anonymous')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js' integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4' crossorigin='anonymous')

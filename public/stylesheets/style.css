@@ -6,10 +6,28 @@ button {
   cursor: pointer;
 }
 
+.sidebar-col a {
+  color: rgba(255, 255, 255, .5);
+}
+
+.sidebar-col a:hover {
+  color: rgba(255, 255, 255, .75);
+}
+
+.sidebar-col a.active {
+  color: #fff;
+}
+
 .hidden {
   display: none;
 }
 
 .ticketClass {
   text-align: right;
+}
+
+@media screen and (min-width: 768px) {
+  .sidebar-col {
+    min-height: calc(100vh - 56px);
+  }
 }
