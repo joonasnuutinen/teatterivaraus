@@ -73,6 +73,26 @@ $(function() {
         unit: 'kpl',
         input: true
       }
+    },
+    
+    sponsor: {
+      name: {
+        label: 'Nimi'
+      },
+      
+      description: {
+        label: 'Kuvaus',
+        textArea: true
+      },
+      
+      url: {
+        label: 'Web-osoite'
+      },
+      
+      order: {
+        label: 'Järjestys',
+        hidden: true
+      }
     }
   };
   
@@ -93,9 +113,9 @@ $(function() {
 function resetContent(schemaOptions) {
   // create new row div and buttons
   var newRowHtml = '<div class="fields"></div>';
-  newRowHtml += '<button class="edit-row">Lisää uusi</button>';
-  newRowHtml += '<button class="save-row hidden">Tallenna</button>';
-  newRowHtml += '<button class="cancel-row hidden">Peruuta</button>';
+  newRowHtml += '<button class="edit-row btn btn-primary" type="button">Lisää uusi</button>';
+  newRowHtml += '<button class="save-row btn btn-primary hidden" type="button">Tallenna</button>';
+  newRowHtml += '<button class="cancel-row btn btn-secondary hidden" type="button">Peruuta</button>';
   
   $('#newRow').html(newRowHtml);
   
@@ -112,8 +132,9 @@ function populateRows(schemaOptions) {
   $.getJSON(url, function(data) {
     var columns = $('.content').attr('data-columns-view').split(' ');
     var allRows = '';
+    var schema = $('.content').attr('data-schema');
     data.forEach(function(item) {
-      allRows += '<div class="row" id="' + item._id + '">';
+      allRows += '<div class="data-row" id="' + item._id + '">';
       allRows += '<div class="fields">';
       
       columns.forEach(function(column) {
@@ -134,13 +155,19 @@ function populateRows(schemaOptions) {
       
       allRows += '</div>';
       
-      allRows += '<button class="edit-row">Muokkaa</button>';
-      allRows += '<button class="delete-row">Poista</button>';
-      allRows += '<button class="save-row hidden">Tallenna</button>';
-      allRows += '<button class="cancel-row hidden">Peruuta</button>';
+      allRows += '<button class="edit-row btn btn-primary" type="button">Muokkaa</button>';
+      allRows += '<button class="delete-row btn btn-danger" type="button">Poista</button>';
+      
+      if (schema == 'sponsor') {
+        allRows += '<button class="move-up btn btn-warning" type="button">Nosta</button>';
+        allRows += '<button class="move-down btn btn-warning" type="button">Laske</button>';
+      }
+      
+      allRows += '<button class="save-row btn btn-primary hidden" type="button">Tallenna</button>';
+      allRows += '<button class="cancel-row btn btn-secondary hidden" type="button">Peruuta</button>';
       allRows += '</div>';
     });
-    $('.rows').html(allRows);
+    $('.data-rows').html(allRows);
   });
 }
 
@@ -186,6 +213,14 @@ function userEvents(schemaOptions) {
   $('#print').on('click', function() {
     printReservations();
   });
+  
+  $('.content').on('click', '.move-up', function() {
+    console.log('move up');
+  });
+  
+  $('.content').on('click', '.move-down', function() {
+    console.log('move down');
+  });
 }
 
 // ================================================================
@@ -209,8 +244,8 @@ function editRow(id, schemaOptions) {
   // hide or disable buttons
   var row = $('#' + id);
   row.children('.save-row, .cancel-row').removeClass('hidden');
-  row.children('.edit-row, .delete-row').addClass('hidden');
-  $('.edit-row, .add-row, .delete-row').prop('disabled', true);
+  row.children('.edit-row, .delete-row, .move-up, .move-down').addClass('hidden');
+  $('.edit-row, .add-row, .delete-row, .move-up, .move-down').prop('disabled', true);
   $('.errors').html('');
 }
 

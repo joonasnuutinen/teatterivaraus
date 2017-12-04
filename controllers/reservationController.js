@@ -205,7 +205,7 @@ exports.put = function(req, res, next) {
   });
 };
 
-// DELETE show via AJAX
+// DELETE reservation via AJAX
 exports.delete = function(req, res, next) {
   Reservation.findByIdAndRemove(req.params.id, function(err) {
     var message = {

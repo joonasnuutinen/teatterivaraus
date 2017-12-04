@@ -2,7 +2,8 @@ h1, p {
   margin-top: 0.5rem;
 }
 
-button {
+button,
+input[type="submit"] {
   cursor: pointer;
 }
 

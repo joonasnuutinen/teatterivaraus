@@ -8,11 +8,11 @@ block content
       p= error.msg
   
   form(action='' method='POST')
-    div
+    .form-group
       label(for='play-name') Näytelmän nimi
-      input#play-name(type='text' name='playName' value=(undefined===theatre.playName ? '' : theatre.playName))
-    div
+      input#play-name.form-control(type='text' name='playName' value=(undefined===theatre.playName ? '' : theatre.playName))
+    .form-group
       label(for='play-description') Näytelmän kuvaus
-      input#play-description(type='text' name='playDescription' value=(undefined===theatre.playDescription ? '' : theatre.playDescription))
+      input#play-description.form-control(type='text' name='playDescription' value=(undefined===theatre.playDescription ? '' : theatre.playDescription))
     div
-      input(type='submit' value='Tallenna')
+      input.btn.btn-primary(type='submit' value='Tallenna')

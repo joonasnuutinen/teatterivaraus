@@ -28,7 +28,8 @@ function showForm(id, data, schemaOptions, idPrefix) {
         formGroup = createTextGroup(data, schemaOptions, idPrefix, column);
       }
       
-      fieldsDiv.appendChild(formGroup);
+      if (formGroup[0] !== '') fieldsDiv.appendChild(formGroup[0]);
+      fieldsDiv.appendChild(formGroup[1]);
     });
 
     $('#' + id + ' > .fields')[0].replaceWith(fieldsDiv);
@@ -44,7 +45,7 @@ function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
     var inputId = idPrefix + 'TicketClass_' + ticketClass._id;
     
     var formGroupDiv = document.createElement('div');
-    formGroupDiv.className = 'form-group';
+    formGroupDiv.className = 'input-group';
     
     var ticketClassLabel = document.createElement('label');
     ticketClassLabel.setAttribute('for', inputId);
@@ -55,10 +56,12 @@ function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
     if (schemaOptions.tickets.input) {
       numberField = document.createElement('input');
       numberField.setAttribute('type', 'number');
+      numberField.className = 'edited-field form-control';
       numberField.min = '0';
       numberField.value = data && data.tickets[index] ? data.tickets[index].amount : '0';
     } else {
       numberField = document.createElement('select');
+      numberField.className = 'edited-field custom-select';
       
       for (var i = 0; i <= 10; i++) {
         var numberOption = document.createElement('option');
@@ -68,31 +71,29 @@ function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
       }
     }
     
-    numberField.className = 'edited-field';
     numberField.id = inputId;
  
     var unitSpan = document.createElement('span');
-    unitSpan.className = 'unit';
+    unitSpan.className = 'unit input-group-addon';
     unitSpan.textContent = 'kpl';
     
-    formGroupDiv.appendChild(ticketClassLabel);
     formGroupDiv.appendChild(numberField);
     formGroupDiv.appendChild(unitSpan);
     
+    ticketClassesDiv.appendChild(ticketClassLabel);
     ticketClassesDiv.appendChild(formGroupDiv);
   });
   
-  return ticketClassesDiv;
+  return ['', ticketClassesDiv];
 }
 
 // create form group for text input
 function createTextGroup(data, schemaOptions, idPrefix, column) {
   var placeholder = schemaOptions[column].placeholder;
-  var unit = schemaOptions[column].unit;
+  var unit = schemaOptions[column].unit; 
   var inputId = idPrefix + capital(column);
   
   var textDiv = document.createElement('div');
-  textDiv.className = 'form-group';
   
   var textLabel = document.createElement('label');
   textLabel.setAttribute('for', inputId);
@@ -107,20 +108,30 @@ function createTextGroup(data, schemaOptions, idPrefix, column) {
     textInput.setAttribute('type', 'text');
   }
 
-  textInput.className = 'edited-field';
+  textInput.className = 'edited-field form-control';
   textInput.id = inputId;
   textInput.placeholder = placeholder ? placeholder : '';
   textInput.value = data ? data[column] : '';
   
-  var unitSpan = document.createElement('span');
-  unitSpan.className = 'unit';
-  unitSpan.textContent = unit ? unit : '';
+  if (schemaOptions[column].hidden) {
+    textInput.setAttribute('type', 'hidden');
+    textLabel = '';
+    textDiv.appendChild(textInput);
+  } else if (unit) {
+    var unitSpan = document.createElement('span');
+    unitSpan.className = 'unit input-group-addon';
+    unitSpan.textContent = unit ? unit : '';
+    textDiv.className = 'input-group';
+    textDiv.appendChild(textInput);
+    textDiv.appendChild(unitSpan);
+  } else {
+    textDiv.className = 'form-group';
+    textDiv.appendChild(textLabel);
+    textDiv.appendChild(textInput);
+    textLabel = '';
+  }
   
-  textDiv.appendChild(textLabel);
-  textDiv.appendChild(textInput);
-  textDiv.appendChild(unitSpan);
-  
-  return textDiv;
+  return [textLabel, textDiv];
 }
 
 // create form group for show
@@ -135,7 +146,7 @@ function createShowGroup(data, schemaOptions, idPrefix, shows) {
   showLabel.textContent = schemaOptions.show.label;
   
   var showSelect = document.createElement('select');
-  showSelect.className = 'edited-field show-select';
+  showSelect.className = 'edited-field show-select custom-select';
   showSelect.id = selectId;
   
   showSelect = populateSelect(showSelect, data, shows);
@@ -143,10 +154,8 @@ function createShowGroup(data, schemaOptions, idPrefix, shows) {
   showDiv.appendChild(showLabel);
   showDiv.appendChild(showSelect);
   
-  return showDiv;
+  return ['', showDiv];
 }
-
-// create form group for 
 
 // populate select item with shows
 function populateSelect(node, data, shows) {
@@ -174,11 +183,14 @@ function saveEdit(id, schemaOptions, callback) {
   var newData = {};
   var ajaxType = 'PUT';
   var ajaxUrl = document.location.pathname + '/' + id;
+  var schema = $('.content').attr('data-schema');
   
   // if new row, AJAX type and url are different
   if (id === 'newRow') {
     ajaxType = 'POST';
     ajaxUrl = '';
+  } else if (schema == 'sponsor') {
+    
   }
   
   $('#' + id + ' .edited-field').each(function() {

@@ -7,17 +7,17 @@ block content
     
     if(options.filterAndPrint)
       .form-group
-        button#print.hidden Tulosta
+        button#print.btn.btn-secondary.hidden Tulosta
       
       #search.form-group
         label(for='keyword') Hae nimellä
-        input#keyword(type='search')
+        input#keyword.form-control(type='search')
       
       .form-group
         label(for='filter') Suodata
-        select#filter
+        select#filter.custom-select
           option(value='') Kaikki näytökset
       
     .errors
-    .row#newRow
-    .rows
+    .data-row#newRow
+    .data-rows
