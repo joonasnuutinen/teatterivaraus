@@ -4,7 +4,7 @@ var Sponsor = require('../models/sponsor.js');
 exports.sponsors = function(req, res, next) {
   var options = {
     schema: 'sponsor',
-    columnsView: 'name description url',
+    columnsView: 'name description url order',
     columnsEdit: 'name description url order',
   };
   res.render('rows', {title: 'Sponsorit', options: options, theatre: req.user});
@@ -104,7 +104,7 @@ exports.put = function(req, res, next) {
       req.sanitize('editedOrder').escape();
       req.sanitize('editedOrder').trim();
       req.sanitize('editedOrder').toInt();
-      
+      console.log( req.body );
       var sponsor = new Sponsor({
         name: req.body.editedName,
         description: req.body.editedDescription,

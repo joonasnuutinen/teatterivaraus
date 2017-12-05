@@ -133,6 +133,7 @@ function populateRows(schemaOptions) {
     var columns = $('.content').attr('data-columns-view').split(' ');
     var allRows = '';
     var schema = $('.content').attr('data-schema');
+    
     data.forEach(function(item) {
       allRows += '<div class="data-row" id="' + item._id + '">';
       allRows += '<div class="fields">';
@@ -147,8 +148,10 @@ function populateRows(schemaOptions) {
           var amount = item.total.tickets;
           var unit = (amount == 1) ? 'lippu' : 'lippua';
           allRows += '<div class="tickets">' + amount + ' ' + unit + ', ' + price + '</div>';
-        } else if(item[column]) {
-          allRows += '<div class="' + column + '">' + item[column] + '</div>';
+        } else if(item[column] !== undefined) {
+          allRows += '<div class="' + column;
+          allRows += (schemaOptions[column] && schemaOptions[column].hidden) ? ' hidden' : '';
+          allRows += '" data-property="' + column + '">' + item[column] + '</div>';
         }
         
       });
@@ -215,11 +218,11 @@ function userEvents(schemaOptions) {
   });
   
   $('.content').on('click', '.move-up', function() {
-    console.log('move up');
+    moveUp( $( this ).parent(), schemaOptions );
   });
   
   $('.content').on('click', '.move-down', function() {
-    console.log('move down');
+    moveDown( $( this ).parent(), schemaOptions );
   });
 }
 
@@ -285,6 +288,85 @@ function printReservations() {
   var selectedShowName = $('#filter')[0].selectedOptions[0].innerText;
   var printUrl = '/app/varaukset/tulosta/' + selectedShowId;
   window.open(printUrl, '_blank');
+}
+
+// move data row up
+function moveUp( $currentRow, schemaOptions ) {
+  var $previousRow = $( $currentRow[0].previousElementSibling );
+
+  if ( $previousRow.length === 0 ) {
+    return;
+  }
+  
+  changeOrder( $currentRow, $previousRow, schemaOptions );
+}
+
+// move data row down
+function moveDown( $currentRow, schemaOptions ) {
+  var $nextRow = $( $currentRow[0].nextElementSibling );
+
+  if ( $nextRow.length === 0 ) {
+    return;
+  }
+  
+  changeOrder( $currentRow, $nextRow, schemaOptions );
+}
+
+// change order between two rows
+function changeOrder( $row1, $row2, schemaOptions ) {
+  var row1Data = {};
+  var row2Data = {};
+  
+  $row1.find( '.fields > div' ).each( function() {
+    var propertyName = 'edited' + capital( $( this ).attr( 'data-property' ) );
+    row1Data[propertyName] = $( this ).text();
+  } );
+  
+  $row2.find( '.fields > div' ).each( function() {
+    var propertyName = 'edited' + capital( $( this ).attr( 'data-property' ) );
+    row2Data[propertyName] = $( this ).text();
+  } );
+  
+  var newCurrentOrder = row2Data.editedOrder;
+  row2Data.editedOrder = row1Data.editedOrder;
+  row1Data.editedOrder = newCurrentOrder;
+  
+  var currentAjaxUrl = document.location.pathname + '/' + $row1[0].id;
+  var previousAjaxUrl = document.location.pathname + '/' + $row2[0].id;
+  
+  var errors = [];
+  
+  $.when(
+    $.ajax( {
+      type: 'PUT',
+      url: currentAjaxUrl,
+      data: row1Data,
+      dataType: 'JSON',
+      success: function(result) {
+        errors = errors.concat( result.errors );
+      }
+    } ),
+    
+    $.ajax( {
+      type: 'PUT',
+      url: previousAjaxUrl,
+      data: row2Data,
+      dataType: 'JSON',
+      success: function(result) {
+        errors = errors.concat( result.errors );
+      }
+    } )
+  ).then( function() {
+    if (errors.length !== 0) {
+      var errorString = '';
+      errors.forEach(function(error) {
+        errorString += error.msg + '<br>';
+      });
+      $('.errors').html(errorString);
+    } else {
+      cancelEdit( null, schemaOptions );
+    }
+  } );
 }
 
 // ================================================================
