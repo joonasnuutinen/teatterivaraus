@@ -276,7 +276,7 @@ function deleteRow(id, schemaOptions) {
 }
 
 // cancel editing row
-function cancelEdit(id, schemaOptions) {
+function cancelEdit(id, schemaOptions, data) {
   resetContent(schemaOptions);
   $('.errors').html('');
   $('.add-row').prop('disabled', false);

@@ -204,7 +204,7 @@ function saveEdit(id, schemaOptions, callback) {
     dataType: 'JSON'
   }).done(function(response) {
     if (response.errors.length === 0) {
-      callback(id, schemaOptions);
+      callback(id, schemaOptions, response.data);
     } else {
       var errors = '';
       response.errors.forEach(function(error) {

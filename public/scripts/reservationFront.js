@@ -42,7 +42,10 @@ function userEvents(schemaOptions) {
   });
 }
 
-function success() {
+function success(id, schemaOptions, data) {
   $('.errors').html('');
-  $('#newRow').html('<p>Varaus onnistui.</p>');
+  
+  var successHtml = '<p>Varaus onnistui! Olemme lähettäneet varausvahvistuksen osoitteeseen <b>' + data.email + '</b>.</p>';
+  
+  $('#newRow').html( successHtml );
 }

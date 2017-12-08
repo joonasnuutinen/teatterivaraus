@@ -8,6 +8,7 @@ var Reservation = require('../models/reservation');
 var TicketClass = require('../models/ticketClass');
 var Show = require('../models/show');
 var Theatre = require('../models/theatre');
+var Sponsor = require( '../models/sponsor' );
 
 dotenv.load();
 
@@ -327,7 +328,7 @@ exports.customerGet = function(req, res, next) {
       schema: 'reservation',
       columnsEdit: 'firstName lastName email phone show ticketClasses additionalInfo',
     };
-    
+    console.log(theatre);
     res.render('customerReservation', {
       title: title,
       theatre: theatre,
@@ -394,13 +395,14 @@ exports.customerPost = function(req, res, next) {
           message.errors.push('Varaus epäonnistui, yritä uudelleen.');
         } else {
           //console.log(reservation);
-          sendEmailConfirmation(reservation._id);
+          sendEmailConfirmation(reservation._id, reservation.theatre);
         }
       });
     } else {
       message.errors = message.errors.concat(errors.useFirstErrorOnly().array());
     }
     
+    message.data = reservation;
     res.send(message);
   });
 }
@@ -415,67 +417,88 @@ exports.publicForm = function(req, res, next) {
 // FUNCTIONS =================================================================
 // ===========================================================================
 
-function sendEmailConfirmation(id) {
-  Reservation.findById(id)
-    .populate('show theatre tickets.ticketClass')
-    .exec(function(err, reservation) {
-      if (err) return;
+function sendEmailConfirmation(id, theatreId) {
+  async.parallel( {
+    reservation: function findReservation(callback) {
+      Reservation.findById( id )
+      .populate( 'show theatre tickets.ticketClass' )
+      .exec( callback );
+    },
+    sponsors: function findSponsors(callback) {
+      Sponsor.find( {theatre: theatreId} )
+      .sort( [['order', 'ascending']] )
+      .exec( callback );
+    }
+  }, function asyncDone(err, results) {
+    if (err) return;
+    
+    var reservation = results.reservation;
+    var sponsors = results.sponsors;
+    
+    // ---------------------------------------------------------------------
+    // email body starts ---------------------------------------------------
+    // ---------------------------------------------------------------------
+    var body = 'Kiitos varauksestasi!\n\n';
+    
+    body += 'Varauksen tiedot:\n\n';
+    
+    body += reservation.theatre.name + ': ' + reservation.theatre.playName + '\n';
+    body += 'Näytös: ' + reservation.show.beginsPretty + '\n\n';
+    
+    body += 'Nimi: ' + reservation.fullName + '\n';
+    body += 'Sähköposti: ' + reservation.email + '\n';
+    body += reservation.phone ? 'Puhelin: ' + reservation.phone + '\n\n' : '\n';
+    
+    body += reservation.additionalInfo ? 'Lisätietoja: ' + reservation.additionalInfo + '\n\n' : '';
+    
+    body += 'Varatut liput:\n'
+    body += reservation.total.code.replace(/<br>/g, '\n') + '\n\n';
+    
+    body += 'Yhteensä: ' + reservation.total.priceString + '\n\n';
+    
+    body += 'Yhteistyössä:\n\n';
+    
+    sponsors.forEach( function eachSponsor(sponsor) {
+      body += sponsor.name + '\n';
+      body += sponsor.description + '\n';
+      body += 'Lue lisää: ' + sponsor.url + '\n\n';
+    } );
+    // ---------------------------------------------------------------------
+    // email body ends -----------------------------------------------------
+    // ---------------------------------------------------------------------
+    
+    var message = {
+      text: body,
+      from: reservation.theatre.name + ' <' + reservation.theatre.email + '>',
+      to: reservation.email,
+      "reply-to": reservation.theatre.email,
+      subject: 'Lippuvarauksesi on vastaanotettu'
+    };
+    
+    smtpServer.send(message, function(err) {
+      if (err) console.log(err);
+    });
+    
+    if (reservation.additionalInfo) {
+      // -------------------------------------------------------------------
+      // email body starts -------------------------------------------------
+      // -------------------------------------------------------------------
+      var enquiryBody = reservation.additionalInfo + '\n\n';
       
-      // ---------------------------------------------------------------------
-      // email body starts ---------------------------------------------------
-      // ---------------------------------------------------------------------
-      var body = 'Kiitos varauksestasi!\n\n';
+      enquiryBody += '(Tämän viestin lähetti Teatterivarauksen automaattisuodatin.)';
+      // -------------------------------------------------------------------
+      // email body ends ---------------------------------------------------
+      // -------------------------------------------------------------------
       
-      body += 'Varauksen tiedot:\n\n';
-      
-      body += reservation.theatre.name + ': ' + reservation.theatre.playName + '\n';
-      body += reservation.show.beginsPretty + '\n\n';
-      
-      body += reservation.fullName + '\n';
-      body += reservation.email + '\n';
-      body += reservation.phone ? reservation.phone + '\n\n' : '\n';
-      
-      body += reservation.additionalInfo ? 'Lisätietoja: ' + reservation.additionalInfo + '\n\n' : '';
-      
-      body += reservation.total.code.replace(/<br>/g, '\n') + '\n\n';
-      
-      body += 'Yhteensä: ' + reservation.total.priceString + '\n\n';
-      // ---------------------------------------------------------------------
-      // email body ends -----------------------------------------------------
-      // ---------------------------------------------------------------------
-      
-      var message = {
-        text: body,
-        from: reservation.theatre.name + ' <' + reservation.theatre.email + '>',
-        to: reservation.email,
-        "reply-to": reservation.theatre.email,
-        subject: 'Lippuvarauksesi on vastaanotettu'
-      };
-      
-      smtpServer.send(message, function(err) {
+      smtpServer.send({
+        text: enquiryBody,
+        from: reservation.firstName + ' ' + reservation.lastName + ' <' + reservation.email + '>',
+        to: reservation.theatre.email,
+        "reply-to": reservation.email,
+        subject: 'Teatterivaraus: Tiedustelu esityksestä ' + reservation.theatre.playName
+      }, function(err) {
         if (err) console.log(err);
       });
-      
-      if (reservation.additionalInfo) {
-        // -------------------------------------------------------------------
-        // email body starts -------------------------------------------------
-        // -------------------------------------------------------------------
-        var enquiryBody = reservation.additionalInfo + '\n\n';
-        
-        enquiryBody += '(Tämän viestin lähetti Teatterivarauksen automaattisuodatin.)';
-        // -------------------------------------------------------------------
-        // email body ends ---------------------------------------------------
-        // -------------------------------------------------------------------
-        
-        smtpServer.send({
-          text: enquiryBody,
-          from: reservation.firstName + ' ' + reservation.lastName + ' <' + reservation.email + '>',
-          to: reservation.theatre.email,
-          "reply-to": reservation.email,
-          subject: 'Teatterivaraus: Tiedustelu esityksestä ' + reservation.theatre.playName
-        }, function(err) {
-          if (err) console.log(err);
-        });
-      }
-    });
+    }
+  } );
 }
