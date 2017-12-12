@@ -253,11 +253,12 @@ exports.stats = function(req, res, next) {
       data.shows[showIndex].reservationCount += ticketAmount;
       total += ticketAmount;
     });
-    console.log(data.shows);
+    //console.log(data.shows);
     res.render('stats', {title: 'Varaustilanne', shows: data.shows, total: total});
   });
 };
 
+/* REMOVED
 // get stats for one show
 exports.showStats = function(req, res, next) {
   async.parallel({
@@ -276,6 +277,7 @@ exports.showStats = function(req, res, next) {
   });
   
 };
+*/
 
 // print reservations in html format
 exports.printHtml = function(req, res, next) {
@@ -318,9 +320,19 @@ exports.printPdf = function(req, res, next) {
 // GET customer reservation form
 exports.customerGet = function(req, res, next) {
   var theatreId = req.params.theatreId;
-  
-  Theatre.findById(theatreId).exec(function(err, theatre) {
-    if (err) return next(err);
+	
+	async.parallel( {
+		theatre: function getTheatre(callback) {
+			Theatre.findById( theatreId ).exec( callback );
+		},
+		sponsors: function getSponsors(callback) {
+			Sponsor.find( {theatre: theatreId} )
+			.sort( [['order', 'ascending']] )
+			.exec( callback );
+		}
+	}, function asyncDone(err, results) {
+		if (err) return next(err);
+		var theatre = results.theatre;
     
     var title = theatre.name + ': ' + theatre.playName + ' - Teatterivaraus';
     
@@ -328,12 +340,17 @@ exports.customerGet = function(req, res, next) {
       schema: 'reservation',
       columnsEdit: 'firstName lastName email phone show ticketClasses additionalInfo',
     };
-    console.log(theatre);
+    //console.log(theatre);
     res.render('customerReservation', {
       title: title,
       theatre: theatre,
+			sponsors: results.sponsors,
       options: options
     });
+	} );
+  
+  Theatre.findById(theatreId).exec(function(err, theatre) {
+    
   });
 };
 

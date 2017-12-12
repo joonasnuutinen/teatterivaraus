@@ -15,18 +15,19 @@ html
           
           .content(data-schema=options.schema data-columns-edit=options.columnsEdit data-theatre=theatre._id)
             .errors
-            .dataRow#newRow
+            .dataRow.new-row#newRow
             
-            if theatre.sponsors
+            if sponsors
               h4 Yhteistyössä
               
-              each sponsor in theatre.sponsors
+              each sponsor in sponsors
+                - var sponsorUrl = 'http://' + sponsor.url;
                 h5= sponsor.name
                 
                 p
                   | #{sponsor.description}
                   |
-                  a(href=sponsor.url) Lue lisää
+                  a(href=sponsorUrl target="_blank") Lue lisää
   
   script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f' crossorigin='anonymous')
   script(src='/scripts/global.js')
