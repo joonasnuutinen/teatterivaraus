@@ -85,7 +85,6 @@ exports.settingsPost = function(req, res, next) {
 
 // GET JSON
 exports.json = function(req, res, next) {
-  console.log( 'theatre / getJSON' );
   async.parallel({
     theatre: function(callback) {
       Theatre.findById(req.params.theatreId, 'name playName playDescription').exec(callback);
