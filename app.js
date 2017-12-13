@@ -35,7 +35,7 @@ var mongoose = require('mongoose');
 var mongoDB = process.env.MONGODB_URL;
 mongoose.connect(mongoDB);
 var db = mongoose.connection;
-console.log( db );
+db.on( 'connected', function(){console.log( 'mongoose connected' );} );
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 require('./config/passport')(passport);
