@@ -184,7 +184,7 @@ function initFilter() {
 // add listeners to user events
 function userEvents(schemaOptions) {  
   $('.content').on('click', '.edit-row', function() {
-    editRow($(this).parent().attr('id'), schemaOptions);
+    editRow($(this).parent().attr('id'), schemaOptions, true);
   });
   
   $('.content').on('click', '.delete-row', function() {
@@ -231,16 +231,16 @@ function userEvents(schemaOptions) {
 // ================================================================
 
 // create form for new or edited row
-function editRow(id, schemaOptions) {
+function editRow(id, schemaOptions, showPast) {
   switch (id) {
     case 'newRow':
       // show new form with no existing data
-      showForm(id, null, schemaOptions, 'new');
+      showForm(id, null, schemaOptions, 'new', showPast);
       break;
     default:
       // populate row with its data
       $.getJSON(document.location.pathname + '/' + id, function(data) {
-        showForm(id, data, schemaOptions, 'edited');
+        showForm(id, data, schemaOptions, 'edited', showPast);
       });
   }
   

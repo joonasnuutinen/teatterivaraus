@@ -15,6 +15,8 @@ var expressValidator = require('express-validator');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var expressTitle = require('express-title');
+var compression = require( 'compression' );
+var helmet = require( 'helmet' );
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -119,6 +121,10 @@ app.use(expressValidator({
   }
 }));
 app.use(cookieParser());
+
+app.use( compression() ); // compress all routes
+app.use( helmet() );
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // configure passport

@@ -14,11 +14,11 @@ html
           span= description
           
           .content(data-schema=options.schema data-columns-edit=options.columnsEdit data-theatre=theatre._id)
-            .errors
             .dataRow.new-row#newRow
+            .errors.text-danger
             
             if sponsors
-              h4 Yhteistyössä
+              h4.mt-5.mb-3 Yhteistyössä
               
               each sponsor in sponsors
                 - var sponsorUrl = 'http://' + sponsor.url;

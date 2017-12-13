@@ -28,7 +28,7 @@ input[type="submit"] {
 }
 
 .new-row {
-	margin-bottom: 2rem;
+	/*margin-bottom: 2rem;*/
 }
 
 @media screen and (min-width: 768px) {

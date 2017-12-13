@@ -340,7 +340,7 @@ exports.customerGet = function(req, res, next) {
       schema: 'reservation',
       columnsEdit: 'firstName lastName email phone show ticketClasses additionalInfo',
     };
-    //console.log(theatre);
+    
     res.render('customerReservation', {
       title: title,
       theatre: theatre,

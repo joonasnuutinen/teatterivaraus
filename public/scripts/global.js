@@ -3,7 +3,7 @@
 // ===================================================================
 
 // create and show form
-function showForm(id, data, schemaOptions, idPrefix) {  
+function showForm(id, data, schemaOptions, idPrefix, showPast) {  
   var fieldHtml = '';
   var columns = $('.content').attr('data-columns-edit').split(' ');
   var jsonUrl = '/' + $('.content').attr('data-theatre') + '.json';
@@ -21,7 +21,7 @@ function showForm(id, data, schemaOptions, idPrefix) {
         
       // add show select
       } else if (column === 'show') {
-        formGroup = createShowGroup(data, schemaOptions, idPrefix, theatre.shows);
+        formGroup = createShowGroup(data, schemaOptions, idPrefix, theatre.shows, showPast);
       
       // add text input
       } else {
@@ -135,7 +135,7 @@ function createTextGroup(data, schemaOptions, idPrefix, column) {
 }
 
 // create form group for show
-function createShowGroup(data, schemaOptions, idPrefix, shows) {
+function createShowGroup(data, schemaOptions, idPrefix, shows, showPast) {
   var selectId = idPrefix + 'Show';
   
   var showDiv = document.createElement('div');
@@ -149,7 +149,7 @@ function createShowGroup(data, schemaOptions, idPrefix, shows) {
   showSelect.className = 'edited-field show-select custom-select';
   showSelect.id = selectId;
   
-  showSelect = populateSelect(showSelect, data, shows);
+  showSelect = populateSelect(showSelect, data, shows, showPast);
   
   showDiv.appendChild(showLabel);
   showDiv.appendChild(showSelect);
@@ -158,16 +158,18 @@ function createShowGroup(data, schemaOptions, idPrefix, shows) {
 }
 
 // populate select item with shows
-function populateSelect(node, data, shows) {
+function populateSelect(node, data, shows, showPast) {
   shows.forEach(function(show) {
-    var optionObject = document.createElement('option');
-    optionObject.value = show._id;
-    optionObject.text = show.beginsPretty;
-    node.add(optionObject);
+    if (showPast || new Date() < Date.parse( show.begins )) {
+      var optionObject = document.createElement('option');
+      optionObject.value = show._id;
+      optionObject.text = show.beginsPretty;
+      node.add(optionObject);
+    }
   });
-  
+  //console.log( data );
   if (data) {
-    node.value = data.show;
+    node.value = data.show._id;
   }
   
   return node;
