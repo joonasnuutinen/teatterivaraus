@@ -3,14 +3,15 @@ var request = require('request');
 var pdf = require('html-pdf');
 var fs = require('fs');
 var email = require('emailjs');
-//var dotenv = require('dotenv');
 var Reservation = require('../models/reservation');
 var TicketClass = require('../models/ticketClass');
 var Show = require('../models/show');
 var Theatre = require('../models/theatre');
 var Sponsor = require( '../models/sponsor' );
 
-//dotenv.load();
+try {
+  require('dotenv').load();
+} catch(err) {}
 
 var smtpServer = email.server.connect({
   user: process.env.SMTP_USER,

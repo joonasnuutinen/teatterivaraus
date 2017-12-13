@@ -4,7 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-//var dotenv = require('dotenv');
 var expressSession = require('express-session');
 //var passwordless = require('passwordless');
 //var MongoStore = require('passwordless-mongostore');
@@ -26,7 +25,10 @@ var User = require('./models/theatre');
 
 var app = express();
 
-//dotenv.load();
+try {
+  require('dotenv').load();
+} catch(err) {}
+
 
 // set up mongoose connection
 var mongoose = require('mongoose');
