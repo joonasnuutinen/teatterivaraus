@@ -26,7 +26,7 @@ var User = require('./models/theatre');
 
 var app = express();
 
-dotenv.load();
+//dotenv.load();
 
 // set up mongoose connection
 var mongoose = require('mongoose');
