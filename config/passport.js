@@ -45,6 +45,13 @@ module.exports = function(passport) {
   // LOCAL LOGIN =====================================================
   passport.use('local-login', new LocalStrategy(options, loginCallback));
   
+  // LOCAL CHANGE Password
+  passport.use( 'local-change-password', new LocalStrategy( options, function changePassword(req, email, password, done) {
+    
+    // TODO: IMPLEMENT PASSWORD CHANGE
+    
+  } ) );
+  
 };
 
 function loginCallback(req, email, password, done) {
