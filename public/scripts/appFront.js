@@ -102,6 +102,8 @@ $(function() {
     resetContent(schemaOptions);
     userEvents(schemaOptions);
     if ($('#filter').length > 0) initFilter();
+  } else {
+    userEvents( null );
   }
 });
 
@@ -224,6 +226,12 @@ function userEvents(schemaOptions) {
   $('.content').on('click', '.move-down', function() {
     moveDown( $( this ).parent(), schemaOptions );
   });
+  
+  $( '#changePassword' ).submit( function passwordChangeSubmitted(evt) {
+    evt.preventDefault();
+    console.log('change password submitted');
+    changePassword.call( this );
+  } );
 }
 
 // ================================================================
@@ -365,6 +373,32 @@ function changeOrder( $row1, $row2, schemaOptions ) {
       $('.errors').html(errorString);
     } else {
       cancelEdit( null, schemaOptions );
+    }
+  } );
+}
+
+// change password
+function changePassword() {
+  var $form = $( this );
+  var url = $form.attr( 'action' );
+  
+  var posting = $.post( url, {
+    oldPassword: $( '#oldPassword' ).val(),
+    newPassword: $( '#newPassword' ).val(),
+    retypeNewPassword: $( '#retypeNewPassword' ).val()
+  } );
+  
+  posting.done( function postingDone( data ) {
+    if (data.errors) {
+      var errors = '';
+      data.errors.forEach(function(error) {
+        errors += error.msg + '<br>';
+      });
+      $form.parent().find( '.message' ).html( errors );
+      console.log('errors printed');
+    } else {
+      $form.parent().find( '.message' ).html( data.message );
+      $form.find( 'input' ).val( '' );
     }
   } );
 }

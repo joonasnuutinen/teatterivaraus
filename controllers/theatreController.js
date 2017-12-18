@@ -83,6 +83,45 @@ exports.settingsPost = function(req, res, next) {
   });
 }
 
+// POST change password
+exports.changePassword = function changePassword(req, res, next) {
+  req.checkBody( 'oldPassword', 'Vanha salasana puuttuu.' ).notEmpty();
+  req.checkBody( 'newPassword', 'Uusi salasana puuttuu.' ).notEmpty();
+  req.checkBody( 'retypeNewPassword', 'Vahvista uusi salasana.' ).notEmpty();
+  
+  req.getValidationResult().then( function errorsValidated(errors) {
+    var response = {
+      errors: []
+    };
+    
+    if (errors.isEmpty()) {
+      if ( !req.user.validPassword( req.body.oldPassword ) ) {
+        response.errors.push( { msg: 'Vanha salasana on virheellinen.' } );
+        res.send( response );
+      } else if ( req.body.newPassword !== req.body.retypeNewPassword ) {
+        response.errors.push( { msg: 'Salasanan vahvistus ei täsmää.' } );
+        res.send( response );
+      } else {
+        Theatre.findById( req.user._id, function doPasswordChange(err, theatre) {
+          if (err) return next( err );
+          
+          theatre.password = theatre.generateHash( req.body.newPassword );
+          
+          theatre.save( function saveTheatre(err) {
+            if (err) return next( err );
+            response.errors = null;
+            response.message = 'Salasanan vaihto onnistui.';
+            res.send( response );
+          } );
+        } );
+      }
+    } else {
+      response.errors = response.errors.concat(errors.useFirstErrorOnly().array());
+      res.send( response );
+    }
+  } );
+};
+
 // GET JSON
 exports.json = function(req, res, next) {
   async.parallel({

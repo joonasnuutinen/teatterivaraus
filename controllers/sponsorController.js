@@ -104,7 +104,7 @@ exports.put = function(req, res, next) {
       req.sanitize('editedOrder').escape();
       req.sanitize('editedOrder').trim();
       req.sanitize('editedOrder').toInt();
-      console.log( req.body );
+      //console.log( req.body );
       var sponsor = new Sponsor({
         name: req.body.editedName,
         description: req.body.editedDescription,

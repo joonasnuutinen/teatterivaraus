@@ -44,14 +44,21 @@ module.exports = function(passport) {
   
   // LOCAL LOGIN =====================================================
   passport.use('local-login', new LocalStrategy(options, loginCallback));
-  
+  /*
   // LOCAL CHANGE Password
   passport.use( 'local-change-password', new LocalStrategy( options, function changePassword(req, email, password, done) {
-    
-    // TODO: IMPLEMENT PASSWORD CHANGE
-    
+    Theatre.findById( req.user._id, function doPasswordChange(err, theatre) {
+      if (err) return done( err );
+      
+      theatre.password = theatre.generateHash( password );
+      
+      theatre.save( function saveTheatre(err) {
+        if (err) throw err;
+        return done( null, theatre );
+      } );
+    } );
   } ) );
-  
+  */
 };
 
 function loginCallback(req, email, password, done) {

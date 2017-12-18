@@ -62,6 +62,9 @@ router.post('/rekisteroidy', passport.authenticate('local-signup', {
   failureFlash: true
 }));
 
+/* POST change password */
+router.post( '/vaihda-salasana', isLoggedIn, theatreController.changePassword );
+
 // STATS =============================================================
 router.get('/varaustilanne', isLoggedIn, reservationController.stats);
 

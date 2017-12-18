@@ -16,3 +16,20 @@ block content
       input#play-description.form-control(type='text' name='playDescription' value=(undefined===theatre.playDescription ? '' : theatre.playDescription))
     div
       input.btn.btn-primary(type='submit' value='Tallenna')
+  
+  section#Vaihda-salasana
+    h2 Vaihda salasana
+    form#changePassword(action='/app/vaihda-salasana' method='post')
+      .form-group
+        label(for='oldPassword') Vanha salasana
+        input#oldPassword.form-control(type='password' name='oldPassword')
+      .form-group
+        label(for='newPassword') Uusi salasana
+        input#newPassword.form-control(type='password' name='newPassword')
+      .form-group
+        label(for='retypeNewPassword') Vahvista uusi salasana
+        input#retypeNewPassword.form-control(type='password' name='retypeNewPassword')
+      .form-group
+        button.btn.btn-primary(type='submit') Vaihda salasana
+    
+    .message
