@@ -1,23 +1,25 @@
 extends layout_app
 
 block content
-  h1= title
-  
-  .content(data-schema=options.schema data-columns-view=options.columnsView data-columns-edit=options.columnsEdit data-theatre=theatre._id)
+  .content
+    h1.page-title= title
     
-    if(options.filterAndPrint)
-      .form-group
-        button#print.btn.btn-secondary.hidden Tulosta
+    .dynamic-content(data-schema=options.schema data-columns-view=options.columnsView data-columns-edit=options.columnsEdit data-theatre=theatre._id)
       
-      #search.form-group
-        label(for='keyword') Hae nimellä
-        input#keyword.form-control(type='search')
+      #content-actions.content-actions
+        button#print.btn.btn--secondary.hidden Tulosta
       
-      .form-group
-        label(for='filter') Suodata
-        select#filter.custom-select
-          option(value='') Kaikki näytökset
+      .data-row#newRow
+      .errors.bg-danger.text-white
       
-    .errors.bg-danger.text-white
-    .data-row#newRow
+      if(options.filterAndPrint)
+        #search
+          label Hae nimellä
+            input#keyword.input(type='search')
+        
+        div
+          label Suodata
+            select#filter.input
+              option(value='') Kaikki näytökset
+
     .data-rows

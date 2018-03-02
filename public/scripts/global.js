@@ -5,8 +5,8 @@
 // create and show form
 function showForm(id, data, schemaOptions, idPrefix, showPast) {  
   var fieldHtml = '';
-  var columns = $('.content').attr('data-columns-edit').split(' ');
-  var jsonUrl = '/' + $('.content').attr('data-theatre') + '.json';
+  var columns = $('.dynamic-content').attr('data-columns-edit').split(' ');
+  var jsonUrl = '/' + $('.dynamic-content').attr('data-theatre') + '.json';
   
   var fieldsDiv = document.createElement('div');
   fieldsDiv.className = 'fields';
@@ -56,12 +56,12 @@ function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
     if (schemaOptions.tickets.input) {
       numberField = document.createElement('input');
       numberField.setAttribute('type', 'number');
-      numberField.className = 'edited-field form-control';
+      numberField.className = 'edited-field input input--narrow';
       numberField.min = '0';
       numberField.value = data && data.tickets[index] ? data.tickets[index].amount : '0';
     } else {
       numberField = document.createElement('select');
-      numberField.className = 'edited-field custom-select';
+      numberField.className = 'edited-field input';
       
       for (var i = 0; i <= 10; i++) {
         var numberOption = document.createElement('option');
@@ -108,7 +108,7 @@ function createTextGroup(data, schemaOptions, idPrefix, column) {
     textInput.setAttribute('type', 'text');
   }
 
-  textInput.className = 'edited-field form-control';
+  textInput.className = 'edited-field input';
   textInput.id = inputId;
   textInput.placeholder = placeholder ? placeholder : '';
   textInput.value = data ? data[column] : '';
@@ -146,7 +146,7 @@ function createShowGroup(data, schemaOptions, idPrefix, shows, showPast) {
   showLabel.textContent = schemaOptions.show.label;
   
   var showSelect = document.createElement('select');
-  showSelect.className = 'edited-field show-select custom-select';
+  showSelect.className = 'edited-field show-select input';
   showSelect.id = selectId;
   
   showSelect = populateSelect(showSelect, data, shows, showPast);
@@ -185,7 +185,7 @@ function saveEdit(id, schemaOptions, callback) {
   var newData = {};
   var ajaxType = 'PUT';
   var ajaxUrl = document.location.pathname + '/' + id;
-  var schema = $('.content').attr('data-schema');
+  var schema = $('.dynamic-content').attr('data-schema');
   
   // if new row, AJAX type and url are different
   if (id === 'newRow') {

@@ -1,23 +1,172 @@
-h1, p {
-  margin-top: 0.5rem;
+/*
+  ============================================================================
+  # Page
+  ============================================================================
+*/
+
+* {
+  box-sizing: border-box;
 }
 
-button,
-input[type="submit"] {
+.page {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1;
+}
+
+/*
+  ============================================================================
+  # Navbar
+  ============================================================================
+*/
+
+.navbar {
+  background: #2d4471;
+  background: linear-gradient(to top left, #152B55, #4d638d);
+  padding: .5rem 0 0;
+}
+
+.navbar__brand {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  font-size: 2rem;
+  margin: 0 0 .5rem .5rem
+}
+
+.navbar__nav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: left;
+}
+
+.navbar__item {
+}
+
+.navbar__link {
+  display: block;
+  padding: .5rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 300;
+}
+
+.navbar__item--active .navbar__link {
+  font-weight: 400;
+}
+
+.navbar__link:hover {
+  text-decoration: underline;
+}
+
+/*
+  ============================================================================
+  # Content
+  ============================================================================
+*/
+
+.content {
+  padding: .5rem;
+  line-height: 1.3;
+}
+
+.page-title {
+  font-size: 2rem;
+  margin: .5rem 0 1rem;
+}
+
+.content p {
+  margin: 0 0 1rem;
+}
+
+.content a,
+.content a:visited {
+  color: #4d638d;
+}
+
+.content a {
+  text-decoration: none;
+}
+
+.content a:hover {
+  text-decoration: underline;
+  color: #2d4471;
+}
+
+/*
+  ============================================================================
+  # Form
+  ============================================================================
+*/
+
+.form {
+  margin-bottom: 1rem;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  max-width: 30em;
+  padding: .4em;
+  margin: .1rem 0 .7rem;
+  border: 1px solid #bbb;
+  border-radius: 2px;
+}
+
+.input--narrow {
+  display: inline-block;
+  width: calc(100% - 29px);
+  margin-right: .5rem;
+}
+
+/*
+  ============================================================================
+  # Buttons
+  ============================================================================
+*/
+
+.btn {
+  border: none;
+  padding: .4em .5em .3em;
+  font-size: 1rem;
+  border-radius: 2px;
   cursor: pointer;
+  margin-right: .3rem;
 }
 
-.sidebar-col a {
-  color: rgba(255, 255, 255, .5);
+.btn:disabled {
+  background: #ddd;
+  color: #999;
+  cursor: default;
 }
 
-.sidebar-col a:hover {
-  color: rgba(255, 255, 255, .75);
+.btn--primary {
+  background: #4d638d;
+  background: linear-gradient(#4d638d, #2d4471);
+  color: white;
 }
 
-.sidebar-col a.active {
-  color: #fff;
+.btn--primary:active {
+  background: #2d4471;
 }
+
+.btn--secondary {
+  background: #d4c16a;
+  background: linear-gradient(#d4c16a, #aa9538);
+  color: white;
+}
+
+.btn--secondary:active {
+  background: #aa9538;
+}
+
+/*
+  ============================================================================
+  # Uncategorized
+  ============================================================================
+*/
 
 .hidden {
   display: none;
@@ -25,10 +174,6 @@ input[type="submit"] {
 
 .ticketClass {
   text-align: right;
-}
-
-.new-row {
-	/*margin-bottom: 2rem;*/
 }
 
 @media screen and (min-width: 768px) {

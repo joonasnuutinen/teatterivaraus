@@ -1,32 +1,13 @@
 extends layout
 
 block content
-  .container-fluid
-    .row
-      .col
-      .col-12.col-sm-8.col-md-6.col-lg-4
-        h1= title
-        
-        if errors
-          each error in errors
-            p= error
-        
-        form(action='' method='POST')
-          .form-group
-            label(for='name') Teatterin nimi
-            input.form-control(name='name' id='name' type='text' aria-required='true')
-          .form-group
-            label(for='email') Sähköposti
-            input.form-control(name='email' id='email' type='email' aria-required='true')
-          .form-group
-            label(for='password') Salasana
-            input.form-control(name='password' id='password' type='password' aria-required='true')
-          .form-group
-            button.btn.btn-primary(type='submit') Rekisteröidy
-        
-        p
-          | Oletko jo rekisteröitynyt?
-          |
-          a(href='/app/kirjaudu') Kirjaudu sisään täällä
-          | .
-      .col
+  .content
+    h1.page-title= title
+    
+    p Ota yhteyttä osoitteeseen <a href="mailto:joonas@joonasnuutinen.com">joonas@joonasnuutinen.com</a>, niin saat tunnukset.
+    
+    p
+      | Oletko jo rekisteröitynyt?
+      |
+      a(href='/app/kirjaudu') Kirjaudu sisään täällä
+      | .

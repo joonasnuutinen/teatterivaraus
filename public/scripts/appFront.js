@@ -97,8 +97,8 @@ $(function() {
   };
   
   // if data-schema is provided, add content handling functionality
-  if ($('.content').attr('data-schema')) {
-    var schemaOptions = options[$('.content').attr('data-schema')];
+  if ($('.dynamic-content').attr('data-schema')) {
+    var schemaOptions = options[$('.dynamic-content').attr('data-schema')];
     resetContent(schemaOptions);
     userEvents(schemaOptions);
     if ($('#filter').length > 0) initFilter();
@@ -115,10 +115,12 @@ $(function() {
 function resetContent(schemaOptions) {
   // create new row div and buttons
   var newRowHtml = '<div class="fields"></div>';
-  newRowHtml += '<button class="edit-row btn btn-primary" type="button">Lisää uusi</button>';
-  newRowHtml += '<button class="save-row btn btn-primary hidden" type="button">Tallenna</button>';
-  newRowHtml += '<button class="cancel-row btn btn-secondary hidden" type="button">Peruuta</button>';
+  var addNewHtml = '<button id="add-new" class="edit-row btn btn--primary" type="button" data-row-id="newRow">Lisää uusi</button>';
+  newRowHtml += '<button class="save-row btn btn--primary hidden" type="button">Tallenna</button>';
+  newRowHtml += '<button class="cancel-row btn btn--secondary hidden" type="button">Peruuta</button>';
   
+  $( '#add-new' ).remove();
+  $( '#content-actions' ).prepend( addNewHtml );
   $('#newRow').html(newRowHtml);
   
   populateRows(schemaOptions);
@@ -132,9 +134,9 @@ function populateRows(schemaOptions) {
   };
   var url = createUrl('json', params);
   $.getJSON(url, function(data) {
-    var columns = $('.content').attr('data-columns-view').split(' ');
+    var columns = $('.dynamic-content').attr('data-columns-view').split(' ');
     var allRows = '';
-    var schema = $('.content').attr('data-schema');
+    var schema = $('.dynamic-content').attr('data-schema');
     
     data.forEach(function(item) {
       allRows += '<div class="data-row" id="' + item._id + '">';
@@ -160,7 +162,7 @@ function populateRows(schemaOptions) {
       
       allRows += '</div>';
       
-      allRows += '<button class="edit-row btn btn-primary" type="button">Muokkaa</button>';
+      allRows += '<button class="edit-row btn btn-primary" type="button" data-row-id="' + item._id + '">Muokkaa</button>';
       allRows += '<button class="delete-row btn btn-danger" type="button">Poista</button>';
       
       if (schema == 'sponsor') {
@@ -168,8 +170,8 @@ function populateRows(schemaOptions) {
         allRows += '<button class="move-down btn btn-warning" type="button">Laske</button>';
       }
       
-      allRows += '<button class="save-row btn btn-primary hidden" type="button">Tallenna</button>';
-      allRows += '<button class="cancel-row btn btn-secondary hidden" type="button">Peruuta</button>';
+      allRows += '<button class="save-row btn btn--primary hidden" type="button">Tallenna</button>';
+      allRows += '<button class="cancel-row btn btn--secondary hidden" type="button">Peruuta</button>';
       allRows += '</div>';
     });
     $('.data-rows').html(allRows);
@@ -185,19 +187,23 @@ function initFilter() {
 
 // add listeners to user events
 function userEvents(schemaOptions) {  
-  $('.content').on('click', '.edit-row', function() {
-    editRow($(this).parent().attr('id'), schemaOptions, true);
+  $( '#nav-toggler' ).click( function navTogglerClicked() {
+    $( '#nav' ).slideToggle();
+  } );
+  
+  $('.dynamic-content').on('click', '.edit-row', function() {
+    editRow($(this).attr('data-row-id'), schemaOptions, true);
   });
   
-  $('.content').on('click', '.delete-row', function() {
+  $('.dynamic-content').on('click', '.delete-row', function() {
     deleteRow($(this).parent().attr('id'), schemaOptions);
   });
   
-  $('.content').on('click', '.save-row', function() {
+  $('.dynamic-content').on('click', '.save-row', function() {
     saveEdit($(this).parent().attr('id'), schemaOptions, cancelEdit);
   });
   
-  $('.content').on('click', '.cancel-row', function() {
+  $('.dynamic-content').on('click', '.cancel-row', function() {
     cancelEdit($(this).parent().attr('id'), schemaOptions);
   });
   
@@ -219,11 +225,11 @@ function userEvents(schemaOptions) {
     printReservations();
   });
   
-  $('.content').on('click', '.move-up', function() {
+  $('.dynamic-content').on('click', '.move-up', function() {
     moveUp( $( this ).parent(), schemaOptions );
   });
   
-  $('.content').on('click', '.move-down', function() {
+  $('.dynamic-content').on('click', '.move-down', function() {
     moveDown( $( this ).parent(), schemaOptions );
   });
   

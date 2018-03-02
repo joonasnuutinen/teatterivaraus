@@ -1,0 +1,31 @@
+/*
+  ============================================================================
+  # Navbar
+  ============================================================================
+*/
+
+.navbar__toggler {
+  float: right;
+  margin-right: .5rem;
+  font-size: 2em;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: white;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.navbar__nav--collapse {
+  display: none;
+}
+
+/*
+  ============================================================================
+  # Content
+  ============================================================================
+*/
+
+.content-actions {
+  margin-bottom: 1rem;
+}

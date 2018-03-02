@@ -5,35 +5,27 @@ html(lang='fi')
   
   head
     title= title + ' - Teatterivaraus'
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/style-app.css')
   
-  body
+  body.page
     header
-      nav.navbar.navbar-expand-md.navbar-dark.bg-dark
-        a.navbar-brand(href='/app') Teatterivaraus
-        button.navbar-toggler(type='button' data-toggle='collapse' data-target='#sidebar' aria-controls='sidebar' aria-expanded='false' aria-label='Avaa tai sulje valikko')
-          span.navbar-toggler-icon
+      nav.navbar
+        a.navbar__brand(href='/app') Teatterivaraus
+        button#nav-toggler.navbar__toggler(type='button')
+          != '&#9776;'
         
-        .navbar-nav.ml-auto.d-none.d-md-flex
-          a.nav-item.nav-link(href='/app/kirjaudu-ulos') Kirjaudu ulos
+        ul#nav.navbar__nav.navbar__nav--collapse
+          each navItem in [{title: 'Varaukset', href: '/app/varaukset'}, {title: 'Varaustilanne', href: '/app/varaustilanne'}, {title: 'Näytökset', href: '/app/naytokset'}, {title: 'Lippujen hinnat', href: '/app/lippujen-hinnat'}, {title: 'Sponsorit', href: '/app/sponsorit'}, {title: 'Asetukset', href: '/app/asetukset'}, {title: 'Julkinen varauslomake', href: '/app/lomake', target: '_blank'}, {title: 'Kirjaudu ulos', href: '/app/kirjaudu-ulos'}]
+            - var isActive = (navItem.title == title)
+            - var className = (isActive ? 'navbar__item navbar__item--active' : 'navbar__item')
+            - var target = ( navItem.target ) ? navItem.target : '_self'
+            li(class=className)
+              a.navbar__link(href=navItem.href target=target)= navItem.title
     
-    .container-fluid
-      .row
-        .sidebar-col.col-12.col-md-3.col-xl-2.pl-0.bg-dark
-          nav.collapse.d-md-block#sidebar
-            each navItem in [{title: 'Varaukset', href: '/app/varaukset'}, {title: 'Varaustilanne', href: '/app/varaustilanne'}, {title: 'Näytökset', href: '/app/naytokset'}, {title: 'Lippujen hinnat', href: '/app/lippujen-hinnat'}, {title: 'Sponsorit', href: '/app/sponsorit'}, {title: 'Asetukset', href: '/app/asetukset'}]
-              - var isActive = (navItem.title == title)
-              - var className = (isActive ? 'nav-link active' : 'nav-link')
-              a(class=className href=navItem.href)= navItem.title
-            
-            a.nav-link(href='/app/lomake' target='_blank') Julkinen varauslomake
-            a.nav-link.d-md-none(href='/app/kirjaudu-ulos') Kirjaudu ulos
-        .col
-          block content
+    block content
     
     script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f' crossorigin='anonymous')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     script(src='/scripts/global.js')
     script(src='/scripts/appFront.js')
