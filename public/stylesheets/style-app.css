@@ -105,3 +105,43 @@
 .table__cell--number {
   text-align: right;
 }
+
+/*
+  ============================================================================
+  # Screen width >= 720px
+  ============================================================================
+*/
+
+@media screen and (min-width: 720px) {
+  .navbar {
+    height: 65px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  .navbar__toggler {
+    display: none;
+  }
+  
+  .navbar__nav--collapse {
+    display: block!important;
+    position: fixed;
+    top: 65px;
+    width: 200px;
+    padding-top: .5rem;
+    background: #2d4471;
+    background: linear-gradient(to top left, #152B55, #4d638d);
+    min-height: calc( 100vh - 65px );
+  }
+  
+  .navbar__nav--collapse .navbar__link {
+    padding: .7rem .5rem;
+  }
+  
+  .content {
+    margin-top: 65px;
+    margin-left: 200px;
+  }
+}
