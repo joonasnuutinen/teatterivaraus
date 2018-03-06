@@ -22,6 +22,9 @@ $(function() {
     tickets: {
       unit: 'kpl',
       input: false
+    },
+    marketingPermission: {
+      label: 'Teatteri saa lähettää minulle sähköpostia tulevista esityksistä.'
     }
   };
   

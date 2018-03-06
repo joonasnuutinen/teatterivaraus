@@ -32,8 +32,8 @@ exports.reservations = function(req, res, next) {
   var options = {
     schema: 'reservation',
     columnsView: 'fullName show tickets additionalInfo',
-    columnsEdit: 'lastName firstName email phone show ticketClasses additionalInfo',
-    filterAndPrint: true,
+    columnsEdit: 'lastName firstName email phone show ticketClasses additionalInfo marketingPermission',
+    filterAndPrint: true
   };
   res.render('rows', {title: 'Varaukset', options: options, theatre: req.user});
 };
@@ -122,7 +122,8 @@ exports.post = function(req, res, next) {
         show: req.body.newShow,
         additionalInfo: req.body.newAdditionalInfo,
         theatre: req.user._id,
-        tickets: tickets
+        tickets: tickets,
+        marketingPermission: req.body.newMarketingPermission
       });
       
       reservation.markModified('tickets');
@@ -180,6 +181,8 @@ exports.put = function(req, res, next) {
       errors: []
     };
     
+    console.log( req.body );
+    
     if (errors.isEmpty()) {
       var reservation = new Reservation({
         lastName: req.body.editedLastName,
@@ -190,7 +193,8 @@ exports.put = function(req, res, next) {
         additionalInfo: req.body.editedAdditionalInfo,
         theatre: req.user._id,
         tickets: tickets,
-        _id: req.params.id
+        _id: req.params.id,
+        marketingPermission: req.body.editedMarketingPermission
       });
       
       reservation.markModified('tickets');
@@ -340,7 +344,7 @@ exports.customerGet = function(req, res, next) {
     
     var options = {
       schema: 'reservation',
-      columnsEdit: 'firstName lastName email phone show ticketClasses additionalInfo',
+      columnsEdit: 'firstName lastName email phone show ticketClasses additionalInfo marketingPermission',
     };
     
     res.render('customerReservation', {
@@ -396,6 +400,8 @@ exports.customerPost = function(req, res, next) {
       errors: []
     };
     
+    //console.log( req.body );
+    
     if (errors.isEmpty()) {
       var reservation = new Reservation({
         lastName: req.body.newLastName,
@@ -405,7 +411,8 @@ exports.customerPost = function(req, res, next) {
         show: req.body.newShow,
         additionalInfo: req.body.newAdditionalInfo,
         theatre: req.params.theatreId,
-        tickets: tickets
+        tickets: tickets,
+        marketingPermission: req.body.newMarketingPermission
       });
       
       reservation.markModified('tickets');

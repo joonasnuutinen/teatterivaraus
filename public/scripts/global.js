@@ -23,6 +23,10 @@ function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {
       } else if (column === 'show') {
         formGroup = createShowGroup(data, schemaOptions, idPrefix, theatre.shows, showPast);
       
+      // add marketing permission checkbox
+      } else if ( column == 'marketingPermission' ) {
+        formGroup = createMarketingPermissionGroup( data, schemaOptions, idPrefix )
+      
       // add text input
       } else {
         formGroup = createTextGroup(data, schemaOptions, idPrefix, column);
@@ -136,6 +140,30 @@ function createTextGroup(data, schemaOptions, idPrefix, column) {
   return [textLabel, textDiv];
 }
 
+// create form group for marketing permission checkbox
+function createMarketingPermissionGroup(data, schemaOptions, idPrefix) {
+  var checkboxId = idPrefix + 'MarketingPermission';
+  
+  var permissionDiv = document.createElement('div');
+  permissionDiv.className = 'form-group form-group--checkboxes';
+
+  var permissionLabel = document.createElement( 'label' );
+  permissionLabel.className = 'form__label';
+  permissionLabel.setAttribute( 'for', checkboxId );
+  permissionLabel.textContent = schemaOptions.marketingPermission.label;
+  
+  var permissionCheckbox = document.createElement( 'input' );
+  permissionCheckbox.type = 'checkbox';
+  permissionCheckbox.className = 'edited-field permission-checkbox checkbox';
+  permissionCheckbox.id = checkboxId;
+  permissionCheckbox.checked = data ? data.marketingPermission : false;
+  
+  permissionDiv.appendChild( permissionCheckbox );
+  permissionDiv.appendChild( permissionLabel );
+  
+  return ['', permissionDiv];
+}
+
 // create form group for show
 function createShowGroup(data, schemaOptions, idPrefix, shows, showPast) {
   var selectId = idPrefix + 'Show';
@@ -204,7 +232,15 @@ function saveEdit(id, schemaOptions, callback) {
   }
   
   $('#' + id + ' .edited-field').each(function() {
-    newData[$(this).attr('id')] = $(this).val();
+    var value;
+    
+    if ( $( this ).hasClass( 'checkbox' ) ) {
+      value = $( this ).prop( 'checked' );
+    } else {
+      value = $( this ).val();
+    }
+    
+    newData[$(this).attr('id')] = value;
   });
   
   $.ajax({

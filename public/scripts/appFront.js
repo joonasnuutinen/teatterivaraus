@@ -72,6 +72,10 @@ $(function() {
       tickets: {
         unit: 'kpl',
         input: true
+      },
+      
+      marketingPermission: {
+        label: 'Markkinointilupa'
       }
     },
     
@@ -434,7 +438,7 @@ function createUrl(subPath, paramObject) {
 function scrollTo(id) {
   var $target = $( '#' + id );
   var offset = $target.offset().top;
-  console.log( offset );
+  //console.log( offset );
   
   $('html, body').scrollTop( offset );
 }

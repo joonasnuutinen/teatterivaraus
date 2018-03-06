@@ -145,6 +145,19 @@
   margin-bottom: 1rem;
 }
 
+.form-group--checkboxes {
+}
+
+.form-group--checkboxes .form__label {
+  width: calc( 100% - 18px );
+  float: right;
+  margin-bottom: 1rem;
+}
+
+.checkbox {
+  margin: 0;
+}
+
 /*
   ============================================================================
   # Buttons

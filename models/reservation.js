@@ -56,7 +56,12 @@ var ReservationSchema = Schema({
       min: 0,
       default: 0
     }
-  }]
+  }],
+  
+  marketingPermission: {
+    type: Boolean,
+    default: false
+  }
 });
 
 // virtual for full name
