@@ -23,7 +23,6 @@
 .navbar {
   background: #2d4471;
   background: linear-gradient(to top left, #152B55, #4d638d);
-  padding: .5rem 0 0;
 }
 
 .navbar__brand {
@@ -32,6 +31,11 @@
   text-decoration: none;
   font-size: 2rem;
   margin: 0 0 .5rem .5rem
+}
+
+.navbar__logo {
+  width: 240px;
+  margin-top: 14px;
 }
 
 .navbar__nav {
@@ -72,11 +76,6 @@
   line-height: 1.3;
 }
 
-.page-title {
-  font-size: 2rem;
-  margin: .5rem 0 1rem;
-}
-
 .content p {
   margin: 0 0 1rem;
 }
@@ -93,6 +92,27 @@
 .content a:hover {
   text-decoration: underline;
   color: #2d4471;
+}
+
+/*
+  ============================================================================
+  # Titles
+  ============================================================================
+*/
+
+.page-title {
+  font-size: 2rem;
+  margin: .5rem 0 1rem;
+}
+
+.secondary-title {
+  font-size: 1.5rem;
+  margin: 2rem 0 1rem;
+}
+
+.small-title {
+  font-size: 1rem;
+  margin: 1rem 0 .5rem;
 }
 
 /*
@@ -121,6 +141,10 @@
   margin-right: .5rem;
 }
 
+.data-row--new {
+  margin-bottom: 1rem;
+}
+
 /*
   ============================================================================
   # Buttons
@@ -129,11 +153,12 @@
 
 .btn {
   border: none;
-  padding: .4em .5em .3em;
+  padding: .3em .5em .3em;
   font-size: 1rem;
   border-radius: 2px;
   cursor: pointer;
-  margin-right: .3rem;
+  margin-right: .1rem;
+  font-family: inherit;
 }
 
 .btn:disabled {
@@ -162,6 +187,16 @@
   background: #aa9538;
 }
 
+.btn--danger {
+  background: #d4986a;
+  background: linear-gradient(#d4986a, #aa6a38);
+  color: white;
+}
+
+.btn--danger:active {
+  background: #aa6a38;
+}
+
 /*
   ============================================================================
   # Uncategorized
@@ -180,4 +215,19 @@
   .sidebar-col {
     min-height: calc(100vh - 56px);
   }
+}
+
+/*
+  ============================================================================
+  # Errors and messages
+  ============================================================================
+*/
+
+.message__content {
+  padding: .2rem;
+  margin-bottom: 1rem;
+}
+
+.message__content--error {
+  background: #d4986a;
 }

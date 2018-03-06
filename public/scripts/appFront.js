@@ -19,7 +19,7 @@ $(function() {
       },
       info: {
         label: 'Näytöksen kuvaus (valinnainen)',
-        placeholder: 'esim. Valaistu yönäytös'
+        placeholder: 'esim. Ensi-ilta'
       },
       year: {
         label: 'Vuosi'
@@ -162,12 +162,12 @@ function populateRows(schemaOptions) {
       
       allRows += '</div>';
       
-      allRows += '<button class="edit-row btn btn-primary" type="button" data-row-id="' + item._id + '">Muokkaa</button>';
-      allRows += '<button class="delete-row btn btn-danger" type="button">Poista</button>';
+      allRows += '<button class="edit-row btn btn--primary" type="button" data-row-id="' + item._id + '">Muokkaa</button>';
+      allRows += '<button class="delete-row btn btn--danger" type="button">Poista</button>';
       
       if (schema == 'sponsor') {
-        allRows += '<button class="move-up btn btn-warning" type="button">Nosta</button>';
-        allRows += '<button class="move-down btn btn-warning" type="button">Laske</button>';
+        allRows += '<button class="move-up btn btn--secondary" type="button">Nosta</button>';
+        allRows += '<button class="move-down btn btn--secondary" type="button">Laske</button>';
       }
       
       allRows += '<button class="save-row btn btn--primary hidden" type="button">Tallenna</button>';
@@ -181,7 +181,7 @@ function populateRows(schemaOptions) {
 // initialize filter
 function initFilter() {
   $.getJSON('/app/naytokset/json', function(shows) {
-    populateSelect($('#filter')[0], null, shows);
+    populateSelect($('#filter')[0], null, shows, true);
   });
 }
 
@@ -246,24 +246,28 @@ function userEvents(schemaOptions) {
 
 // create form for new or edited row
 function editRow(id, schemaOptions, showPast) {
+  var row = $('#' + id);
+  row.addClass( 'data-row--edit' );
+  
+  var showSaveAndCancelButtons = function() {
+    row.children('.save-row, .cancel-row').removeClass('hidden');
+    row.children('.edit-row, .delete-row, .move-up, .move-down').addClass('hidden');
+  }
+
+  $('.edit-row, .add-row, .delete-row, .move-up, .move-down').prop('disabled', true);
+  $('.errors').html('');
+  
   switch (id) {
     case 'newRow':
       // show new form with no existing data
-      showForm(id, null, schemaOptions, 'new', showPast);
+      showForm(id, null, schemaOptions, 'new', showPast, showSaveAndCancelButtons);
       break;
     default:
       // populate row with its data
       $.getJSON(document.location.pathname + '/' + id, function(data) {
-        showForm(id, data, schemaOptions, 'edited', showPast);
+        showForm(id, data, schemaOptions, 'edited', showPast, showSaveAndCancelButtons);
       });
-  }
-  
-  // hide or disable buttons
-  var row = $('#' + id);
-  row.children('.save-row, .cancel-row').removeClass('hidden');
-  row.children('.edit-row, .delete-row, .move-up, .move-down').addClass('hidden');
-  $('.edit-row, .add-row, .delete-row, .move-up, .move-down').prop('disabled', true);
-  $('.errors').html('');
+  }  
 }
 
 // delete row
@@ -283,7 +287,7 @@ function deleteRow(id, schemaOptions) {
         response.errors.forEach(function(error) {
           errors += error.msg + '<br>';
         });
-        $('.errors').html(errors);
+        $('.errors').html( '<div class="message__content message__content--error">' + errors + '</div>' );
       }
     });
   }
@@ -291,9 +295,11 @@ function deleteRow(id, schemaOptions) {
 
 // cancel editing row
 function cancelEdit(id, schemaOptions, data) {
+  $( '.data-row' ).removeClass( 'data-row--edit' );
   resetContent(schemaOptions);
   $('.errors').html('');
   $('.add-row').prop('disabled', false);
+  if ( id ) scrollTo( id );
 }
 
 // print reservations
@@ -389,9 +395,9 @@ function changePassword() {
   var url = $form.attr( 'action' );
   
   var posting = $.post( url, {
-    oldPassword: $( '#oldPassword' ).val(),
-    newPassword: $( '#newPassword' ).val(),
-    retypeNewPassword: $( '#retypeNewPassword' ).val()
+    oldPassword: $form.find( 'input[name="oldPassword"]' ).val(),
+    newPassword: $form.find( 'input[name="newPassword"]' ).val(),
+    retypeNewPassword: $form.find( 'input[name="retypeNewPassword"]' ).val(),
   } );
   
   posting.done( function postingDone( data ) {
@@ -400,10 +406,9 @@ function changePassword() {
       data.errors.forEach(function(error) {
         errors += error.msg + '<br>';
       });
-      $form.parent().find( '.message' ).html( errors );
-      console.log('errors printed');
+      $form.parent().find( '.message' ).html( '<div class="message__content message__content--error">' + errors + '</div>' );
     } else {
-      $form.parent().find( '.message' ).html( data.message );
+      $form.parent().find( '.message' ).html( '<div class="message__content">' + data.message + '</div>' );
       $form.find( 'input' ).val( '' );
     }
   } );
@@ -423,4 +428,13 @@ function createUrl(subPath, paramObject) {
     }
   }
   return url;
+}
+
+// scroll to id
+function scrollTo(id) {
+  var $target = $( '#' + id );
+  var offset = $target.offset().top;
+  console.log( offset );
+  
+  $('html, body').scrollTop( offset );
 }

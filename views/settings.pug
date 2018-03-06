@@ -1,35 +1,29 @@
 extends layout_app
 
 block content
-  h1= title
-  
-  if errors
-    each error in errors
-      p= error.msg
-  
-  form(action='' method='POST')
-    .form-group
-      label(for='play-name') Näytelmän nimi
-      input#play-name.form-control(type='text' name='playName' value=(undefined===theatre.playName ? '' : theatre.playName))
-    .form-group
-      label(for='play-description') Näytelmän kuvaus
-      input#play-description.form-control(type='text' name='playDescription' value=(undefined===theatre.playDescription ? '' : theatre.playDescription))
-    div
-      input.btn.btn-primary(type='submit' value='Tallenna')
-  
-  section#Vaihda-salasana
-    h2 Vaihda salasana
-    form#changePassword(action='/app/vaihda-salasana' method='post')
-      .form-group
-        label(for='oldPassword') Vanha salasana
-        input#oldPassword.form-control(type='password' name='oldPassword')
-      .form-group
-        label(for='newPassword') Uusi salasana
-        input#newPassword.form-control(type='password' name='newPassword')
-      .form-group
-        label(for='retypeNewPassword') Vahvista uusi salasana
-        input#retypeNewPassword.form-control(type='password' name='retypeNewPassword')
-      .form-group
-        button.btn.btn-primary(type='submit') Vaihda salasana
+  .content
+    h1.page-title= title
     
-    .message
+    if errors
+      each error in errors
+        p= error.msg
+    
+    form.form(action='' method='POST')
+      label Näytelmän nimi
+        input.input(type='text' name='playName' value=(undefined===theatre.playName ? '' : theatre.playName))
+      label Näytelmän kuvaus
+        input.input(type='text' name='playDescription' value=(undefined===theatre.playDescription ? '' : theatre.playDescription))
+      button.btn.btn--primary(type='submit') Tallenna
+    
+    section#Vaihda-salasana
+      h2.secondary-title Vaihda salasana
+      form#changePassword.form(action='/app/vaihda-salasana' method='post')
+        label Vanha salasana
+          input.input(type='password' name='oldPassword')
+        label Uusi salasana
+          input.input(type='password' name='newPassword')
+        label Vahvista uusi salasana
+          input.input(type='password' name='retypeNewPassword')
+        button.btn.btn--primary(type='submit') Vaihda salasana
+      
+      .message

@@ -1,33 +1,35 @@
 doctype html
-html
+html(lang='fi')
+  meta(charset='utf-8')
+  meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+  
   head
     title= title
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="/images/icon.png">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
     link(rel='stylesheet', href='/stylesheets/style.css')
     
-  body
-    .container
-      .row
-        .col
-          - var description = theatre.name + ': ' + theatre.playName;
-          h1 Lippuvaraus
-          span= description
-          
-          .content(data-schema=options.schema data-columns-edit=options.columnsEdit data-theatre=theatre._id)
-            .dataRow.new-row#newRow
-            .errors.text-danger
+  body.page
+    .content
+      - var description = theatre.name + ': ' + theatre.playName;
+      h1.page-title Lippuvaraus
+      p= description
+      
+      .dynamic-content(data-schema=options.schema data-columns-edit=options.columnsEdit data-theatre=theatre._id)
+        .dataRow.new-row.data-row--new#newRow
+        .errors.text-danger
+        
+        if sponsors
+          section
+            h2.secondary-title Yhteistyössä
             
-            if sponsors
-              h4.mt-5.mb-3 Yhteistyössä
+            each sponsor in sponsors
+              h3.small-title= sponsor.name
               
-              each sponsor in sponsors
-                - var sponsorUrl = 'http://' + sponsor.url;
-                h5= sponsor.name
-                
-                p
-                  | #{sponsor.description}
-                  |
-                  a(href=sponsorUrl target="_blank") Lue lisää
+              p
+                | #{sponsor.description}
+                |
+                a(href=sponsor.urlHref target="_blank") Lue lisää
   
   script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f' crossorigin='anonymous')
   script(src='/scripts/global.js')

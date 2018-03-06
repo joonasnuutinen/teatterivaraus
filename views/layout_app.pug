@@ -5,14 +5,16 @@ html(lang='fi')
   
   head
     title= title + ' - Teatterivaraus'
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/images/icon.png">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/style-app.css')
   
   body.page
     header
       nav.navbar
-        a.navbar__brand(href='/app') Teatterivaraus
+        a.navbar__brand(href='/app')
+          img.navbar__logo(src='/images/logo.svg' alt='Teatterivaraus-logo')
         button#nav-toggler.navbar__toggler(type='button')
           != '&#9776;'
         

@@ -8,6 +8,7 @@ var TicketClass = require('../models/ticketClass');
 var Show = require('../models/show');
 var Theatre = require('../models/theatre');
 var Sponsor = require( '../models/sponsor' );
+var mailgun = require( 'mailgun-js' );
 
 try {
   require('dotenv').load();
@@ -254,7 +255,7 @@ exports.stats = function(req, res, next) {
       data.shows[showIndex].reservationCount += ticketAmount;
       total += ticketAmount;
     });
-    //console.log(data.shows);
+    console.log(data.shows);
     res.render('stats', {title: 'Varaustilanne', shows: data.shows, total: total});
   });
 };
@@ -377,6 +378,7 @@ exports.customerPost = function(req, res, next) {
   req.checkBody('newLastName', 'Sukunimi puuttuu.').notEmpty();
   req.checkBody('newEmail', 'Sähköposti puuttuu.').notEmpty();
   req.checkBody('newEmail', 'Virheellinen sähköposti.').isEmail();
+  req.checkBody('newShow', 'Näytöstä ei ole valittu.').notEmpty();
   
   req.sanitize('newLastName').escape();
   req.sanitize('newLastName').trim();
@@ -479,7 +481,7 @@ function sendEmailConfirmation(id, theatreId) {
     sponsors.forEach( function eachSponsor(sponsor) {
       body += sponsor.name + '\n';
       body += sponsor.description + '\n';
-      body += 'Lue lisää: ' + sponsor.url + '\n\n';
+      body += 'Lue lisää: ' + sponsor.urlHref + '\n\n';
     } );
     // ---------------------------------------------------------------------
     // email body ends -----------------------------------------------------
@@ -493,8 +495,14 @@ function sendEmailConfirmation(id, theatreId) {
       subject: 'Lippuvarauksesi on vastaanotettu'
     };
     
-    smtpServer.send(message, function(err) {
+    var mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN});
+    
+    /*smtpServer.send(message, function(err) {
       if (err) console.log(err);
+    });*/
+    
+    mailgun.messages().send( message, function mailSent(err) {
+      if (err) console.log( err );
     });
     
     if (reservation.additionalInfo) {
@@ -508,7 +516,7 @@ function sendEmailConfirmation(id, theatreId) {
       // email body ends ---------------------------------------------------
       // -------------------------------------------------------------------
       
-      smtpServer.send({
+      mailgun.messages().send({
         text: enquiryBody,
         from: reservation.firstName + ' ' + reservation.lastName + ' <' + reservation.email + '>',
         to: reservation.theatre.email,

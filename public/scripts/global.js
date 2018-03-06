@@ -3,7 +3,7 @@
 // ===================================================================
 
 // create and show form
-function showForm(id, data, schemaOptions, idPrefix, showPast) {  
+function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {  
   var fieldHtml = '';
   var columns = $('.dynamic-content').attr('data-columns-edit').split(' ');
   var jsonUrl = '/' + $('.dynamic-content').attr('data-theatre') + '.json';
@@ -33,6 +33,8 @@ function showForm(id, data, schemaOptions, idPrefix, showPast) {
     });
 
     $('#' + id + ' > .fields')[0].replaceWith(fieldsDiv);
+    
+    if ( callback ) callback();
   });
 }
 
@@ -61,7 +63,7 @@ function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
       numberField.value = data && data.tickets[index] ? data.tickets[index].amount : '0';
     } else {
       numberField = document.createElement('select');
-      numberField.className = 'edited-field input';
+      numberField.className = 'edited-field input input--narrow';
       
       for (var i = 0; i <= 10; i++) {
         var numberOption = document.createElement('option');
@@ -160,10 +162,16 @@ function createShowGroup(data, schemaOptions, idPrefix, shows, showPast) {
 // populate select item with shows
 function populateSelect(node, data, shows, showPast) {
   shows.forEach(function(show) {
-    if (showPast || new Date() < Date.parse( show.begins )) {
+    var isPast = new Date() > Date.parse( show.begins );
+    if (showPast || ! isPast) {
       var optionObject = document.createElement('option');
       optionObject.value = show._id;
       optionObject.text = show.beginsPretty;
+      
+      if ( isPast ) {
+        optionObject.disabled = true;
+      }
+      
       node.add(optionObject);
     }
   });
@@ -212,7 +220,7 @@ function saveEdit(id, schemaOptions, callback) {
       response.errors.forEach(function(error) {
         errors += error.msg + '<br>';
       });
-      $('.errors').html(errors);
+      $('.errors').html( '<div class="message__content message__content--error">' + errors + '</div>');
     }
   });
 }

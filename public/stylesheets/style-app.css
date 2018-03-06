@@ -6,7 +6,7 @@
 
 .navbar__toggler {
   float: right;
-  margin-right: .5rem;
+  margin: 17px .5rem 0 0;
   font-size: 2em;
   padding: 0;
   background: transparent;
@@ -27,5 +27,81 @@
 */
 
 .content-actions {
+}
+
+/*
+  ============================================================================
+  # Rows
+  ============================================================================
+*/
+
+.data-row--new {
   margin-bottom: 1rem;
+}
+
+.data-rows .data-row {
+  
+}
+
+.data-rows .data-row:nth-child(even) {
+  background: #ecf3ff;
+}
+
+.name,
+.fullName,
+.beginsLite {
+  font-weight: 700;
+}
+
+.name,
+.description {
+  margin-bottom: .25rem;
+}
+
+.data-row--edit .fields {
+  margin-top: 1rem;
+}
+
+/*
+  ============================================================================
+  # Tables
+  ============================================================================
+*/
+
+.table {
+  border-collapse: collapse;
+}
+
+.table__head {
+  background: #78a;
+  color: white;
+}
+
+.table__header {
+  text-align: left;
+  font-weight: 500;
+}
+
+.table__header,
+.table__cell {
+  border-bottom: 1px solid #ccc;
+  padding: .2em;
+}
+
+.table__body .table__row:nth-child(even) {
+  background: #ecf3ff;
+}
+
+.table__foot {
+  background: #78a;
+  color: white;
+  font-weight: 500;
+}
+
+.table__foot .table__row:last-child .table__cell {
+  border-bottom: none;
+}
+
+.table__cell--number {
+  text-align: right;
 }

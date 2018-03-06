@@ -4,7 +4,7 @@ var Sponsor = require('../models/sponsor.js');
 exports.sponsors = function(req, res, next) {
   var options = {
     schema: 'sponsor',
-    columnsView: 'name description url order',
+    columnsView: 'name description urlView order',
     columnsEdit: 'name description url order',
   };
   res.render('rows', {title: 'Sponsorit', options: options, theatre: req.user});
@@ -15,17 +15,17 @@ exports.post = function(req, res, next) {
   Sponsor.count({theatre: req.user._id}, function(err, sponsorCount) {
     if (err) return next(err);
     
-    console.log(req.body);
+    //console.log(req.body);
   
     req.checkBody('newName', 'Nimi puuttuu.').notEmpty();
     req.checkBody('newDescription', 'Kuvaus puuttuu.').notEmpty();
     req.checkBody('newUrl', 'Web-osoite puuttuu.').notEmpty();
     
-    console.log('pre-isUrl');
+    //console.log('pre-isUrl');
     
     req.checkBody('newUrl', 'Virheellinen web-osoite.').isURL();
     
-    console.log('checkBody done');
+    //console.log('checkBody done');
     
     req.getValidationResult().then(function(errors) {
       var message = {
@@ -53,7 +53,7 @@ exports.post = function(req, res, next) {
           }
         });
       } else {
-        console.log('errors');
+        //console.log('errors');
         message.errors = message.errors.concat(errors.useFirstErrorOnly().array());
       }
       

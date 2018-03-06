@@ -6,7 +6,7 @@ var Reservation = require('../models/reservation');
 exports.shows = function(req, res, next) {
   var options = {
     schema: 'show',
-    columnsView: 'beginsPretty',
+    columnsView: 'beginsLite info',
     columnsEdit: 'date time info',
   };
   res.render('rows', {title: 'Näytökset', options: options, theatre: req.user});

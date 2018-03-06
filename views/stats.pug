@@ -1,18 +1,20 @@
 extends layout_app
 
 block content
-  h1= title
-  
-  table.table.table-responsive
-    thead.thead-default
-      tr
-        th Esitys
-        th Varauksia
-    tbody
-      each show in shows
-        tr
-          td= show.beginsPretty
-          td.text-right= show.reservationCount
-      tr.table-info
-        th(scope='row') Yhteensä
-        td.text-right= total
+  .content
+    h1.page-title= title
+    
+    table.table
+      thead.table__head
+        tr.table__row
+          th.table__header(scope="col") Esitys
+          th.table__header(scope="col") Varauksia
+      tbody.table__body
+        each show in shows
+          tr.table__row
+            td.table__cell= show.beginsPretty
+            td.table__cell.table__cell--number= show.reservationCount
+      tfoot.table__foot
+        tr.table__row
+          td.table__cell Yhteensä
+          td.table__cell.table__cell--number= total

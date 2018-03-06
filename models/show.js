@@ -68,12 +68,20 @@ ShowSchema
 });
 */
 
+// virtual for lite date
+ShowSchema
+  .virtual('beginsLite')
+  .get(function() {
+    const weekdays = ['su', 'ma', 'ti', 'ke', 'to', 'pe', 'la'];
+    return weekdays[this.weekday] + ' ' + moment(this.begins).format('D.M.YYYY [klo] H.mm');
+});
+
 // virtual for pretty date
 ShowSchema
   .virtual('beginsPretty')
   .get(function() {
     const weekdays = ['su', 'ma', 'ti', 'ke', 'to', 'pe', 'la'];
-    return weekdays[this.weekday] + ' ' + moment(this.begins).format('D.M.YYYY [klo] H.mm') + ' ' + this.info;
+    return this.beginsLite + ' ' + this.info;
 });
 
 // virtual for date
