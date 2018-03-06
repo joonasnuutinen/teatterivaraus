@@ -32,7 +32,7 @@ function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {
       fieldsDiv.appendChild(formGroup[1]);
     });
 
-    $('#' + id + ' > .fields')[0].replaceWith(fieldsDiv);
+    $('#' + id + ' > .fields').replaceWith(fieldsDiv);
     
     if ( callback ) callback();
   });
