@@ -35,7 +35,7 @@ $(function() {
 function resetView(schemaOptions) {
   $('#newRow').html('<div class="fields"></div>');
   $('#newRow').append('<button class="save-row btn btn--primary" type="button">Varaa</button>');
-  showForm('newRow', null, schemaOptions, 'new', true);
+  showForm('newRow', null, schemaOptions, 'new' );
 }
 
 // user events

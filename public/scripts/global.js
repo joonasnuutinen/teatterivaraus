@@ -191,17 +191,15 @@ function createShowGroup(data, schemaOptions, idPrefix, shows, showPast) {
 function populateSelect(node, data, shows, showPast) {
   shows.forEach(function(show) {
     var isPast = new Date() > Date.parse( show.begins );
-    if (showPast || ! isPast) {
-      var optionObject = document.createElement('option');
-      optionObject.value = show._id;
-      optionObject.text = show.beginsPretty;
-      
-      if ( isPast ) {
-        optionObject.disabled = true;
-      }
-      
-      node.add(optionObject);
+    var optionObject = document.createElement('option');
+    optionObject.value = show._id;
+    optionObject.text = show.beginsPretty;
+    
+    if ( isPast && ! showPast ) {
+      optionObject.disabled = true;
     }
+    
+    node.add(optionObject);
   });
   //console.log( data );
   if (data) {
