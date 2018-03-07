@@ -15,8 +15,19 @@ table {
   border-collapse: collapse;
 }
 
-table, th, td {
+.show {
+  border: none;
+  padding-bottom: 1em;
+}
+
+.price {
+  text-align: right;
+}
+
+th, td {
   border: 1px solid black;
+  text-align: left;
+  padding: .25em .5em;
 }
 
 @media print {

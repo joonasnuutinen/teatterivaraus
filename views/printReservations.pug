@@ -8,12 +8,12 @@ html
     table
       thead
         tr
-          th(colspan='4')= show.beginsPretty
+          th.show(colspan='4')= show.beginsPretty
         tr
           th Nimi
           th Varaukset
           th Lisätietoja
-          th Hinta
+          th.price Hinta
         
         tbody
           each val in reservations
@@ -21,4 +21,4 @@ html
               td= val.fullName
               td!= val.total.code
               td= val.additionalInfo
-              td= val.total.priceString
+              td.price= val.total.priceString
