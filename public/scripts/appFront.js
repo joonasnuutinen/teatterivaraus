@@ -43,6 +43,9 @@ $(function() {
       time: {
         label: 'Kellonaika',
         placeholder: 'hh.mm'
+      },
+      enable: {
+        label: 'Ota vastaan varauksia'
       }
     },
     
@@ -73,9 +76,14 @@ $(function() {
         unit: 'kpl',
         input: true
       },
-      
       marketingPermission: {
         label: 'Markkinointilupa'
+      },
+      source: {
+        name: {
+          dashboard: 'Manuaalinen varaus',
+          webForm: 'Nettivaraus'
+        }
       }
     },
     
@@ -141,44 +149,119 @@ function populateRows(schemaOptions) {
     var columns = $('.dynamic-content').attr('data-columns-view').split(' ');
     var allRows = '';
     var schema = $('.dynamic-content').attr('data-schema');
+    $( '.data-rows' ).html( '' );
     
     data.forEach(function(item) {
+      var $dataRow = $( '<div>' )
+        .addClass( 'data-row' )
+        .attr( 'id', item._id );
+      
+      var $fields = $( '<div>' ).addClass( 'fields' );
+      
       allRows += '<div class="data-row" id="' + item._id + '">';
       allRows += '<div class="fields">';
       
       columns.forEach(function(column) {
+        var $column;
+        
+        // show
         if (column === 'show') {
+          var showText = (item.show !== null) ? item.show.beginsPretty : 'POISTETTU NÄYTÖS';
+          
+          $column = $( '<div>' )
+            .addClass( 'show' )
+            .text( showText );
+          
           allRows += '<div class="show">';
-          allRows += (item.show !== null) ? item.show.beginsPretty : 'POISTETTU NÄYTÖS';
+          allRows += 
           allRows += '</div>';
+        
+        // tickets
         } else if (column === 'tickets') {
           var price = item.total.priceString;
           var amount = item.total.tickets;
           var unit = (amount == 1) ? 'lippu' : 'lippua';
           allRows += '<div class="tickets">' + amount + ' ' + unit + ', ' + price + '</div>';
+          
+        // source
+        } else if ( column == 'source' ) {
+          var sourceName = schemaOptions.source.name[item.source] || 'Tuntematon lähde';
+          $column = $( '<span>' )
+            .addClass( 'source' )
+            .attr( 'title', sourceName )
+            .click( function showTooltip(e) {
+              e.stopPropagation();
+              $( '.tooltip' ).remove();
+              var tooltipHtml = '<b class="source-name">' + sourceName + '</b><br>';
+              tooltipHtml += 'Lisätty: ' + item.addedPretty;
+              tooltipHtml += ( item.edited ) ? '<br>Muokattu: ' + item.editedPretty : '';
+              //console.log(tooltipHtml);
+              var $tooltip = $( '<div>' )
+                .addClass( 'tooltip' )
+                .html( tooltipHtml )
+                .prependTo( $( '#' + item._id ) );
+              $( '.page' ).click( function pageClicked() {
+                $( '.tooltip' ).remove();
+                $( this ).off( 'click' );
+              } );
+            } );
+          
+          switch ( item.source ) {
+            case 'dashboard':
+              $column.html( '<i class="fas fa-pencil-alt"></i>' );
+              break;
+            case 'webForm':
+              $column.html( '<i class="fas fa-desktop"></i>' );
+              break;
+            default:
+              $column.html( '<i class="fas fa-question"></i>' );
+          }
+          
+          allRows += $column.get( 0 ).outerHTML;
+          
+        // everything else
         } else if(item[column] !== undefined) {
+          $column = $( '<div>' )
+            .addClass( column )
+            .attr( 'data-property', column )
+            .text( item[column] );
+          
+          if ( schemaOptions[column] && schemaOptions[column].hidden ) {
+            $column.addClass( 'hidden' );
+          }
+          
           allRows += '<div class="' + column;
           allRows += (schemaOptions[column] && schemaOptions[column].hidden) ? ' hidden' : '';
           allRows += '" data-property="' + column + '">' + item[column] + '</div>';
         }
         
+        $fields.append( $column );
+        
       });
       
       allRows += '</div>';
       
-      allRows += '<button class="edit-row btn btn--primary" type="button" data-row-id="' + item._id + '">Muokkaa</button>';
-      allRows += '<button class="delete-row btn btn--danger" type="button">Poista</button>';
+      var buttons = '';
+      
+      buttons += '<button class="edit-row btn btn--primary" type="button" data-row-id="' + item._id + '">Muokkaa</button>';
+      buttons += '<button class="delete-row btn btn--danger" type="button">Poista</button>';
       
       if (schema == 'sponsor') {
-        allRows += '<button class="move-up btn btn--secondary" type="button">Nosta</button>';
-        allRows += '<button class="move-down btn btn--secondary" type="button">Laske</button>';
+        buttons += '<button class="move-up btn btn--secondary" type="button">Nosta</button>';
+        buttons += '<button class="move-down btn btn--secondary" type="button">Laske</button>';
       }
       
-      allRows += '<button class="save-row btn btn--primary hidden" type="button">Tallenna</button>';
-      allRows += '<button class="cancel-row btn btn--secondary hidden" type="button">Peruuta</button>';
+      buttons += '<button class="save-row btn btn--primary hidden" type="button">Tallenna</button>';
+      buttons += '<button class="cancel-row btn btn--secondary hidden" type="button">Peruuta</button>';
       allRows += '</div>';
+      
+      $dataRow.append( $fields ).append( buttons );
+      
+      $( '.data-rows' ).append( $dataRow );
     });
-    $('.data-rows').html(allRows);
+    
+    
+    //$('.data-rows').html(allRows);
   });
 }
 

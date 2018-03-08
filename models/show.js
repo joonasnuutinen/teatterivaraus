@@ -15,6 +15,11 @@ var ShowSchema = Schema({
     default: ''
   },
   
+  enable: {
+    type: Boolean,
+    default: true
+  },
+  
   theatre: {
     type: Schema.ObjectId,
     ref: 'Theatre',

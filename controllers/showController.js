@@ -7,7 +7,7 @@ exports.shows = function(req, res, next) {
   var options = {
     schema: 'show',
     columnsView: 'beginsLite info',
-    columnsEdit: 'date time info',
+    columnsEdit: 'date time info enable',
   };
   res.render('rows', {title: 'Näytökset', options: options, theatre: req.user});
 };
@@ -38,6 +38,7 @@ exports.post = function(req, res, next) {
       var show = new Show({
         begins: req.body.newBegins,
         info: req.body.newInfo,
+        enable: req.body.newEnable,
         theatre: req.user._id,
       });
   
@@ -56,7 +57,7 @@ exports.post = function(req, res, next) {
 
 // GET shows JSON
 exports.getJSON = function(req, res, next) {
-  Show.find({theatre: req.user._id}, 'begins info')
+  Show.find({theatre: req.user._id})
     .sort([['begins', 'ascending']])
     .exec(function(err, shows) {
       if (err) return next(err);
@@ -66,7 +67,7 @@ exports.getJSON = function(req, res, next) {
 
 // get one show in JSON format
 exports.getById = function(req, res, next) {
-  Show.findById(req.params.id, 'begins info')
+  Show.findById(req.params.id)
     .exec(function(err, data) {
       if (err) return next(err);
       res.json(data);
@@ -96,9 +97,12 @@ exports.put = function(req, res, next) {
       req.sanitize('editedInfo').trim();
       req.sanitize('editedBegins').toDate();
       
+      //console.log( req.body );
+      
       var show = new Show({
         begins: req.body.editedBegins,
         info: req.body.editedInfo,
+        enable: req.body.editedEnable,
         theatre: req.user._id,
         _id: req.params.id
       });

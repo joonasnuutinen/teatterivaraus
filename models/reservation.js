@@ -29,8 +29,16 @@ var ReservationSchema = Schema({
   },
   
   added: {
-    type: Date,
-    default: Date.now()
+    type: Date
+  },
+  
+  edited: {
+    type: Date
+  },
+  
+  source: {
+    type: String,
+    enum: ['webForm', 'dashboard']
   },
   
   additionalInfo: {
@@ -70,9 +78,14 @@ ReservationSchema.virtual('fullName')
     return this.lastName + ' ' + this.firstName;
 });
 
-// virtual for pretty date
+// virtual for pretty added date
 ReservationSchema.virtual('addedPretty').get(function() {
   return moment(this.added).format('D.M.YYYY [klo] H.mm');
+});
+
+// virtual for pretty edited date
+ReservationSchema.virtual('editedPretty').get(function() {
+  return moment(this.edited).format('D.M.YYYY [klo] H.mm');
 });
 
 // virtual for total object

@@ -23,9 +23,9 @@ function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {
       } else if (column === 'show') {
         formGroup = createShowGroup(data, schemaOptions, idPrefix, theatre.shows, showPast);
       
-      // add marketing permission checkbox
-      } else if ( column == 'marketingPermission' ) {
-        formGroup = createMarketingPermissionGroup( data, schemaOptions, idPrefix )
+      // add checkbox
+      } else if ( column == 'marketingPermission' || column == 'enable' ) {
+        formGroup = createCheckboxGroup( data, schemaOptions, idPrefix, column )
       
       // add text input
       } else {
@@ -140,28 +140,28 @@ function createTextGroup(data, schemaOptions, idPrefix, column) {
   return [textLabel, textDiv];
 }
 
-// create form group for marketing permission checkbox
-function createMarketingPermissionGroup(data, schemaOptions, idPrefix) {
-  var checkboxId = idPrefix + 'MarketingPermission';
+// create form group for checkbox
+function createCheckboxGroup(data, schemaOptions, idPrefix, column) {
+  var checkboxId = idPrefix + capital( column );
   
-  var permissionDiv = document.createElement('div');
-  permissionDiv.className = 'form-group form-group--checkboxes';
+  var checkboxDiv = document.createElement('div');
+  checkboxDiv.className = 'form-group form-group--checkboxes';
 
-  var permissionLabel = document.createElement( 'label' );
-  permissionLabel.className = 'form__label';
-  permissionLabel.setAttribute( 'for', checkboxId );
-  permissionLabel.textContent = schemaOptions.marketingPermission.label;
+  var checkboxLabel = document.createElement( 'label' );
+  checkboxLabel.className = 'form__label';
+  checkboxLabel.setAttribute( 'for', checkboxId );
+  checkboxLabel.textContent = schemaOptions[column].label;
   
-  var permissionCheckbox = document.createElement( 'input' );
-  permissionCheckbox.type = 'checkbox';
-  permissionCheckbox.className = 'edited-field permission-checkbox checkbox';
-  permissionCheckbox.id = checkboxId;
-  permissionCheckbox.checked = data ? data.marketingPermission : false;
+  var checkbox = document.createElement( 'input' );
+  checkbox.type = 'checkbox';
+  checkbox.className = 'edited-field checkbox';
+  checkbox.id = checkboxId;
+  checkbox.checked = data ? data[column] : false;
   
-  permissionDiv.appendChild( permissionCheckbox );
-  permissionDiv.appendChild( permissionLabel );
+  checkboxDiv.appendChild( checkbox );
+  checkboxDiv.appendChild( checkboxLabel );
   
-  return ['', permissionDiv];
+  return ['', checkboxDiv];
 }
 
 // create form group for show
@@ -195,7 +195,7 @@ function populateSelect(node, data, shows, showPast) {
     optionObject.value = show._id;
     optionObject.text = show.beginsPretty;
     
-    if ( isPast && ! showPast ) {
+    if ( ( isPast || ! show.enable ) && ! showPast ) {
       optionObject.disabled = true;
     }
     
@@ -225,8 +225,6 @@ function saveEdit(id, schemaOptions, callback) {
   if (id === 'newRow') {
     ajaxType = 'POST';
     ajaxUrl = '';
-  } else if (schema == 'sponsor') {
-    
   }
   
   $('#' + id + ' .edited-field').each(function() {

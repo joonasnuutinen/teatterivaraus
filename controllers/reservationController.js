@@ -31,7 +31,7 @@ exports.index = function(req, res, next) {
 exports.reservations = function(req, res, next) {
   var options = {
     schema: 'reservation',
-    columnsView: 'fullName show tickets additionalInfo',
+    columnsView: 'source fullName show tickets additionalInfo',
     columnsEdit: 'lastName firstName email phone show ticketClasses additionalInfo marketingPermission',
     filterAndPrint: true
   };
@@ -123,6 +123,8 @@ exports.post = function(req, res, next) {
         additionalInfo: req.body.newAdditionalInfo,
         theatre: req.user._id,
         tickets: tickets,
+        source: 'dashboard',
+        added: Date.now(),
         marketingPermission: req.body.newMarketingPermission
       });
       
@@ -181,7 +183,7 @@ exports.put = function(req, res, next) {
       errors: []
     };
     
-    console.log( req.body );
+    //console.log( req.body );
     
     if (errors.isEmpty()) {
       var reservation = new Reservation({
@@ -193,6 +195,7 @@ exports.put = function(req, res, next) {
         additionalInfo: req.body.editedAdditionalInfo,
         theatre: req.user._id,
         tickets: tickets,
+        edited: Date.now(),
         _id: req.params.id,
         marketingPermission: req.body.editedMarketingPermission
       });
@@ -259,7 +262,7 @@ exports.stats = function(req, res, next) {
       data.shows[showIndex].reservationCount += ticketAmount;
       total += ticketAmount;
     });
-    console.log(data.shows);
+    //console.log(data.shows);
     res.render('stats', {title: 'Varaustilanne', shows: data.shows, total: total});
   });
 };
@@ -412,6 +415,8 @@ exports.customerPost = function(req, res, next) {
         additionalInfo: req.body.newAdditionalInfo,
         theatre: req.params.theatreId,
         tickets: tickets,
+        source: 'webForm',
+        added: Date.now(),
         marketingPermission: req.body.newMarketingPermission
       });
       
