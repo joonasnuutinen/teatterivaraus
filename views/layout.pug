@@ -16,7 +16,7 @@ html(lang='fi')
           img.navbar__logo(src='/images/logo.svg' alt='Teatterivaraus-logo')
           
         ul#nav.navbar__nav
-          each navItem in [{title: 'Etusivu', href: '/'}, {title: 'Kirjaudu', href: '/app'}, {title: 'Rekisteröidy', href: '/app/rekisteroidy'}]
+          each navItem in [{title: 'Etusivu', href: '/'}, {title: 'Kirjaudu', href: '/app'}, {title: 'Tilaa', href: '/tilaa'}]
             - var isActive = (navItem.title == title)
             - var className = (isActive ? 'navbar__item navbar__item--active' : 'navbar__item')
             li(class=className)

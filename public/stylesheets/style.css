@@ -88,7 +88,7 @@
 }
 
 .content p {
-  margin: 0 0 1rem;
+  margin: .5rem 0 1rem;
 }
 
 .content a,
@@ -144,7 +144,7 @@
 */
 
 .form {
-  margin-bottom: 1rem;
+  /*margin-bottom: 1rem;*/
 }
 
 .input {
@@ -260,7 +260,7 @@
 
 .message__content {
   padding: .2rem;
-  margin-bottom: 1rem;
+  margin-top: .5rem;
 }
 
 .message__content--error {

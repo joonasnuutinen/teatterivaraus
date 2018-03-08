@@ -15,7 +15,7 @@ block content
         label Näytelmän nimi
           input.input(type='text' name='playName' value=(undefined===theatre.playName ? '' : theatre.playName))
         label Näytelmän kuvaus
-          input.input(type='text' name='playDescription' value=(undefined===theatre.playDescription ? '' : theatre.playDescription))
+          textarea.input(type='text' name='playDescription' value=(undefined===theatre.playDescription ? '' : theatre.playDescription))
         button.btn.btn--primary(type='submit') Tallenna
     
     section.box#Vaihda-salasana

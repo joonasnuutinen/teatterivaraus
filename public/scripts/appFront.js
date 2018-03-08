@@ -45,7 +45,8 @@ $(function() {
         placeholder: 'hh.mm'
       },
       enable: {
-        label: 'Ota vastaan varauksia'
+        label: 'Ota vastaan varauksia',
+        default: true
       }
     },
     
@@ -77,7 +78,8 @@ $(function() {
         input: true
       },
       marketingPermission: {
-        label: 'Markkinointilupa'
+        label: 'Markkinointilupa',
+        default: false
       },
       source: {
         name: {
@@ -128,8 +130,10 @@ function resetContent(schemaOptions) {
   // create new row div and buttons
   var newRowHtml = '<div class="fields"></div>';
   var addNewHtml = '<button id="add-new" class="edit-row btn btn--primary" type="button" data-row-id="newRow">Lisää uusi</button>';
+  
   newRowHtml += '<button class="save-row btn btn--primary hidden" type="button">Tallenna</button>';
   newRowHtml += '<button class="cancel-row btn btn--secondary hidden" type="button">Peruuta</button>';
+  newRowHtml += '<div class="errors"></div>';
   
   $( '#add-new' ).remove();
   $( '#content-actions' ).prepend( addNewHtml );
@@ -253,6 +257,7 @@ function populateRows(schemaOptions) {
       
       buttons += '<button class="save-row btn btn--primary hidden" type="button">Tallenna</button>';
       buttons += '<button class="cancel-row btn btn--secondary hidden" type="button">Peruuta</button>';
+      buttons += '<div class="errors"></div>';
       allRows += '</div>';
       
       $dataRow.append( $fields ).append( buttons );

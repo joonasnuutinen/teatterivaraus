@@ -35,8 +35,12 @@ function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {
       if (formGroup[0] !== '') fieldsDiv.appendChild(formGroup[0]);
       fieldsDiv.appendChild(formGroup[1]);
     });
+    
+    //var $errors = $( '<div>' ).addClass( 'errors' );
 
-    $('#' + id + ' > .fields').replaceWith(fieldsDiv);
+    $('#' + id + ' > .fields')
+      .replaceWith(fieldsDiv)
+      //.append( $errors );
     
     if ( callback ) callback();
   });
@@ -156,7 +160,7 @@ function createCheckboxGroup(data, schemaOptions, idPrefix, column) {
   checkbox.type = 'checkbox';
   checkbox.className = 'edited-field checkbox';
   checkbox.id = checkboxId;
-  checkbox.checked = data ? data[column] : false;
+  checkbox.checked = data ? data[column] : schemaOptions[column].default;
   
   checkboxDiv.appendChild( checkbox );
   checkboxDiv.appendChild( checkboxLabel );
@@ -252,7 +256,7 @@ function saveEdit(id, schemaOptions, callback) {
       response.errors.forEach(function(error) {
         errors += error.msg + '<br>';
       });
-      $('.errors').html( '<div class="message__content message__content--error">' + errors + '</div>');
+      $('#' + id + ' .errors').html( '<div class="message__content message__content--error">' + errors + '</div>');
     }
   });
 }

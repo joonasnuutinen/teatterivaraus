@@ -2,7 +2,7 @@ var async = require('async');
 var Theatre = require('../models/theatre');
 var Show = require('../models/show');
 var TicketClass = require('../models/ticketClass');
-var registerTitle = 'Rekisteröidy';
+var registerTitle = 'Tilaa';
 
 // GET login
 exports.loginGet = function(req, res, next) {
