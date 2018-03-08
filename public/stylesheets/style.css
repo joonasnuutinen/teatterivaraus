@@ -14,15 +14,24 @@
   line-height: 1;
 }
 
+.page--reservation {
+  background: #fafafa;
+}
+
 /*
   ============================================================================
-  # Navbar
+  # Header
   ============================================================================
 */
 
-.navbar {
+.header {
   background: #2d4471;
   background: linear-gradient(to top left, #152B55, #4d638d);
+}
+
+.navbar {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .navbar__brand {
@@ -40,7 +49,7 @@
 
 .navbar__nav {
   list-style-type: none;
-  margin: 0;
+  margin: 0 0 0 auto;
   padding: 0;
   display: flex;
   justify-content: left;
@@ -96,6 +105,13 @@
   color: #2d4471;
 }
 
+.box {
+  box-shadow: 0 1px 4px #777;
+  padding: .5rem;
+  margin-bottom: 1rem;
+  background: white;
+}
+
 /*
   ============================================================================
   # Titles
@@ -109,12 +125,16 @@
 
 .secondary-title {
   font-size: 1.5rem;
-  margin: 2rem 0 1rem;
+  margin: .5rem 0 1rem;
 }
 
 .small-title {
   font-size: 1rem;
   margin: 1rem 0 .5rem;
+}
+
+.small-title--box {
+  margin-top: .5rem;
 }
 
 /*
@@ -245,4 +265,17 @@
 
 .message__content--error {
   background: #d4986a;
+}
+
+/*
+  ============================================================================
+  # Screen width >= 520px
+  ============================================================================
+*/
+
+@media screen and (min-width: 520px) {
+  .navbar {
+    display: flex;
+    align-items: center;
+  }
 }

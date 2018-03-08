@@ -9,34 +9,35 @@ html(lang='fi')
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
     link(rel='stylesheet', href='/stylesheets/style.css')
     
-  body.page
+  body.page.page--reservation
     header
       nav.navbar
         a.navbar__brand(href='/')
           img.navbar__logo(src='/images/logo.svg' alt='Teatterivaraus-logo')
     
     .content
-      h3.small-title= theatre.name
-      h1.page-title= theatre.playName
-      
-      if theatre.playDescription
-        p= theatre.playDescription
-      
-      .dynamic-content(data-schema=options.schema data-columns-edit=options.columnsEdit data-theatre=theatre._id)
-        .dataRow.new-row.data-row--new#newRow
-        .errors.text-danger
+      section.box
+        h3.small-title.small-title--box= theatre.name
+        h1.page-title= theatre.playName
         
-        if sponsors
-          section
-            h2.secondary-title Yhteistyössä
+        if theatre.playDescription
+          p= theatre.playDescription
+        
+        .dynamic-content(data-schema=options.schema data-columns-edit=options.columnsEdit data-theatre=theatre._id)
+          .dataRow.new-row.data-row--new#newRow
+          .errors.text-danger
+        
+      if sponsors
+        section.box
+          h2.secondary-title.secondary-title--box Yhteistyössä
+          
+          each sponsor in sponsors
+            h3.small-title= sponsor.name
             
-            each sponsor in sponsors
-              h3.small-title= sponsor.name
-              
-              p
-                | #{sponsor.description}
-                |
-                a(href=sponsor.urlHref target="_blank") Lue lisää
+            p
+              | #{sponsor.description}
+              |
+              a(href=sponsor.urlHref target="_blank") Lue lisää
   
   script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f' crossorigin='anonymous')
   script(src='/scripts/global.js')

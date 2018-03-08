@@ -348,6 +348,7 @@ function editRow(id, schemaOptions, showPast) {
     case 'newRow':
       // show new form with no existing data
       showForm(id, null, schemaOptions, 'new', showPast, showSaveAndCancelButtons);
+      $( '#newRow' ).removeClass( 'hidden' );
       break;
     default:
       // populate row with its data
@@ -386,7 +387,8 @@ function cancelEdit(id, schemaOptions, data) {
   resetContent(schemaOptions);
   $('.errors').html('');
   $('.add-row').prop('disabled', false);
-  if ( id ) scrollTo( id );
+  $( '#newRow' ).addClass( 'hidden' );
+  //if ( id ) scrollTo( id );
 }
 
 // print reservations

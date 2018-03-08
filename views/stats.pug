@@ -4,17 +4,18 @@ block content
   .content
     h1.page-title= title
     
-    table.table
-      thead.table__head
-        tr.table__row
-          th.table__header(scope="col") Esitys
-          th.table__header(scope="col") Varauksia
-      tbody.table__body
-        each show in shows
+    section.box
+      table.table
+        thead.table__head
           tr.table__row
-            td.table__cell= show.beginsPretty
-            td.table__cell.table__cell--number= show.reservationCount
-      tfoot.table__foot
-        tr.table__row
-          td.table__cell Yhteensä
-          td.table__cell.table__cell--number= total
+            th.table__header(scope="col") Esitys
+            th.table__header.table__header--number(scope="col") Varauksia
+        tbody.table__body
+          each show in shows
+            tr.table__row
+              td.table__cell= show.beginsPretty
+              td.table__cell.table__cell--number= show.reservationCount
+        tfoot.table__foot
+          tr.table__row
+            td.table__cell Yhteensä
+            td.table__cell.table__cell--number= total

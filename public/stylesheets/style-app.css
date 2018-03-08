@@ -1,8 +1,22 @@
 /*
   ============================================================================
+  # Page
+  ============================================================================
+*/
+
+.page {
+  background: #fafafa;
+}
+
+/*
+  ============================================================================
   # Navbar
   ============================================================================
 */
+
+.navbar {
+  max-width: none;
+}
 
 .navbar__toggler {
   float: right;
@@ -26,7 +40,19 @@
   ============================================================================
 */
 
+.content {
+}
+
 .content-actions {
+  margin-bottom: 1rem;
+}
+
+.filter-content {
+  margin-bottom: 1.5rem;
+}
+
+.secondary-title {
+  margin-top: .5rem;
 }
 
 /*
@@ -35,6 +61,13 @@
   ============================================================================
 */
 
+.data-row {
+  margin-bottom: 1rem;
+  padding: .5rem;
+  box-shadow: 0 1px 4px #777;
+  background: white;
+}
+
 .data-row--new {
   margin-bottom: 1rem;
 }
@@ -42,11 +75,11 @@
 .data-rows .data-row {
   position: relative;
 }
-
+/*
 .data-rows .data-row:nth-child(even) {
   background: #ecf3ff;
 }
-
+*/
 .name,
 .fullName,
 .beginsLite {
@@ -59,13 +92,17 @@
 }
 
 .data-row--edit .fields {
-  margin-top: 1rem;
+  /*margin-top: 1rem;*/
+}
+
+.fields > div {
+  margin-bottom: .1rem;
 }
 
 .source {
   position: absolute;
-  top: 1px;
-  right: 1px;
+  top: .5rem;
+  right: .5rem;
   color: #777;
   cursor: pointer;
 }
@@ -93,7 +130,9 @@
 */
 
 .table {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
 }
 
 .table__head {
@@ -104,6 +143,10 @@
 .table__header {
   text-align: left;
   font-weight: 500;
+}
+
+.table__header--number {
+  text-align: right;
 }
 
 .table__header,
@@ -137,7 +180,7 @@
 */
 
 @media screen and (min-width: 720px) {
-  .navbar {
+  .header {
     height: 65px;
     position: fixed;
     top: 0;

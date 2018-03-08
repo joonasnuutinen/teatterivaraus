@@ -7,15 +7,18 @@ block content
     if errors
       each error in errors
         p= error.msg
+
+    section.box
+      h2.secondary-title Näytelmän tiedot
+      
+      form.form(action='' method='POST')
+        label Näytelmän nimi
+          input.input(type='text' name='playName' value=(undefined===theatre.playName ? '' : theatre.playName))
+        label Näytelmän kuvaus
+          input.input(type='text' name='playDescription' value=(undefined===theatre.playDescription ? '' : theatre.playDescription))
+        button.btn.btn--primary(type='submit') Tallenna
     
-    form.form(action='' method='POST')
-      label Näytelmän nimi
-        input.input(type='text' name='playName' value=(undefined===theatre.playName ? '' : theatre.playName))
-      label Näytelmän kuvaus
-        input.input(type='text' name='playDescription' value=(undefined===theatre.playDescription ? '' : theatre.playDescription))
-      button.btn.btn--primary(type='submit') Tallenna
-    
-    section#Vaihda-salasana
+    section.box#Vaihda-salasana
       h2.secondary-title Vaihda salasana
       form#changePassword.form(action='/app/vaihda-salasana' method='post')
         label Vanha salasana

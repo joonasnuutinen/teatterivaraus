@@ -9,17 +9,18 @@ block content
       #content-actions.content-actions
         button#print.btn.btn--secondary.hidden Tulosta
       
-      .data-row.data-row--new#newRow
+      .data-row.data-row--new.hidden#newRow
       .errors.bg-danger.text-white
       
       if(options.filterAndPrint)
-        #search
-          label Hae nimellä
-            input#keyword.input(type='search')
-        
-        div
-          label Suodata
-            select#filter.input
-              option(value='') Kaikki näytökset
+        .filter-content
+          #search
+            label Hae nimellä
+              input#keyword.input(type='search')
+          
+          div
+            label Suodata
+              select#filter.input
+                option(value='') Kaikki näytökset
 
       .data-rows
