@@ -21,8 +21,8 @@ router.get('/ota-kayttoon', function(req, res, next) {
 });
 
 /* GET benefits page. */
-router.get('/hyodyt', function(req, res, next) {
-  res.render('benefits', { title: 'Hyödyt' });
+router.get('/ominaisuudet', function(req, res, next) {
+  res.render('benefits', { title: 'Ominaisuudet' });
 });
 
 // GET theatre JSON

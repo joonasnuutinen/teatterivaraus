@@ -2,9 +2,11 @@ extends layout
 
 block content
   .content
-    h1.page-title Hyödyt
+    h1.page-title Ominaisuudet
     
-    h3.small-title Lipunmyyjän työ vähenee
+    h3.small-title Nettilomake helpottaa lipunmyyjän työtä
+    
+    img(src='/images/demo/nettilomake-taytetty.png')
     
     p Voit linkittää teatterin nettisivuille ja sosiaaliseen mediaan varauslomakkeen, jolla katsoja syöttää nimensä, sähköpostinsa, haluamansa esityksen ja lippujen määrän itse suoraan järjestelmään.
     
@@ -12,11 +14,15 @@ block content
     
     h3.small-title Sähköpostivahvistus tuo varmuutta
     
+    img(src='/images/demo/sahkopostivahvistus.png')
+    
     p Kun katsoja on varannut lippunsa netissä, järjestelmä lähettää varauksesta automaattisesti vahvistuksen katsojan sähköpostiosoitteeseen. Vahvistuksessa lukee selkeästi varauksen tiedot, joten vahvistus toimii todisteena ja muistutuksena tehdystä varauksesta. Vahvistusviestin vastausosoitteeksi määrittyy teatterin sähköpostiosoite, joten vahvistus toimii myös väylänä ottaa tarvittaessa helposti yhteyttä teatteriin.
     
     p Toisinaan katsojilla voi olla kysymyksiä tai erikoistoiveita. Näitä varten nettivarauslomakkeessa on <i>Lisätietoja</i>-kenttä, jonka katsoja voi halutessaan täyttää. Jos tässä kentässä on tekstiä, järjestelmä lähettää sen sisällön automaattisesti teatterin sähköpostiin. Viestin vastausosoitteeksi määräytyy katsojan sähköpostiosoite. Näin saat tiedon katsojan kysymyksistä ja toiveista suoraan sähköpostiin ja voit yhdellä klikkauksella alkaa kirjoittaa vastausviestiä.
     
     h3.small-title Kaikki löytyy yhdestä paikasta
+    
+    img(src='/images/demo/varaukset.png')
     
     p Hallintapaneeli on teatterin työympäristö, johon kaikki toiminnallisuus on keskitetty. Siellä voit lisätä, muokata ja poistaa sekä netin kautta tulleita että käsin syötettyjä varauksia.
     
@@ -24,17 +30,23 @@ block content
     
     h3.small-title Löydät haluamasi varauksen hetkessä
     
+    img(src='/images/demo/hae-nimella.png')
+    
     p Hallintapaneelissa voit helposti hakea varauksia nimellä ja suodattaa niitä esityspäivän mukaan. Hakutulokset päivittyvät välittömästi, kun alat kirjoittaa tai valitset suodattimen.
     
     p Voit tulostaa haluamasi esityksen varaukset siistinä taulukkona sukunimen mukaisessa aakkosjärjestyksessä. Järjestelmä laskee joka varauksen kokonaissumman, mikä nopeuttaa asiointia lippukopilla (ja heikentää lipunmyyjän päässälaskutaitoja, sori!).
     
     h3.small-title Rajattomasti lipputyyppejä
     
+    img(src='/images/demo/lippujen-hinnat.png')
+    
     p Aikuiset, opiskelijat, eläkeläiset, koirat, kissat, kummin kaimat – kaikki käy. Lipputyyppien määrää ei ole rajoitettu. Syötät vain hallintapaneelissa lipputyypin nimen ja hinnan, ja se ilmestyy järjestelmään.
     
     p Voit lisätä, muokata tai poistaa lipputyyppejä milloin tahansa. Jos yrität vahingossa poistaa lipputyyppiä, jolle on kirjattu varauksia, järjestelmä ei anna tehdä sitä ennen kuin nämä varaukset on poistettu tai muutettu eri lipputyypille.
     
     h3.small-title Rajattomasti näytöksiä
+    
+    img(src='/images/demo/naytokset.png')
     
     p Olipa esitykselläsi yksi tai satayksi näytöstä, järjestelmä tottelee sinua. Monta esitystä samana päivänä? Onnistuu. Erikoisnäytösten nimeäminen? Onnistuu.
     
@@ -43,6 +55,8 @@ block content
     p Voit lisätä, muokata tai poistaa esityksiä milloin tahansa. Jos yrität vahingossa poistaa esitystä, jolle on kirjattu varauksia, järjestelmä ei anna tehdä sitä ennen kuin nämä varaukset on poistettu tai muutettu eri näytökselle.
     
     h3.small-title Sponsorit pienentävät kustannuksia
+    
+    img(src='/images/demo/sponsorit.png')
     
     p Erityisesti kauempaa tulevaa katsojaa kiinnostaa varmasti paikalliset palvelut. Teatterit myyvätkin usein mainospaikkoja käsiohjelmiinsa paikallisille yrityksille. Valitettavan usein käsiohjelman ilmoitus saavuttaa kuitenkin majoitusta tai ruokailua kaipaavan katsojan aivan liian myöhään.
     
@@ -57,6 +71,8 @@ block content
     p Jäät lopulta 30 € voitolle. Saat siis varausjärjestelmän, joka helpottaa työtäsi, lyhentää lippujonoja, tuo yhteistyökumppaneillesi näkyvyyttä ja lopulta tienaat 30 €. Todellinen win-win-win-tilanne, vai kuinka?
     
     h3.small-title Ennakoi yleisöryntäykset
+    
+    img(src='/images/demo/varaustilanne.png')
     
     p Näet hallintapaneelissa yhdellä silmäyksellä kunkin esityksen varaustilanteen. Näin osaat ennakoida, mihin esityksiin tarvitaan ekstramäärä kahvia ja pullaa.
     
@@ -94,4 +110,7 @@ block content
     
     h3.small-title Ei toistuvia maksuja
     
-    p Teatterivaraus ei ole kestotilaus. Ostat palvelun yhdeksi esityskaudeksi kerrallaan, ja jos et halua jatkossa käyttää sitä, sinun ei tarvitse tehdä mitään.
+    p Teatterivaraus ei ole kestotilaus. Ostat palvelun yhdeksi esityskaudeksi kerrallaan ja jos et halua jatkossa käyttää sitä, sinun ei tarvitse tehdä mitään.
+    
+    p
+      a.btn.btn--primary(href='/ota-kayttoon') Ota käyttöön

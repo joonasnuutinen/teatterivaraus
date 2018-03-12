@@ -18,6 +18,11 @@
   background: #fafafa;
 }
 
+img {
+  width: 100%;
+  height: auto;
+}
+
 /*
   ============================================================================
   # Header
@@ -228,7 +233,8 @@
 .btn--primary {
   background: #4d638d;
   background: linear-gradient(#4d638d, #2d4471);
-  color: white;
+  color: white!important;
+  text-decoration: none!important;
 }
 
 .btn--primary:active {
