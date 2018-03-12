@@ -10,9 +10,19 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Etusivu' });
 });
 
+/* GET story page. */
+router.get('/tarina', function(req, res, next) {
+  res.render('story', { title: 'Tarina' });
+});
+
 /* GET order page. */
-router.get('/tilaa', function(req, res, next) {
-  res.render('register', { title: 'Tilaa' });
+router.get('/ota-kayttoon', function(req, res, next) {
+  res.render('register', { title: 'Ota käyttöön' });
+});
+
+/* GET benefits page. */
+router.get('/hyodyt', function(req, res, next) {
+  res.render('benefits', { title: 'Hyödyt' });
 });
 
 // GET theatre JSON

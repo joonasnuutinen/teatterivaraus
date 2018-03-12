@@ -132,6 +132,7 @@ function createTextGroup(data, schemaOptions, idPrefix, column) {
     unitSpan.className = 'unit input-group-addon';
     unitSpan.textContent = unit ? unit : '';
     textDiv.className = 'input-group';
+    textInput.className += ' input--narrow';
     textDiv.appendChild(textInput);
     textDiv.appendChild(unitSpan);
   } else {

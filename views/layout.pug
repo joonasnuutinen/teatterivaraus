@@ -16,13 +16,21 @@ html(lang='fi')
           img.navbar__logo(src='/images/logo.svg' alt='Teatterivaraus-logo')
           
         ul#nav.navbar__nav
-          each navItem in [{title: 'Etusivu', href: '/'}, {title: 'Kirjaudu', href: '/app'}, {title: 'Tilaa', href: '/tilaa'}]
+          each navItem in [{title: 'Etusivu', href: '/'}, {title: 'Tarina', href: '/tarina'}, {title: 'Hyödyt', href: '/hyodyt'}, {title: 'Ota käyttöön', href: '/ota-kayttoon'}, {title: 'Kirjaudu', href: '/app'}]
             - var isActive = (navItem.title == title)
             - var className = (isActive ? 'navbar__item navbar__item--active' : 'navbar__item')
             li(class=className)
               a.navbar__link(href=navItem.href)= navItem.title
               
     block content
+    
+    footer.footer
+      div.footer__content
+        p
+          | <a href="http://www.joonasnuutinen.com">Joonas Nuutinen</a><br>
+          | <a href="mailto:joonas@teatterivaraus.fi">joonas@teatterivaraus.fi</a><br>
+          | 050-354 7670<br>
+          | Y-tunnus: 2477397-2
       
     script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f' crossorigin='anonymous')
     script(src='/scripts/global.js')
