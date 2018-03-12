@@ -4,10 +4,22 @@ block content
   .content
     h1.page-title= title
     
-    p Ota yhteyttä osoitteeseen <a href="mailto:joonas@teatterivaraus.fi">joonas@teatterivaraus.fi</a>, niin saat tunnukset.
+    form.form(action='/')
+      label Teatterin nimi
+        input.input(type='text' name='name' required)
+      label Teatterin sähköposti
+        input.input(type='email' name='email' required)
+      | Otan palvelun käyttöön<br>
+      label alkaen
+        input.input(type='date' name='beginning')
+      label päättyen
+        input.input(type='date' name='ending')
+      label Lisätietoja
+        textarea.input(name='additional-info')
+      button.btn.btn--primary(type='submit') Lähetä
     
     p
-      | Oletko jo rekisteröitynyt?
+      | Oletko jo saanut tunnukset?
       |
       a(href='/app/kirjaudu') Kirjaudu sisään täällä
       | .

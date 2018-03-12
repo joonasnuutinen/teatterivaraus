@@ -20,15 +20,21 @@ exports.registerGet = function(req, res, next) {
   res.render('register', {title: registerTitle, errors: req.flash('signupMessage')});
 };
 
-// POST register
-exports.registerPost = function(req, res, next) {
+// POST contact
+exports.contactPost = function(req, res, next) {
   req.checkBody('name', 'Teatterin nimi puuttuu').notEmpty();
   req.checkBody('email', 'Sähköpostiosoite puuttuu').notEmpty();
   
   req.sanitize('name').escape();
   req.sanitize('email').escape();
+  req.sanitize('beginning').escape();
+  req.sanitize('ending').escape();
+  req.sanitize('additional-info').escape();
   req.sanitize('name').trim();
   req.sanitize('email').trim();
+  req.sanitize('beginning').trim();
+  req.sanitize('ending').trim();
+  req.sanitize('additional-info').trim();
   
   var errors = req.validationErrors();
   
