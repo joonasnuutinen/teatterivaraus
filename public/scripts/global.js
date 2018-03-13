@@ -261,3 +261,37 @@ function saveEdit(id, schemaOptions, callback) {
     }
   });
 }
+
+( function detectContactSubmit() {
+  $( '#contactForm' ).submit( function formSubmitted(evt) {
+    evt.preventDefault();
+    submitForm.call( this );
+  } );
+} )();
+
+function submitForm() {
+  var $form = $( this );
+  var url = $form.attr( 'action' );
+  
+  var posting = $.post( url, {
+    name: $form.find( 'input[name="name"]' ).val(),
+    email: $form.find( 'input[name="email"]' ).val(),
+    beginning: $form.find( 'input[name="beginning"]' ).val(),
+    ending: $form.find( 'input[name="ending"]' ).val(),
+    additionalInfo: $form.find( 'input[name="additionalInfo"]' ).val()
+  } );
+  
+  posting.done( function postingDone( data ) {
+    if (data.errors) {
+      var errors = '';
+      data.errors.forEach(function(error) {
+        errors += error.msg + '<br>';
+      });
+      $( '#message' ).html( '<div class="message__content message__content--error">' + errors + '</div>' );
+    } else {
+      $( '#message' ).html( '<div class="message__content message__content--success">' + data.message + '</div>' );
+      $form.find( 'input' ).val( '' );
+      $( '#contactForm' ).slideUp();
+    }
+  } );
+}

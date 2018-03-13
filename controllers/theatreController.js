@@ -1,8 +1,14 @@
 var async = require('async');
 var Theatre = require('../models/theatre');
+var Contact = require('../models/contact');
 var Show = require('../models/show');
 var TicketClass = require('../models/ticketClass');
 var registerTitle = 'Tilaa';
+var mailgun = require( 'mailgun-js' );
+
+try {
+  require('dotenv').load();
+} catch(err) {}
 
 // GET login
 exports.loginGet = function(req, res, next) {
@@ -29,28 +35,46 @@ exports.contactPost = function(req, res, next) {
   req.sanitize('email').escape();
   req.sanitize('beginning').escape();
   req.sanitize('ending').escape();
-  req.sanitize('additional-info').escape();
+  req.sanitize('additionalInfo').escape();
   req.sanitize('name').trim();
   req.sanitize('email').trim();
   req.sanitize('beginning').trim();
   req.sanitize('ending').trim();
-  req.sanitize('additional-info').trim();
+  req.sanitize('additionalInfo').trim();
   
-  var errors = req.validationErrors();
-  
-  var theatre = new Theatre({
-    name: req.body.name,
-    email: req.body.email
-  });
-  
-  if (errors) {
-    res.render('author_form', {title: registerTitle, theatre: theatre, errors: errors});
-    return;
-  }
-  
-  // data is valid
-  theatre.save(function(err) {
-    return next(err);
+  req.getValidationResult().then(function(errors) {
+    var response = {
+      errors: []
+    };
+    
+    if (errors.isEmpty()) {
+      var contact = new Contact({
+        name: req.body.name,
+        email: req.body.email,
+        beginning: req.body.beginning,
+        ending: req.body.ending,
+        additionalInfo: req.body.additionalInfo
+      });
+      
+      contact.save(function(err) {
+        //console.log( err );
+        if ( err ) {
+          response.errors.push( 'Lähetys epäonnistui, yritä uudelleen.' );
+        } else {
+          response.errors = null;
+          response.message = 'Kiitos viestistä! Saat kirjautumistunnukset antamaasi sähköpostiosoitteeseen vuorokauden sisällä.';
+          sendFormViaEmail( contact );
+        }
+        res.send( response );
+      });
+      
+    } else {
+      response.errors = response.errors.concat( errors.useFirstErrorOnly().array() );
+      res.send( response );
+    }
+    
+    //response.data = contact;
+    
   });
 };
 
@@ -156,3 +180,35 @@ exports.sent = function(req, res, next) {
   res.render('sent', {title: 'Kirjautumislinkki lähetetty'});
 };
 */
+
+function sendFormViaEmail(contact) {
+  // ---------------------------------------------------------------------
+  // email body starts ---------------------------------------------------
+  // ---------------------------------------------------------------------
+  var body = 'Teatterin nimi: ' + contact.name + '\n';
+  body += 'Teatterin sähköposti: ' + contact.email + '\n\n';
+  
+  body += 'Otan palvelun käyttöön\n';
+  body += '- alkaen: ' + contact.beginning + '\n';
+  body += '- päättyen: ' + contact.ending + '\n\n';
+  
+  body += 'Lisätietoja: ' + contact.additionalInfo;
+  
+  // ---------------------------------------------------------------------
+  // email body ends -----------------------------------------------------
+  // ---------------------------------------------------------------------
+  
+  var message = {
+    text: body,
+    from: contact.name + ' <' + contact.email + '>',
+    to: process.env.ADMIN_EMAIL,
+    "reply-to": contact.email,
+    subject: 'Teatterivaraus: Yhteydenotto'
+  };
+  
+  var mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN});
+  
+  mailgun.messages().send( message, function mailSent(err) {
+    if (err) console.log( err );
+  });
+}

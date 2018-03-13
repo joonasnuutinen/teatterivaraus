@@ -14,20 +14,27 @@ var ContactSchema = Schema({
   },
   
   playName: {
-    type: String,
-    required: true
+    type: String
   },
   
   beginning: {
-    type: String
+    type: String,
+    default: ''
   },
   
   ending: {
-    type: String
+    type: String,
+    default: ''
   },
   
   additionalInfo: {
-    type: String
+    type: String,
+    default: ''
+  },
+  
+  submitted: {
+    type: Date,
+    default: Date.now()
   }
 });
 

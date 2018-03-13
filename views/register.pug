@@ -4,7 +4,7 @@ block content
   .content
     h1.page-title= title
     
-    form.form(action='/')
+    form#contactForm.form(action='' method='POST')
       label Teatterin nimi
         input.input(type='text' name='name' required)
       label Teatterin sähköposti
@@ -15,8 +15,10 @@ block content
       label päättyen
         input.input(type='date' name='ending')
       label Lisätietoja
-        textarea.input(name='additional-info')
+        textarea.input(name='additionalInfo')
       button.btn.btn--primary(type='submit') Lähetä
+      
+    #message
     
     p
       | Oletko jo saanut tunnukset?

@@ -20,6 +20,9 @@ router.get('/ota-kayttoon', function(req, res, next) {
   res.render('register', { title: 'Ota käyttöön' });
 });
 
+/* POST to order page. */
+router.post( '/ota-kayttoon', theatreController.contactPost );
+
 /* GET benefits page. */
 router.get('/ominaisuudet', function(req, res, next) {
   res.render('benefits', { title: 'Ominaisuudet' });
@@ -31,7 +34,5 @@ router.get('/:theatreId.json', theatreController.json);
 /* customer reservation form */
 router.get('/:theatreId', reservationController.customerGet);
 router.post('/:theatreId', reservationController.customerPost);
-
-
 
 module.exports = router;

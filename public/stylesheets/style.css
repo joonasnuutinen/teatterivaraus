@@ -129,12 +129,7 @@ img {
 }
 
 .cover__title {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  color: white;
-  background: rgba(0, 0, 0, .7);
+  text-align: center;
   margin: 0;
   padding: 2rem .5rem;
   font-size: 2rem;
@@ -296,9 +291,13 @@ img {
   background: #d4986a;
 }
 
+.message__content--success {
+  background: #dcfbdc;
+}
+
 /*
   ============================================================================
-  # Errors and messages
+  # Footer
   ============================================================================
 */
 
