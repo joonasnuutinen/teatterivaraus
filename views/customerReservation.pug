@@ -20,7 +20,7 @@ html(lang='fi')
         h3.small-title.small-title--box= theatre.name
         h1.page-title= theatre.playName
         
-        if theatre.playDescription
+        if (theatre.playDescription && false)
           p= theatre.playDescription
         
         .dynamic-content(data-schema=options.schema data-columns-edit=options.columnsEdit data-theatre=theatre._id)

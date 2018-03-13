@@ -2,74 +2,74 @@ extends layout
 
 block content
   .content
-    section.hero
-      h2.cover__title Lippuvarausjärjestelmä harrastajateattereille
+    section.section.section--hero
+      h2.section__title Lippuvarausjärjestelmä harrastajateattereille
     
       p Teatterivaraus on uusi palvelu, joka on tehty helpottamaan harrastajateattereiden lippurumbaa.
     
+    section.section
+      h2.section__title Vastaanota lippuvarauksia netissä
+      
+      .section__content
+        p Saat käyttöösi nettilomakkeen, jolla katsojat varaavat lippunsa helposti itse.
+      
+      
+    section.section
+      h2.section__title Lisää, muokkaa ja poista varauksia käsin
+      
+      .section__content
+        p Voit lisätä, muokata ja poistaa varauksia mielin määrin hallintapaneelissa.
+        
+    section.section
+      h2.section__title Tarkastele helposti kaikkia varauksia
+      
+      .section__content
+        p Voit hakea varauksia nimellä ja suodattaa niitä esityspäivän mukaan.
     
-    h2.secondary-title Toimivaksi todettu
+    section.section
+      h2.section__title Automaattiset tulosteet varauksista
+      
+      .section__content
+        p Järjestelmä muodostaa valitsemastasi näytöksestä selkeän listan, jossa varaukset on lueteltu aakkosjärjestyksessä. Kunkin varauksen kohdalla näkyy varatut liput, mahdolliset erikoistoiveet ja varauksen kokonaissumma.
+        
+    section.section
+      h2.section__title Hallitse näytöksiä ja lipputyyppejä
+      
+      .section__content
+        p Voit lisätä rajattomasti näytöksiä ja lipputyyppejä sekä määrittää, mihin näytöksiin otetaan varauksia vastaan.
+        
+    section.section
+      h2.section__title Lisää sponsoreita
+      
+      .section__content
+        p Voit tarjota nettilomakkeen ja varausvahvistuksen yhteydestä mainospaikkoja yhteistyökumppaneillesi haluamaasi hintaan.
     
-    p Teatterivaraus on kolmen vuoden kehitystyön tulos. Palvelua on testattu yhteistyössä <a href="http://teatterimohko.fi/">Teatteri Möhkön</a> kanssa, ja sen avulla on testijakson aikana varattu yli 6 000 lippua aidoissa kenttäolosuhteissa.
+    section.section
+      h2.section__title Lisää ominaisuuksia
+      
+      .section__content
+        ul
+          li Sähköpostivahvistukset
+          li Selainpohjainen
+          li Toimii kaikilla laitteilla
+          li Helppo käyttää
+          li Turvallinen
+          li Kattavat tilastot
     
-    p Nyt vuonna 2018 palvelu on ensimmäistä kertaa kaikkien harrastajateattereiden saatavilla.
-    
-    <a href="/tarina">Lue lisää siitä, miten Teatterivaraus sai alkunsa</a>
-    
-    h2.secondary-title Mitattavat hyödyt
-    
-    p Teatterivaraus helpottaa merkittävästi lipunmyyjän työtä. Suuri osa varauksista tulee nettilomakkeen kautta, jolloin katsoja syöttää varauksensa järjestelmään itse eikä lipunmyyjän tarvitse tehdä mitään.
-    
-    p Loput varaukset syötetään helppokäyttöisessä, selainpohjaisessa käyttöliittymässä.
-    
-    p Järjestelmä lajittelee varaukset automaattisesti esityspäivän mukaan, järjestää ne sukunimen mukaiseen aakkosjärjestykseen ja muodostaa niistä helppolukuisen A4-tulosteen.
-    
-    p Kenttäkokeissa järjestelmän on havaittu vähentävän lipunmyyjän työtä jopa kolmanneksella ja lisäksi kasvattavan kokonaisvarausprosenttia.
-    
-    <a href="/hyodyt">Lue lisää Teatterivarauksen hyödyistä</a>
+    section.section
+      h2.section__title Tuki
+      
+      .section__content
+        p Henkilökohtainen tuki on yhden sähköpostin tai puhelinsoiton päässä. Olipa kysymyksesi mikä tahansa, löydämme siihen vastauksen.
+        
+    section.section
+      h2.section__title Yksi hinta
+      
+      .section__content
+        p Palvelun hinta on <b>30 € / alkava kuukausi</b>. Maksat vain siltä ajalta, kun otat varauksia vastaan. Käyttöaika määritetään sopimuksen yhteydessä ja veloitetaan kerran. Ei toistuvia maksuja. Ei kestotilausta.
+          
     
     
-    h2.secondary-title Reilu hinta
-    
-    p Palvelun hinta on <b>30 € / alkava kuukausi</b> sisältäen arvonlisäveron 24 %. Hinta laskutetaan käyttöönoton yhteydessä.
-    
-    p <i>Esimerkki:</i> Teatteri ottaa palvelun käyttöön 1.4., ja viimeinen näytös on 30.7. Alkavia kuukausia on neljä, joten teatterilta laskutetaan 120 € huhtikuun alussa.
-    
-    p
-      a.btn.btn--primary(href='/ota-kayttoon') Ota käyttöön
-    
-    h2.secondary-title Kysyttyä
-    
-    h3.small-title Kuinka saan palvelun käyttöön?
-    
-    p Lähetä sähköpostia osoitteeseen <a href="mailto:joonas.nuutinen@teatterivaraus.fi">joonas@teatterivaraus.fi</a> ja kerro, mille ajalle haluat palvelun käyttöön. Saat kirjautumistunnukset vuorokauden sisällä.
-    
-    h3.small-title Kuinka kauan kestää ottaa palvelu käyttöön?
-    
-    p Kun olet saanut tunnukset, kirjaudut palveluun ja lisäät esitysajat ja lippujen hinnat. Tähän kuluu näytösten ja lipputyyppien määrästä riippuen 10–30 minuuttia. Tämän jälkeen voit aloittaa varausten vastaanottamisen välittömästi.
-    
-    h3.small-title Miten palvelua käytetään?
-    
-    p Kirjoitan parhaillaan käyttöopasta. Ilmoitan heti, kun se on valmis.
-    
-    h3.small-title Miten asennan varauslomakkeen teatterin nettisivuille?
-    
-    p Varauslomaketta ei asenneta teatterin nettisivuille, vaan lomake löytyy osoitteesta, joka on muotoa <i>www.teatterivaraus.fi/&lt;teatterin yksilöivä tunnus&gt;</i>. Saat linkin, kun otat palvelun käyttöön.
-    
-    p Joka teatterin nettisivut ovat erilaiset, joten lomakkeen asentaminen erilaisille julkaisualustoille – puhumattakaan visuaalisen ulkoasun yhteensovittamisesta – olisi työlästä ja toisi lisäkustannuksia.
-    
-    p Sen sijaan teatterin kannattaa luoda sivuilleen oma lippuvarausosio, jonka osoite on esimerkiksi muotoa <i>www.teatterinnimi.fi/liput</i>. Tästä osoitteesta voi joko uudelleenohjata tai linkittää Teatterivarauksen lomakkeeseen.
-    
-    h3.small-title Mistä saan lisätietoa?
-    
-    p Lähetä sähköpostia osoitteeseen <a href="mailto:joonas@teatterivaraus.fi">joonas@teatterivaraus.fi</a> tai soita numeroon 050-354 7670. Vastaan mielelläni kaikkiin kysymyksiin.
-
-    
-    h2.secondary-title Tyytyväisyystakuu
-    
-    p Jos olet tyytymätön mihin tahansa palvelun osa-alueeseen, ota yhteyttä. Yritän korjata ongelman parhaani mukaan.
-    
-    p Jos emme pääse yhteisymmärrykseen, saat maksamasi summan kokonaisuudessaan takaisin ja voit edelleen käyttää palvelua sopimuksen loppuun asti.
     
     p
       a.btn.btn--primary(href='/ota-kayttoon') Ota käyttöön
