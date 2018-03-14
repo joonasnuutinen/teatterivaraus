@@ -13,10 +13,10 @@ html(lang='fi')
     header.header
       nav.navbar
         a.navbar__brand(href='/' rel='home' title='Siirry etusivulle')
-          img.navbar__logo(src='/images/logo.svg' alt='Teatterivaraus-logo')
+          img.navbar__logo(src='/images/logo-vertical.svg' alt='Teatterivaraus-logo')
           
         ul#nav.navbar__nav
-          each navItem in [{title: 'Ominaisuudet', href: '/ominaisuudet'}, {title: 'Tarina', href: '/tarina'}, {title: 'Ota käyttöön', href: '/ota-kayttoon'}, {title: 'Kirjaudu', href: '/app'}]
+          each navItem in [{title: 'Tarina', href: '/tarina'}, {title: 'Ota käyttöön', href: '/ota-kayttoon'}, {title: 'Kirjaudu', href: '/app'}]
             - var isActive = (navItem.title == title)
             - var className = (isActive ? 'navbar__item navbar__item--active' : 'navbar__item')
             li(class=className)

@@ -16,6 +16,12 @@
 
 .navbar {
   max-width: none;
+  text-align: left;
+  padding: 0;
+}
+
+.navbar__logo {
+  margin-left: .5rem;
 }
 
 .navbar__toggler {
@@ -41,6 +47,7 @@
 */
 
 .content {
+  padding: .5rem;
 }
 
 .content-actions {

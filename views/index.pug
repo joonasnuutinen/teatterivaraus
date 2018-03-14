@@ -3,58 +3,98 @@ extends layout
 block content
   .content
     section.section.section--hero
-      h2.section__title Lippuvarausjärjestelmä harrastajateattereille
+      h2.section__title Helpota teatterisi lippurumbaa
     
-      p Teatterivaraus on uusi palvelu, joka on tehty helpottamaan harrastajateattereiden lippurumbaa.
+      p Teatterivaraus on uusi palvelu, joka on tehty helpottamaan teattereiden lipunmyyntiä.
     
-    section.section
+    section.section.section--webform
       h2.section__title Vastaanota lippuvarauksia netissä
+      
+      figure.section__figure
+        img.section__image(src='/images/demo/nettivaraus-pieni.png')
       
       .section__content
         p Saat käyttöösi nettilomakkeen, jolla katsojat varaavat lippunsa helposti itse.
       
       
     section.section
-      h2.section__title Lisää, muokkaa ja poista varauksia käsin
+      h2.section__title Hallitse kaikkea helposti yhdessä paikassa
       
       .section__content
-        p Voit lisätä, muokata ja poistaa varauksia mielin määrin hallintapaneelissa.
+        p Kaikki toiminnot ovat aina kätesi ulottuvilla. Voit kirjautua hallintapaneeliin millä tahansa laitteella.
+        
+        .feature
+          .feature__figure
+            img.feature__image(src='/images/demo/mallivaraukset.png')
+          
+          h3.feature__title Lisää, muokkaa ja poista varauksia käsin
+          
+          .feature__content
+            p Voit lisätä, muokata ja poistaa varauksia mielin määrin.
+        
+        .feature
+          h3.feature__title Löydä haluamasi varaus hetkessä
+          
+          .feature__content
+            p Voit hakea varauksia nimellä ja suodattaa niitä esityspäivän mukaan. Kaikki tapahtuu käden käänteessä.
+    
+        .feature
+          h3.feature__title Hallitse näytöksiä ja lipputyyppejä
+      
+          .feature__content
+            p Voit lisätä rajattomasti näytöksiä ja lipputyyppejä sekä määrittää, mihin näytöksiin otetaan varauksia vastaan.
         
     section.section
-      h2.section__title Tarkastele helposti kaikkia varauksia
+      h2.section__title Lisää sponsoreita
       
       .section__content
-        p Voit hakea varauksia nimellä ja suodattaa niitä esityspäivän mukaan.
+        p Voit tarjota nettilomakkeen ja varausvahvistuksen yhteydestä mainospaikkoja yhteistyökumppaneillesi – haluamaasi hintaan.
     
     section.section
       h2.section__title Automaattiset tulosteet varauksista
       
       .section__content
         p Järjestelmä muodostaa valitsemastasi näytöksestä selkeän listan, jossa varaukset on lueteltu aakkosjärjestyksessä. Kunkin varauksen kohdalla näkyy varatut liput, mahdolliset erikoistoiveet ja varauksen kokonaissumma.
-        
-    section.section
-      h2.section__title Hallitse näytöksiä ja lipputyyppejä
-      
-      .section__content
-        p Voit lisätä rajattomasti näytöksiä ja lipputyyppejä sekä määrittää, mihin näytöksiin otetaan varauksia vastaan.
-        
-    section.section
-      h2.section__title Lisää sponsoreita
-      
-      .section__content
-        p Voit tarjota nettilomakkeen ja varausvahvistuksen yhteydestä mainospaikkoja yhteistyökumppaneillesi haluamaasi hintaan.
     
     section.section
-      h2.section__title Lisää ominaisuuksia
+      h2.section__title Muita ominaisuuksia
       
       .section__content
-        ul
-          li Sähköpostivahvistukset
-          li Selainpohjainen
-          li Toimii kaikilla laitteilla
-          li Helppo käyttää
-          li Turvallinen
-          li Kattavat tilastot
+        .feature
+          h3.feature__title Sähköpostivahvistukset
+          
+          .feature__content
+            p Älykkäät sähköpostivahvistukset katsojalle ja teatterille.
+        
+        .feature
+          h3.feature__title Selainpohjainen
+          
+          .feature__content
+            p Ei asennettavia ohjelmia. Kaikki tapahtuu suoraan selaimella.
+        
+        .feature
+          h3.feature__title Toimii kaikilla laitteilla
+          
+          .feature__content
+            p Käytät palvelua yhtä helposti älypuhelimella, tabletilla, läppärillä tai pöytäkoneella. Tiedot synkronoidaan automaattisesti laitteiden välillä.
+        
+        .feature
+          h3.feature__title Helppo käyttää
+          
+          .feature__content
+            p Suunniteltu mahdollisimman helpoksi, yksinkertaiseksi ja selkeäksi. Nopea käyttöönotto.
+        
+        .feature
+          h3.feature__title Turvallinen
+          
+          .feature__content
+            p Tiedonsiirto on salattu. Tiedot säilytetään turvallisilla pilvipalvelimilla. Poistamme katsojien tiedot, kun esityskausi on ohi.
+        
+        .feature
+          h3.feature__title Kattavat tilastot
+          
+          .feature__content
+            p Toimitamme esityskauden jälkeen kattavat tilastot varatuista lipuista.
     
     section.section
       h2.section__title Tuki
@@ -67,10 +107,6 @@ block content
       
       .section__content
         p Palvelun hinta on <b>30 € / alkava kuukausi</b>. Maksat vain siltä ajalta, kun otat varauksia vastaan. Käyttöaika määritetään sopimuksen yhteydessä ja veloitetaan kerran. Ei toistuvia maksuja. Ei kestotilausta.
-          
-    
-    
-    
-    p
-      a.btn.btn--primary(href='/ota-kayttoon') Ota käyttöön
-    
+        
+        p
+          a.btn.btn--primary(href='/ota-kayttoon') Ota käyttöön
