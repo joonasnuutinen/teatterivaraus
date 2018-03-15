@@ -48,6 +48,7 @@
 
 .content {
   padding: .5rem;
+  max-width: 900px;
 }
 
 .content-actions {

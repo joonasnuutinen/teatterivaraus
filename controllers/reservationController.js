@@ -340,8 +340,11 @@ exports.customerGet = function(req, res, next) {
 			.exec( callback );
 		}
 	}, function asyncDone(err, results) {
+    console.log(err);
 		if (err) return next(err);
 		var theatre = results.theatre;
+    console.log('theatre:');
+    console.log(theatre);
     
     var title = theatre.name + ': ' + theatre.playName + ' - Teatterivaraus';
     

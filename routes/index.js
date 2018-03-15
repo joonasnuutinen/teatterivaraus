@@ -15,6 +15,16 @@ router.get('/tarina', function(req, res, next) {
   res.render('story', { title: 'Tarina' });
 });
 
+/* GET support page. */
+router.get('/tuki', function(req, res, next) {
+  res.render('support', { title: 'Tuki' });
+});
+
+/* GET contact page. */
+router.get('/yhteystiedot', function(req, res, next) {
+  res.render('contact', { title: 'Yhteystiedot' });
+});
+
 /* GET order page. */
 router.get('/ota-kayttoon', function(req, res, next) {
   res.render('register', { title: 'Ota käyttöön' });

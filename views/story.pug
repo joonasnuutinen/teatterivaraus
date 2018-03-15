@@ -2,39 +2,40 @@ extends layout
 
 block content
   .content
-    h1.page-title Tarina
-    
-    p Hei, olen Joonas.
-    
-    p Vuonna 2014 liityin Suomen itäisimmän kesäteatterin, <a href="http://teatterimohko.fi/">Teatteri Möhkön</a> riveihin. Esitin sota-aiheisessa näytelmässä nuorta upseeria ja vastasin näytelmän musiikista.
-    
-    p Möhkön lippuvaraukset kirjattiin tuolloin paperille. Ryhmille oli oma A4-pohja ja yksittäisvarauksille oma. Varaukset otettiin vastaan puhelimella ja sähköpostilla, ja ne kirjattiin lomakkeeseen sitä mukaa, kun niitä tuli.
-    
-    p Näytelmä oli pienelle teatterillemme yleisömenestys. Esityksiä oli 15, ja katsojia kävi yli 5 000. Noin puolet katsojista varasi liput ennakkoon. Voit vain arvata, millaiset jonot lippukopille kertyi, kun lipunmyyjämme joutui etsimään parhaana päivänä lähes kymmenen paperiarkin joukosta juuri sitä oikeaa varausta samalla kun sadat katsojat odottivat helteessä kärsimättömänä lippujaan. Toisinaan esitysten alkua jouduttiin viivästämään jonojen takia.
-    
-    h2.small-title Päätin tehdä asialle jotain
-    
-    p Seuraavan talven aikana väsäsin Googlen pilvipalveluita käyttäen lippuvarauslomakkeen, jonka avulla katsojat pystyivät varaamaan lippunsa netissä. Lippuvaraukset siirtyivät automaattisesti Google Sheets -tiedostoon, jossa niitä pystyi vapaasti suodattamaan, lajittelemaan ja muokkaamaan.
-    
-    p Lipunmyyjämme kirjasi myös muuta kautta tulleet varaukset samaan tiedostoon, ja esityspäivänä tulostimme kyseisen päivän varaukset siistinä taulukkona sukunimen mukaan aakkostettuna.
-    
-    p Järjestelmä oli kömpelö mutta teki tehtävänsä. Lippujonot lyhenivät ja lippupuhelin pirisi vähemmän, kun yhä useampi katsoja varasi lippunsa netissä.
-    
-    h2.small-title Alkoi kolmen vuoden kehitystyö
-    
-    p Seuraavan kolmen vuoden aikana kehitin järjestelmää vähitellen. Lisäsin muun muassa ominaisuuden, joka laski automaattisesti kunkin varauksen kokonaissumman sekä helpotin esitysten suodattamista ja tulostamista.
-    
-    p Kesällä 2017 tutkin katsojatilastoja. Huomasin, että karkeasti yksi kolmasosa myydyistä lipuista varattiin netissä, yksi kolmasosa puhelimitse tai sähköpostitse ja yksi kolmasosa ovelta. Tämä todisti, että nettivaraus on oikeasti vähentänyt puhelinvarausten määrää kolmanneksella ja kasvattanut kokonaisvarausprosenttia saman verran kolmen vuoden takaiseen verrattuna.
-    
-    p Puhelinvarausten väheneminen vähentää suoraan lipunmyyjän ennakkotyötä. Kokonaisvarausten kasvu puolestaan lisää katsojan sitoutumista. Molemmat muutokset ovat erittäin tervetulleita.
-    
-    h2.small-title Yksi kaikkien puolesta
-    
-    p Järjestelmän toimivuus innoitti miettimään: jos Teatteri Möhkö on tyytyväinen uuteen järjestelmään, ehkä siitä voisi olla hyötyä muillekin harrastajateattereille. Kömpelö Google-viritelmä ei kuitenkaan enää riittäisi.
-    
-    p Päätin koodata varausjärjestelmän alusta asti itse. Käärin hihat ja opettelin paljon paljon uusia teknologioita. Kului kesä, kului syksy, kului talvi. Menetin uskoni projektiin monta kertaa mutta palasin aina uudelleen.
-    
-    p Kolmen vuoden kenttäkokemus ja yhdeksän kuukauden sitkeä kehitystyö on nyt palkittu. Saanko esitellä: <i>Teatterivaraus</i>, harrastajateattereille suunnattu lippuvarausjärjestelmä. Helppo käyttää, toimivaksi havaittu, korvaamaton apu.
-    
-    p
-      a.btn.btn--primary(href='/ota-kayttoon') Ota käyttöön
+    section.section.section--long
+      .section__content
+        h1.page-title Tarina
+        
+        p Hei, olen Joonas.
+        
+        p Vuonna 2014 liityin Suomen itäisimmän kesäteatterin, <a href="http://teatterimohko.fi/">Teatteri Möhkön</a> riveihin. Esitin sota-aiheisessa näytelmässä nuorta upseeria ja vastasin näytelmän musiikista.
+        
+        p Möhkön lippuvaraukset kirjattiin tuolloin paperille. Ryhmille oli oma A4-pohja ja yksittäisvarauksille oma. Varaukset otettiin vastaan puhelimella ja sähköpostilla, ja ne kirjattiin lomakkeeseen sitä mukaa, kun niitä tuli.
+        
+        p Näytelmä oli pienelle teatterillemme yleisömenestys. Esityksiä oli 15, ja katsojia kävi yli 5 000. Noin puolet katsojista varasi liput ennakkoon. Voit vain arvata, millaiset jonot lippukopille kertyi, kun lipunmyyjämme joutui etsimään parhaana päivänä lähes kymmenen paperiarkin joukosta juuri sitä oikeaa varausta samalla kun sadat katsojat odottivat helteessä kärsimättömänä lippujaan. Toisinaan esitysten alkua jouduttiin viivästämään jonojen takia.
+        
+        h2.small-title Päätin tehdä asialle jotain
+        
+        p Seuraavan talven aikana väsäsin Googlen pilvipalveluita käyttäen lippuvarauslomakkeen, jonka avulla katsojat pystyivät varaamaan lippunsa netissä. Lippuvaraukset siirtyivät automaattisesti Google Sheets -tiedostoon, jossa niitä pystyi vapaasti suodattamaan, lajittelemaan ja muokkaamaan.
+        
+        p Lipunmyyjämme kirjasi myös muuta kautta tulleet varaukset samaan tiedostoon, ja esityspäivänä tulostimme kyseisen päivän varaukset siistinä taulukkona sukunimen mukaan aakkostettuna.
+        
+        p Järjestelmä oli kömpelö mutta teki tehtävänsä. Lippujonot lyhenivät ja lippupuhelin pirisi vähemmän, kun yhä useampi katsoja varasi lippunsa netissä.
+        
+        h2.small-title Alkoi kolmen vuoden kehitystyö
+        
+        p Seuraavan kolmen vuoden aikana kehitin järjestelmää vähitellen. Lisäsin muun muassa ominaisuuden, joka laski automaattisesti kunkin varauksen kokonaissumman sekä helpotin esitysten suodattamista ja tulostamista.
+        
+        p Kesällä 2017 tutkin katsojatilastoja. Huomasin, että karkeasti yksi kolmasosa myydyistä lipuista varattiin netissä, yksi kolmasosa puhelimitse tai sähköpostitse ja yksi kolmasosa ovelta. Tämä todisti, että nettivaraus on oikeasti vähentänyt puhelinvarausten määrää kolmanneksella ja kasvattanut kokonaisvarausprosenttia saman verran kolmen vuoden takaiseen verrattuna.
+        
+        p Puhelinvarausten väheneminen vähentää suoraan lipunmyyjän ennakkotyötä. Kokonaisvarausten kasvu puolestaan lisää katsojan sitoutumista. Molemmat muutokset ovat erittäin tervetulleita.
+        
+        h2.small-title Yksi kaikkien puolesta
+        
+        p Järjestelmän toimivuus innoitti miettimään: jos Teatteri Möhkö on tyytyväinen uuteen järjestelmään, ehkä siitä voisi olla hyötyä muillekin harrastajateattereille. Kömpelö Google-viritelmä ei kuitenkaan enää riittäisi.
+        
+        p Päätin koodata varausjärjestelmän alusta asti itse. Käärin hihat ja opettelin paljon paljon uusia teknologioita. Kului kesä, kului syksy, kului talvi. Menetin uskoni projektiin monta kertaa mutta palasin aina uudelleen.
+        
+        p Kolmen vuoden kenttäkokemus ja yhdeksän kuukauden sitkeä kehitystyö on nyt palkittu. Saanko esitellä: <i>Teatterivaraus</i>, harrastajateattereille suunnattu lippuvarausjärjestelmä. Helppo käyttää, toimivaksi havaittu, korvaamaton apu.
+        
+        a.btn.btn--primary.btn--big(href='/ota-kayttoon') Ota käyttöön

@@ -14,24 +14,36 @@ html(lang='fi')
     header.header
       nav.navbar
         a.navbar__brand(href='/' rel='home' title='Siirry etusivulle')
-          img.navbar__logo(src='/images/logo-vertical.svg' alt='Teatterivaraus-logo')
+          img.navbar__logo.navbar__logo--vertical(src='/images/logo-vertical.svg' alt='Teatterivaraus-logo')
+          img.navbar__logo.navbar__logo--horizontal(src='/images/logo.svg' alt='Teatterivaraus-logo')
           
         ul#nav.navbar__nav
-          each navItem in [{title: 'Tarina', href: '/tarina'}, {title: 'Ota käyttöön', href: '/ota-kayttoon'}, {title: 'Kirjaudu', href: '/app'}]
-            - var isActive = (navItem.title == title)
-            - var className = (isActive ? 'navbar__item navbar__item--active' : 'navbar__item')
-            li(class=className)
-              a.navbar__link(href=navItem.href)= navItem.title
+          li.navbar__item.navbar__item--secondary
+            a.navbar__link(href='/tarina') Tarina
+          li.navbar__item.navbar__item--secondary
+            a.navbar__link(href='/yhteystiedot') Yhteystiedot
+          li.navbar__item
+            a.navbar__link(href='/app') Kirjaudu sisään
               
     block content
     
     footer.footer
-      div.footer__content
-        p
-          | <a href="http://www.joonasnuutinen.com">Joonas Nuutinen</a><br>
-          | <a href="mailto:joonas@teatterivaraus.fi">joonas@teatterivaraus.fi</a><br>
-          | 050-354 7670<br>
-          | Y-tunnus: 2477397-2
+      h2.footer__title Teatterivaraus
+      
+      ul.footer__nav
+        li.footer__nav-item
+          a.footer__link(href='/tarina') Tarina
+        li.footer__nav-item
+          a.footer__link(href='/yhteystiedot') Yhteystiedot
+        li.footer__nav-item
+          a.footer__link(href='/ota-kayttoon') Ota käyttöön
+        li.footer__nav-item
+          a.footer__link(href='/app') Kirjaudu sisään
+      
+      p.copyright
+        | &copy; #{new Date().getFullYear()}
+        |
+        a.footer__link(href='http://www.joonasnuutinen.com/') Joonas Nuutinen
       
     script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f' crossorigin='anonymous')
     script(src='/scripts/global.js')

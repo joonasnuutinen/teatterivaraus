@@ -1,26 +1,28 @@
 extends layout
 
 block content
-  .content  
-    h1.page-title= title
+  .content 
+    section.section.section--form
+      .section__content
+        h1.page-title= title
 
-    p Kirjaudu sisään kirjoittamalla käyttäjätilisi sähköpostiosoite ja salasana alla oleviin kenttiin.
-    
-    if errors
-      each error in errors
-        p= error
-    
-    form.form(action='' method='POST')
-      label Sähköposti
-        input.input(name='email' type='email' required autofocus)
-      
-      label Salasana
-        input.input(name='password' type='password' required)
-      
-      button.btn.btn--primary(type='submit') Kirjaudu
-    
-    p
-      | Uusi käyttäjä?
-      |
-      a(href='/tilaa') Tilaa palvelu täällä
-      | .
+        p Kirjaudu sisään kirjoittamalla käyttäjätilisi sähköpostiosoite ja salasana alla oleviin kenttiin.
+        
+        if errors
+          each error in errors
+            p= error
+        
+        form.form(action='' method='POST')
+          label Sähköposti
+            input.input(name='email' type='email' required autofocus)
+          
+          label Salasana
+            input.input(name='password' type='password' required)
+          
+          button.btn.btn--primary(type='submit') Kirjaudu
+        
+        p
+          | Uusi käyttäjä?
+          |
+          a(href='/ota-kayttoon') Ota palvelu käyttöön täällä
+          | .

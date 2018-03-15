@@ -3,27 +3,27 @@ extends layout
 block content
   .content
     section.section.section--hero
-      h2.section__title Helpota teatterisi lippurumbaa
-    
       .section__content
+        h2.section__title Helpota teatterisi lippurumbaa
+    
         p Teatterivaraus on uusi palvelu, joka on tehty helpottamaan teattereiden lipunmyyntiä.
       
-      a.btn.btn--primary(href='/ota-kayttoon') Ota käyttöön
+        a.btn.btn--primary.btn--big(href='/ota-kayttoon') Ota käyttöön
     
     section.section.section--webform
-      h2.section__title Vastaanota lippuvarauksia netissä
-      
-      figure.section__figure
-        img.section__image(src='/images/demo/nettivaraus-pieni.png')
-      
       .section__content
+        h2.section__title Vastaanota lippuvarauksia netissä
+      
+        figure.section__figure
+          img.section__image(src='/images/demo/nettivaraus-pieni.png')
+      
         p Saat käyttöösi nettilomakkeen, jolla katsojat varaavat lippunsa helposti itse.
       
       
     section.section.section--dashboard
-      h2.section__title Hallitse kaikkea helposti yhdessä paikassa
-      
       .section__content
+        h2.section__title Hallitse kaikkea helposti yhdessä paikassa
+      
         p Kaikki toiminnot ovat aina kätesi ulottuvilla. Voit kirjautua hallintapaneeliin millä tahansa laitteella.
         
         .feature
@@ -54,9 +54,9 @@ block content
             p Voit lisätä rajattomasti näytöksiä ja lipputyyppejä sekä määrittää, mihin näytöksiin otetaan varauksia vastaan.
         
     section.section.section--sponsors
-      h2.section__title Sponsorit tuovat lisätuloja
-      
       .section__content
+        h2.section__title Sponsorit tuovat lisätuloja
+      
         p Nettivarauslomake ja sähköpostivahvistus tarjoavat yhteistyökumppaneillesi erinomaisen kanavan tavoittaa potentiaalisia asiakkaita.
         
         p Voit lisätä sponsoreita helposti hallintapaneelissa. Varaaja näkee sponsorin nimen, kuvauksen ja linkin sponsorin nettisivulle.
@@ -64,66 +64,72 @@ block content
         p Mikä parasta, voit hinnoitella mainospaikat haluamallasi tavalla ja ansaita teatterillesi lisätuloja. Me tarjoamme alustan – kaikesta muusta päätät sinä.
     
     section.section.section--print
-      h2.section__title Automaattiset tulosteet varauksista
-      
-      figure.section__figure
-        img.section__image(src='/images/demo/mallituloste.png')
-      
       .section__content
+        h2.section__title Automaattiset tulosteet varauksista
+      
+        figure.section__figure
+          img.section__image(src='/images/demo/mallituloste.png')
+      
+      
         p Järjestelmä muodostaa valitsemastasi näytöksestä selkeän listan, jossa varaukset on lueteltu aakkosjärjestyksessä. Kunkin varauksen kohdalla näkyy varatut liput, mahdolliset erikoistoiveet ja varauksen kokonaissumma.
     
     section.section.section--other-features
-      h2.section__title Muita ominaisuuksia
-      
       .section__content
-        .feature
-          h3.feature__title <span class="icon"><i class="far fa-envelope"></i></span> Sähköpostivahvistukset
-          
-          .feature__content
-            p Älykkäät sähköpostivahvistukset katsojalle ja teatterille.
+        h2.section__title Muita ominaisuuksia
         
-        .feature
-          h3.feature__title <span class="icon"><i class="fas fa-globe"></i></span> Selainpohjainen
-          
-          .feature__content
-            p Ei asennettavia ohjelmia. Kaikki tapahtuu suoraan selaimella.
-        
-        .feature
-          h3.feature__title <span class="icon"><i class="fas fa-mobile-alt"></i></span> Toimii kaikilla laitteilla
-          
-          .feature__content
-            p Käytät palvelua yhtä helposti älypuhelimella, tabletilla, läppärillä tai pöytäkoneella. Tiedot synkronoidaan automaattisesti laitteiden välillä.
-        
-        .feature
-          h3.feature__title <span class="icon"><i class="fas fa-child"></i></span> Helppo käyttää
-          
-          .feature__content
-            p Suunniteltu mahdollisimman helpoksi, yksinkertaiseksi ja selkeäksi. Nopea käyttöönotto.
-        
-        .feature
-          h3.feature__title <span class="icon"><i class="fas fa-lock"></i></span> Turvallinen
-          
-          .feature__content
-            p Tiedonsiirto on salattu. Tiedot säilytetään turvallisilla pilvipalvelimilla. Poistamme katsojien tiedot, kun esityskausi on ohi.
-        
-        .feature
-          h3.feature__title <span class="icon"><i class="far fa-chart-bar"></i></span> Kattavat tilastot
-          
-          .feature__content
-            p Toimitamme esityskauden jälkeen kattavat tilastot varatuista lipuista.
+        .feature-row
+          .feature-group
+            .feature
+              h3.feature__title <span class="icon"><i class="far fa-envelope"></i></span> Sähköpostivahvistukset
+              
+              .feature__content
+                p Älykkäät sähköpostivahvistukset katsojalle ja teatterille.
             
-        .feature
-          h3.feature__title <span class="icon"><i class="fas fa-user"></i></span> Osaava tuki
-          
-          .feature__content
-            p Henkilökohtainen tuki on yhden sähköpostin tai puhelinsoiton päässä. Olipa kysymyksesi mikä tahansa, löydämme siihen vastauksen.
+            .feature
+              h3.feature__title <span class="icon"><i class="fas fa-globe"></i></span> Selainpohjainen
+              
+              .feature__content
+                p Ei asennettavia ohjelmia. Kaikki tapahtuu suoraan selaimella.
+            
+            .feature
+              h3.feature__title <span class="icon"><i class="fas fa-mobile-alt"></i></span> Toimii kaikilla laitteilla
+              
+              .feature__content
+                p Käytät palvelua yhtä helposti älypuhelimella, tabletilla, läppärillä tai pöytäkoneella. Tiedot synkronoidaan automaattisesti laitteiden välillä.
+                
+            .feature
+              h3.feature__title <span class="icon"><i class="fas fa-child"></i></span> Helppo käyttää
+              
+              .feature__content
+                p Suunniteltu mahdollisimman helpoksi, yksinkertaiseksi ja selkeäksi. Nopea käyttöönotto.
+            
+          .feature-group
+            .feature
+              h3.feature__title <span class="icon"><i class="fas fa-lock"></i></span> Turvallinen
+              
+              .feature__content
+                p Tiedonsiirto on salattu. Tiedot säilytetään turvallisilla pilvipalvelimilla. Poistamme katsojien tiedot, kun esityskausi on ohi.
+            
+            .feature
+              h3.feature__title <span class="icon"><i class="far fa-chart-bar"></i></span> Kattavat tilastot
+              
+              .feature__content
+                p Toimitamme esityskauden jälkeen kattavat tilastot varatuista lipuista.
+            
+            .feature
+              h3.feature__title <span class="icon"><i class="fas fa-user"></i></span> Osaava tuki
+              
+              .feature__content
+                p Henkilökohtainen tuki on yhden sähköpostin tai puhelinsoiton päässä. Olipa kysymyksesi mikä tahansa, löydämme siihen vastauksen.
         
     section.section.section--price
-      h2.section__title Yksi hinta
-      
       .section__content
-        p Palvelun hinta on <b>30 € / kuukausi</b>.
+        h2.section__title Yksi hinta
+
+        p Palvelun hinta on <b class="price">30 € / kuukausi</b>.
         
-        p Maksat vain siltä ajalta, kun otat varauksia vastaan. Käyttöaika määritetään sopimuksen yhteydessä ja veloitetaan kerran. Ei toistuvia maksuja. Ei kestotilausta.
+        p Maksat vain siltä ajalta, kun käytät palvelua. Käyttöaika määritetään käyttöönoton yhteydessä ja veloitetaan kerran. Ei toistuvia maksuja. Ei kestotilausta.
         
-      a.btn.btn--primary(href='/ota-kayttoon') Ota käyttöön
+        a.btn.btn--primary.btn--big(href='/ota-kayttoon') Ota käyttöön
+      
+        p.notice Hinta sisältää arvonlisäveron 24 %.
