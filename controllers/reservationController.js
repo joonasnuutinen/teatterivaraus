@@ -341,10 +341,8 @@ exports.customerGet = function(req, res, next) {
 		}
 	}, function asyncDone(err, results) {
     console.log(err);
-		if (err) return next(err);
+		if (err) return next();
 		var theatre = results.theatre;
-    console.log('theatre:');
-    console.log(theatre);
     
     var title = theatre.name + ': ' + theatre.playName + ' - Teatterivaraus';
     

@@ -4,6 +4,7 @@ html(lang='fi')
   meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
   
   head
+    - title = title || 'Sivua ei löydy';
     title= title + ' - Teatterivaraus'
     <link rel="icon" type="image/png" href="/images/icon.png">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700" rel="stylesheet">
@@ -43,7 +44,7 @@ html(lang='fi')
       p.copyright
         | &copy; #{new Date().getFullYear()}
         |
-        a.footer__link(href='http://www.joonasnuutinen.com/') Joonas Nuutinen
+        a.footer__link(href='http://www.joonasnuutinen.com/' rel='external author') Joonas Nuutinen
       
     script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f' crossorigin='anonymous')
     script(src='/scripts/global.js')
