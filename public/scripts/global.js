@@ -278,7 +278,7 @@ function submitForm() {
     email: $form.find( 'input[name="email"]' ).val(),
     beginning: $form.find( 'input[name="beginning"]' ).val(),
     ending: $form.find( 'input[name="ending"]' ).val(),
-    additionalInfo: $form.find( 'input[name="additionalInfo"]' ).val()
+    additionalInfo: $form.find( 'textarea[name="additionalInfo"]' ).val()
   } );
   
   posting.done( function postingDone( data ) {
