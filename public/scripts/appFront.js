@@ -103,6 +103,10 @@ $(function() {
         label: 'Web-osoite'
       },
       
+      urlView: {
+        name: 'url'
+      },
+      
       order: {
         label: 'Järjestys',
         hidden: true
@@ -225,9 +229,11 @@ function populateRows(schemaOptions) {
           
         // everything else
         } else if(item[column] !== undefined) {
+          var propertyName = schemaOptions[column].name || column;
+          
           $column = $( '<div>' )
             .addClass( column )
-            .attr( 'data-property', column )
+            .attr( 'data-property', propertyName )
             .text( item[column] );
           
           if ( schemaOptions[column] && schemaOptions[column].hidden ) {
@@ -476,7 +482,7 @@ function changeOrder( $row1, $row2, schemaOptions ) {
       errors.forEach(function(error) {
         errorString += error.msg + '<br>';
       });
-      $('.errors').html(errorString);
+      $row1.find( '.errors' ).html( '<div class="message__content message__content--error">' + errorString + '</div>' );
     } else {
       cancelEdit( null, schemaOptions );
     }
