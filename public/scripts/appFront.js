@@ -380,7 +380,7 @@ function deleteRow(id, schemaOptions) {
         response.errors.forEach(function(error) {
           errors += error.msg + '<br>';
         });
-        $('.errors').html( '<div class="message__content message__content--error">' + errors + '</div>' );
+        $('#' + id + ' .errors').html( '<div class="message__content message__content--error">' + errors + '</div>' );
       }
     });
   }
