@@ -286,8 +286,8 @@ p {
 */
 
 .section--sponsors {
-  background: #2d4471;
-  background: linear-gradient(to top left, #152B55, #4d638d);
+  background: #777;
+  background: linear-gradient(to top left, #777, #676767);
   color: white;
   font-weight: 300;
   padding-top: 2rem;
@@ -345,7 +345,7 @@ p {
 
 .section--other-features .feature__title {
   margin-bottom: .5rem;
-  color: #2d4471;
+  color: #061738;
 }
 
 .section--other-features p {
@@ -366,7 +366,7 @@ p {
 }
 
 .price {
-  color: #2d4471;
+  color: #061738;
 }
 
 .section--price .btn {
