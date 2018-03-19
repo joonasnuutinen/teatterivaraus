@@ -19,6 +19,8 @@ html(lang='fi')
           img.navbar__logo.navbar__logo--horizontal(src='/images/logo.svg' alt='Teatterivaraus-logo')
           
         ul#nav.navbar__nav
+          li.navbar__item
+            a.navbar__link(href='/') Etusivu
           li.navbar__item.navbar__item--secondary
             a.navbar__link(href='/tarina') Tarina
           li.navbar__item.navbar__item--secondary
@@ -29,9 +31,9 @@ html(lang='fi')
     block content
     
     footer.footer
-      h2.footer__title Teatterivaraus
-      
       ul.footer__nav
+        li.footer__nav-item
+          a.footer__link(href='/') Etusivu
         li.footer__nav-item
           a.footer__link(href='/tarina') Tarina
         li.footer__nav-item

@@ -627,13 +627,13 @@ p {
   ============================================================================
 */
 
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 390px) {
   .navbar__item--secondary {
     display: block;
   }
 }
 
-@media screen and (min-width: 430px) {
+@media screen and (min-width: 490px) {
   .navbar {
     display: flex;
     align-items: center;
@@ -649,12 +649,6 @@ p {
   
   .navbar__item--secondary {
     display: none;
-  }
-}
-
-@media screen and (min-width: 580px) {
-  .navbar__item--secondary {
-    display: block;
   }
 }
 
@@ -715,5 +709,11 @@ p {
   
   .section--other-features .feature-group:last-child {
     padding-right: 0;
+  }
+}
+
+@media screen and (min-width: 650px) {
+  .navbar__item--secondary {
+    display: block;
   }
 }
