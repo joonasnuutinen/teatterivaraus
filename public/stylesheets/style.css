@@ -567,7 +567,8 @@ p {
 }
 
 .message__content--error {
-  background: #d4986a;
+  background: #b50202;
+  color: white;
 }
 
 .message__content--success {
