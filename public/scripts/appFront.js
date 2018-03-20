@@ -229,7 +229,7 @@ function populateRows(schemaOptions) {
           
         // everything else
         } else if(item[column] !== undefined) {
-          var propertyName = schemaOptions[column].name || column;
+          var propertyName = (schemaOptions[column] && schemaOptions[column].name) ? schemaOptions[column].name : column;
           
           $column = $( '<div>' )
             .addClass( column )
