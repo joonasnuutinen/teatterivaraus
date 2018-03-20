@@ -14,10 +14,6 @@ block content
       form.form(action='' method='POST')
         label Näytelmän nimi
           input.input(type='text' name='playName' value=(undefined===theatre.playName ? '' : theatre.playName))
-        label Näytelmän kuvaus
-          textarea.input(type='text' name='playDescription')
-            if theatre.playDescription
-              | #{theatre.playDescription}
         button.btn.btn--primary(type='submit') Tallenna
     
     section.box#Vaihda-salasana
