@@ -5,6 +5,7 @@ var Show = require('../models/show');
 var TicketClass = require('../models/ticketClass');
 var registerTitle = 'Tilaa';
 var mailgun = require( 'mailgun-js' );
+var request = require('request');
 
 try {
   require('dotenv').load();
@@ -28,6 +29,24 @@ exports.registerGet = function(req, res, next) {
 
 // POST contact
 exports.contactPost = function(req, res, next) {
+  var response = {
+      errors: []
+    };
+    
+  var recaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify';
+  request.post({
+    url: recaptchaUrl,
+    form: {
+      secret: process.env.RECAPTCHA_SECRET,
+      response: req.body.recaptchaResponse
+    },
+    function(err, response, body) {
+      if (err || ! body.success) {
+        response.errors.push('reCAPTCHA-varmennus epäonnistui');
+      }
+    }
+  });
+  
   req.checkBody('name', 'Teatterin nimi puuttuu').notEmpty();
   req.checkBody('email', 'Sähköpostiosoite puuttuu').notEmpty();
   
@@ -45,9 +64,7 @@ exports.contactPost = function(req, res, next) {
   req.sanitize('playName').trim();
   
   req.getValidationResult().then(function(errors) {
-    var response = {
-      errors: []
-    };
+    
     
     if (errors.isEmpty()) {
       var contact = new Contact({

@@ -279,7 +279,8 @@ function submitForm() {
     playName: $form.find( 'input[name="playName"]' ).val(),
     beginning: $form.find( 'input[name="beginning"]' ).val(),
     ending: $form.find( 'input[name="ending"]' ).val(),
-    additionalInfo: $form.find( 'textarea[name="additionalInfo"]' ).val()
+    additionalInfo: $form.find( 'textarea[name="additionalInfo"]' ).val(),
+    recaptchaResponse: grecaptcha.getResponse()
   } );
   
   posting.done( function postingDone( data ) {
@@ -289,6 +290,7 @@ function submitForm() {
         errors += error.msg + '<br>';
       });
       $( '#message' ).html( '<div class="message__content message__content--error">' + errors + '</div>' );
+      grecaptcha.reset();
     } else {
       $( '#message' ).html( '<div class="message__content message__content--success">' + data.message + '</div>' );
       $form.find( 'input' ).val( '' );
