@@ -30,79 +30,73 @@ exports.registerGet = function(req, res, next) {
 // POST contact
 exports.contactPost = function(req, res, next) {
   var response = {
-      errors: []
-    };
-    
-  console.log(req.body);
+    errors: [],
+    success: false
+  };
     
   var recaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify';
+  
   request.post({
     url: recaptchaUrl,
     form: {
       secret: process.env.RECAPTCHA_SECRET,
       response: req.body.recaptchaResponse
-    },
-    function(err, response, body) {
-      console.log({
-        err: err,
-        response: response,
-        body: body
-      });
-      if (err || ! body.success) {
-        response.errors.push('reCAPTCHA-varmennus epäonnistui');
+    }
+  }, function(err, gResponse, body) {
+      var data = JSON.parse(body);
+
+      if (err || ! data.success) {
+        var message = {msg: 'reCAPTCHA-varmennus epäonnistui'};
+        response.errors.push(message);
       }
-    }
-  });
-  
-  req.checkBody('name', 'Teatterin nimi puuttuu').notEmpty();
-  req.checkBody('email', 'Sähköpostiosoite puuttuu').notEmpty();
-  
-  req.sanitize('name').escape();
-  req.sanitize('email').escape();
-  req.sanitize('beginning').escape();
-  req.sanitize('ending').escape();
-  req.sanitize('additionalInfo').escape();
-  req.sanitize('playName').escape();
-  req.sanitize('name').trim();
-  req.sanitize('email').trim();
-  req.sanitize('beginning').trim();
-  req.sanitize('ending').trim();
-  req.sanitize('additionalInfo').trim();
-  req.sanitize('playName').trim();
-  
-  req.getValidationResult().then(function(errors) {
-    
-    
-    if (errors.isEmpty() && response.errors.length === 0) {
-      var contact = new Contact({
-        name: req.body.name,
-        email: req.body.email,
-        playName: req.body.playName,
-        beginning: req.body.beginning,
-        ending: req.body.ending,
-        additionalInfo: req.body.additionalInfo
-      });
       
-      contact.save(function(err) {
-        //console.log( err );
-        if ( err ) {
-          response.errors.push( 'Lähetys epäonnistui, yritä uudelleen.' );
+      req.checkBody('name', 'Teatterin nimi puuttuu').notEmpty();
+      req.checkBody('email', 'Sähköpostiosoite puuttuu').notEmpty();
+      
+      req.sanitize('name').escape();
+      req.sanitize('email').escape();
+      req.sanitize('beginning').escape();
+      req.sanitize('ending').escape();
+      req.sanitize('additionalInfo').escape();
+      req.sanitize('playName').escape();
+      req.sanitize('name').trim();
+      req.sanitize('email').trim();
+      req.sanitize('beginning').trim();
+      req.sanitize('ending').trim();
+      req.sanitize('additionalInfo').trim();
+      req.sanitize('playName').trim();
+      
+      req.getValidationResult().then(function(errors) {
+        if (errors.isEmpty() && response.errors.length === 0) {
+          var contact = new Contact({
+            name: req.body.name,
+            email: req.body.email,
+            playName: req.body.playName,
+            beginning: req.body.beginning,
+            ending: req.body.ending,
+            additionalInfo: req.body.additionalInfo
+          });
+          
+          contact.save(function(err) {
+            //console.log( err );
+            if ( err ) {
+              response.errors.push( 'Lähetys epäonnistui, yritä uudelleen.' );
+            } else {
+              response.errors = null;
+              response.message = 'Kiitos viestistä! Saat kirjautumistunnukset antamaasi sähköpostiosoitteeseen vuorokauden sisällä.';
+              response.success = true;
+              sendFormViaEmail( contact );
+            }
+            res.send( response );
+          });
+          
         } else {
-          response.errors = null;
-          response.message = 'Kiitos viestistä! Saat kirjautumistunnukset antamaasi sähköpostiosoitteeseen vuorokauden sisällä.';
-          sendFormViaEmail( contact );
+          response.errors = response.errors.concat( errors.useFirstErrorOnly().array() );
+          res.send( response );
         }
-        res.send( response );
       });
-      
-    } else {
-      response.errors = response.errors.concat( errors.useFirstErrorOnly().array() );
-      res.send( response );
     }
-    
-    //response.data = contact;
-    
-  });
+  );
 };
 
 // GET settings
