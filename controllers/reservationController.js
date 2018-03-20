@@ -489,13 +489,18 @@ function sendEmailConfirmation(id, theatreId) {
     
     body += 'Yhteensä: ' + reservation.total.priceString + '\n\n';
     
-    body += 'Yhteistyössä:\n\n';
+    console.log(sponsors);
     
-    sponsors.forEach( function eachSponsor(sponsor) {
-      body += sponsor.name + '\n';
-      body += sponsor.description + '\n';
-      body += 'Lue lisää: ' + sponsor.urlHref + '\n\n';
-    } );
+    if (sponsors.length > 0) {
+      body += 'Yhteistyössä:\n\n';
+    
+      sponsors.forEach( function eachSponsor(sponsor) {
+        body += sponsor.name + '\n';
+        body += sponsor.description + '\n';
+        body += 'Lue lisää: ' + sponsor.urlHref + '\n\n';
+      } );
+    }
+
     // ---------------------------------------------------------------------
     // email body ends -----------------------------------------------------
     // ---------------------------------------------------------------------

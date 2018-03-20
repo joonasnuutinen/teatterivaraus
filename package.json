@@ -7,7 +7,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "devstart": "nodemon ./bin/www"
+    "devstart": "nodemon ./bin/www",
+    "local": "nodemon --exec \"heroku local\" --signal SIGTERM"
   },
   "dependencies": {
     "async": "^2.5.0",

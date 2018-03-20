@@ -26,7 +26,7 @@ html(lang='fi')
         .dynamic-content(data-schema=options.schema data-columns-edit=options.columnsEdit data-theatre=theatre._id)
           .dataRow.new-row.data-row--new#newRow
         
-      if sponsors
+      if sponsors.length > 0
         section.box
           h2.secondary-title.secondary-title--box Yhteistyössä
           

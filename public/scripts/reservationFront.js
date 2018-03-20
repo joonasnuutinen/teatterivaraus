@@ -49,7 +49,7 @@ function userEvents(schemaOptions) {
 function success(id, schemaOptions, data) {
   $('.errors').html('');
   
-  var successHtml = '<p>Varaus onnistui! Olemme lähettäneet varausvahvistuksen osoitteeseen <b>' + data.email + '</b>.</p>';
+  var successHtml = '<p class="message__content message__content--success">Varaus onnistui! Olemme lähettäneet varausvahvistuksen osoitteeseen <b>' + data.email + '</b>.</p>';
   
   $('#newRow').html( successHtml );
 }
