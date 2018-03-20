@@ -276,6 +276,7 @@ function submitForm() {
   var posting = $.post( url, {
     name: $form.find( 'input[name="name"]' ).val(),
     email: $form.find( 'input[name="email"]' ).val(),
+    playName: $form.find( 'input[name="playName"]' ).val(),
     beginning: $form.find( 'input[name="beginning"]' ).val(),
     ending: $form.find( 'input[name="ending"]' ).val(),
     additionalInfo: $form.find( 'textarea[name="additionalInfo"]' ).val()

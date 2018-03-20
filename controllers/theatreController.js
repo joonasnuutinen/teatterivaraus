@@ -36,11 +36,13 @@ exports.contactPost = function(req, res, next) {
   req.sanitize('beginning').escape();
   req.sanitize('ending').escape();
   req.sanitize('additionalInfo').escape();
+  req.sanitize('playName').escape();
   req.sanitize('name').trim();
   req.sanitize('email').trim();
   req.sanitize('beginning').trim();
   req.sanitize('ending').trim();
   req.sanitize('additionalInfo').trim();
+  req.sanitize('playName').trim();
   
   req.getValidationResult().then(function(errors) {
     var response = {
@@ -51,6 +53,7 @@ exports.contactPost = function(req, res, next) {
       var contact = new Contact({
         name: req.body.name,
         email: req.body.email,
+        playName: req.body.playName,
         beginning: req.body.beginning,
         ending: req.body.ending,
         additionalInfo: req.body.additionalInfo
@@ -186,7 +189,8 @@ function sendFormViaEmail(contact) {
   // email body starts ---------------------------------------------------
   // ---------------------------------------------------------------------
   var body = 'Teatterin nimi: ' + contact.name + '\n';
-  body += 'Teatterin sähköposti: ' + contact.email + '\n\n';
+  body += 'Teatterin sähköposti: ' + contact.email + '\n';
+  body += 'Näytelmän nimi: ' + contact.playName + '\n\n';
   
   body += 'Otan palvelun käyttöön\n';
   body += '- alkaen: ' + contact.beginning + '\n';
