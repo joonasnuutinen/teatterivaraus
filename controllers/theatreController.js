@@ -41,6 +41,11 @@ exports.contactPost = function(req, res, next) {
       response: req.body.recaptchaResponse
     },
     function(err, response, body) {
+      console.log({
+        err: err,
+        response: response,
+        body: body
+      });
       if (err || ! body.success) {
         response.errors.push('reCAPTCHA-varmennus epäonnistui');
       }
@@ -66,7 +71,7 @@ exports.contactPost = function(req, res, next) {
   req.getValidationResult().then(function(errors) {
     
     
-    if (errors.isEmpty()) {
+    if (errors.isEmpty() && response.errors.length === 0) {
       var contact = new Contact({
         name: req.body.name,
         email: req.body.email,
