@@ -33,6 +33,8 @@ exports.contactPost = function(req, res, next) {
       errors: []
     };
     
+  console.log(req.body);
+    
   var recaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify';
   request.post({
     url: recaptchaUrl,
