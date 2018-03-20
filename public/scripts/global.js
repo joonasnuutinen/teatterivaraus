@@ -244,6 +244,10 @@ function saveEdit(id, schemaOptions, callback) {
     newData[$(this).attr('id')] = value;
   });
   
+  if (grecaptcha) {
+    newData.recaptchaResponse = grecaptcha.getResponse();
+  }
+  
   $.ajax({
     type: ajaxType,
     data: newData,

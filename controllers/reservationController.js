@@ -366,77 +366,92 @@ exports.customerGet = function(req, res, next) {
 
 // POST customer reservation form
 exports.customerPost = function(req, res, next) {
-  var tickets = [];
+  var message = {
+    errors: [],
+    success: false
+  };
+    
+  var recaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify';
   
-  for (var field in req.body) {
-    var re = /newTicketClass_(\w+)/;
-    var match = field.match(re);
-    if (match) {
-      req.sanitize(field).escape();
-      req.sanitize(field).trim();
-      req.sanitize(field).toInt();
-      tickets.push({
-        ticketClass: match[1],
-        amount: req.body[field]
-      });
+  request.post({
+    url: recaptchaUrl,
+    form: {
+      secret: process.env.RECAPTCHA_SECRET_R,
+      response: req.body.recaptchaResponse
     }
-  }
-  
-  req.checkBody('newFirstName', 'Etunimi puuttuu.').notEmpty();
-  req.checkBody('newLastName', 'Sukunimi puuttuu.').notEmpty();
-  req.checkBody('newEmail', 'Sähköposti puuttuu.').notEmpty();
-  req.checkBody('newEmail', 'Virheellinen sähköposti.').isEmail();
-  req.checkBody('newShow', 'Näytöstä ei ole valittu.').notEmpty();
-  
-  req.sanitize('newLastName').escape();
-  req.sanitize('newLastName').trim();
-  req.sanitize('newFirstName').escape();
-  req.sanitize('newFirstName').trim();
-  req.sanitize('newEmail').escape();
-  req.sanitize('newEmail').trim();
-  req.sanitize('newPhone').escape();
-  req.sanitize('newPhone').trim();
-  req.sanitize('newAdditionalInfo').escape();
-  req.sanitize('newAdditionalInfo').trim();
-  
-  req.getValidationResult().then(function(errors) {
-    var message = {
-      errors: []
-    };
-    
-    //console.log( req.body );
-    
-    if (errors.isEmpty()) {
-      var reservation = new Reservation({
-        lastName: req.body.newLastName,
-        firstName: req.body.newFirstName,
-        email: req.body.newEmail,
-        phone: req.body.newPhone,
-        show: req.body.newShow,
-        additionalInfo: req.body.newAdditionalInfo,
-        theatre: req.params.theatreId,
-        tickets: tickets,
-        source: 'webForm',
-        added: Date.now(),
-        marketingPermission: req.body.newMarketingPermission
-      });
-      
-      reservation.markModified('tickets');
-      
-      reservation.save(function(err) {
-        if (err) {
-          message.errors.push('Varaus epäonnistui, yritä uudelleen.');
-        } else {
-          //console.log(reservation);
-          sendEmailConfirmation(reservation._id, reservation.theatre);
-        }
-      });
-    } else {
-      message.errors = message.errors.concat(errors.useFirstErrorOnly().array());
+  }, function(err, gResponse, body) {
+    var data = JSON.parse(body);
+
+    if (err || ! data.success) {
+      message.errors.push({msg: 'reCAPTCHA-varmennus epäonnistui'});
     }
     
-    message.data = reservation;
-    res.send(message);
+    var tickets = [];
+    
+    for (var field in req.body) {
+      var re = /newTicketClass_(\w+)/;
+      var match = field.match(re);
+      if (match) {
+        req.sanitize(field).escape();
+        req.sanitize(field).trim();
+        req.sanitize(field).toInt();
+        tickets.push({
+          ticketClass: match[1],
+          amount: req.body[field]
+        });
+      }
+    }
+    
+    req.checkBody('newFirstName', 'Etunimi puuttuu.').notEmpty();
+    req.checkBody('newLastName', 'Sukunimi puuttuu.').notEmpty();
+    req.checkBody('newEmail', 'Sähköposti puuttuu.').notEmpty();
+    req.checkBody('newEmail', 'Virheellinen sähköposti.').isEmail();
+    req.checkBody('newShow', 'Näytöstä ei ole valittu.').notEmpty();
+    
+    req.sanitize('newLastName').escape();
+    req.sanitize('newLastName').trim();
+    req.sanitize('newFirstName').escape();
+    req.sanitize('newFirstName').trim();
+    req.sanitize('newEmail').escape();
+    req.sanitize('newEmail').trim();
+    req.sanitize('newPhone').escape();
+    req.sanitize('newPhone').trim();
+    req.sanitize('newAdditionalInfo').escape();
+    req.sanitize('newAdditionalInfo').trim();
+    
+    req.getValidationResult().then(function(errors) {
+      if (errors.isEmpty()) {
+        var reservation = new Reservation({
+          lastName: req.body.newLastName,
+          firstName: req.body.newFirstName,
+          email: req.body.newEmail,
+          phone: req.body.newPhone,
+          show: req.body.newShow,
+          additionalInfo: req.body.newAdditionalInfo,
+          theatre: req.params.theatreId,
+          tickets: tickets,
+          source: 'webForm',
+          added: Date.now(),
+          marketingPermission: req.body.newMarketingPermission
+        });
+        
+        reservation.markModified('tickets');
+        
+        reservation.save(function(err) {
+          if (err) {
+            message.errors.push({msg: 'Varaus epäonnistui, yritä uudelleen.'});
+          } else {
+            //console.log(reservation);
+            sendEmailConfirmation(reservation._id, reservation.theatre);
+          }
+        });
+      } else {
+        message.errors = message.errors.concat(errors.useFirstErrorOnly().array());
+      }
+      
+      message.data = reservation;
+      res.send(message);
+    });
   });
 }
 
@@ -488,8 +503,6 @@ function sendEmailConfirmation(id, theatreId) {
     body += reservation.total.code.replace(/<br>/g, '\n') + '\n\n';
     
     body += 'Yhteensä: ' + reservation.total.priceString + '\n\n';
-    
-    console.log(sponsors);
     
     if (sponsors.length > 0) {
       body += 'Yhteistyössä:\n\n';

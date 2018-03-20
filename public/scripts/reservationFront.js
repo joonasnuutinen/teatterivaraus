@@ -34,6 +34,7 @@ $(function() {
 
 function resetView(schemaOptions) {
   $('#newRow').html('<div class="fields"></div>');
+  $('#newRow').append('<div class="g-recaptcha" data-sitekey="6LcfqU0UAAAAACC_k1CfwizhQoT00i-DMirqujUo"></div>');
   $('#newRow').append('<button class="save-row btn btn--primary btn--big" type="button">Varaa</button>');
   $( '#newRow' ).append( '<div class="errors"></div>' );
   showForm('newRow', null, schemaOptions, 'new' );
