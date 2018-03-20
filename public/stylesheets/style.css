@@ -648,7 +648,7 @@ p {
   }
   
   .navbar__logo--horizontal {
-    display: initial;
+    display: inline-block;
   }
   
   .navbar__item--secondary {

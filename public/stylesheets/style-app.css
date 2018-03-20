@@ -205,6 +205,7 @@
     display: block!important;
     position: fixed;
     top: 65px;
+    left: 0;
     width: 200px;
     padding-top: .5rem;
     background: #2d4471;

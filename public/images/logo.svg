@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="2875.4" height="462.49" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg version="1.1" viewBox="0 0 2875.4 462.49" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
  <metadata>
   <rdf:RDF>
    <cc:Work rdf:about="">
@@ -12,7 +12,6 @@
  <defs>
   <linearGradient id="linearGradient30" x1="32.496" x2="71.215" y1="51.132" y2="51.132" gradientTransform="scale(1.2967 .77121)" gradientUnits="userSpaceOnUse" xlink:href="#SvgjsLinearGradient3675"/>
   <linearGradient id="linearGradient32" x1="10.207" x2="19.076" y1="59.475" y2="59.475" gradientTransform="scale(1.5536 .64368)" gradientUnits="userSpaceOnUse" xlink:href="#SvgjsLinearGradient3675"/>
-  <linearGradient id="linearGradient34" x1="10.097" x2="58.8" y1="60.121" y2="60.121" gradientTransform="scale(1.5704 .63676)" gradientUnits="userSpaceOnUse" xlink:href="#SvgjsLinearGradient3675"/>
   <linearGradient id="linearGradient36" x1="4.2673" x2="71.897" y1="25.483" y2="25.483" gradientTransform="scale(1.1984 .83444)" gradientUnits="userSpaceOnUse" xlink:href="#SvgjsLinearGradient3675"/>
   <linearGradient id="linearGradient40" x1="4.1134" x2="74.274" y1="26.437" y2="26.437" gradientTransform="scale(1.2433 .80434)" gradientUnits="userSpaceOnUse" xlink:href="#SvgjsLinearGradient3675"/>
  </defs>
@@ -26,9 +25,9 @@
   <g id="main_text" transform="matrix(1.4041 0 0 1.4041 117 25.794)" fill="#fff" feature="main_text" groupName="main_text" name="main_text" rel="mainfill">
    <path d="m11.5 4.6v1.84h-4.64v13.16h-2.22v-13.16h-4.64v-1.84zm4.02 13.16h8.14v1.84h-10.36v-15h9.98v1.84h-7.76v4.44h6.34v1.86h-6.34zm16.66-13.16 6.16 15h-2.4l-1.5-3.92h-5.9l-1.48 3.92h-2.4l6.16-15zm-2.94 9.24h4.5l-2.24-5.92zm20.8-9.24v1.84h-4.64v13.16h-2.22v-13.16h-4.64v-1.84zm11.5 0v1.84h-4.64v13.16h-2.22v-13.16h-4.64v-1.84zm4.02 13.16h8.14v1.84h-10.36v-15h9.98v1.84h-7.76v4.44h6.34v1.86h-6.34zm21.86-7.84c0 2.28-1.32 4.12-3.22 4.92l3.22 4.76h-2.46l-2.94-4.36h-3.5v4.36h-2.22v-15h5.82c2.94 0.02 5.3 2.3 5.3 5.32zm-8.9-3.48v6.96h3.58c1.7 0 3.1-1.44 3.1-3.48 0-2.02-1.4-3.48-3.1-3.48zm14.12-1.84v15h-2.22v-15zm9.44 15h-1.26l-5.78-15h2.38l4.04 11.04 4.02-11.04h2.38zm13.5-15 6.16 15h-2.4l-1.5-3.92h-5.9l-1.48 3.92h-2.4l6.16-15zm-2.94 9.24h4.5l-2.24-5.92zm22.02-3.92c0 2.28-1.32 4.12-3.22 4.92l3.22 4.76h-2.46l-2.94-4.36h-3.5v4.36h-2.22v-15h5.82c2.94 0.02 5.3 2.3 5.3 5.32zm-8.9-3.48v6.96h3.58c1.7 0 3.1-1.44 3.1-3.48 0-2.02-1.4-3.48-3.1-3.48zm17.62-1.84 6.16 15h-2.4l-1.5-3.92h-5.9l-1.48 3.92h-2.4l6.16-15zm-2.94 9.24h4.5l-2.24-5.92zm20.52-9.24h2.22v9.12c0 2.42-0.96 6.08-6 6.08s-6.04-3.66-6.04-6.08v-9.12h2.22v9.12c0 0.9 0.2 4.24 3.82 4.24s3.78-3.34 3.78-4.24zm15.32 9.5c0.06 0.14 0.54 1.5-0.08 2.92-0.72 1.7-2.74 2.76-5.26 2.78-2.18 0-4.16-0.96-5.56-2.48l1.48-1.48c0.7 1.24 2.48 2.12 4.08 2.12 1.74-0.02 2.76-0.66 3.18-1.66 0.32-0.74 0.06-1.54 0.04-1.56-0.42-1.16-1.58-1.42-3.22-1.92-1.86-0.56-4-1.02-4.7-2.98-0.38-1.02-0.28-2.2 0.24-3.16 1.16-2.2 4.12-2.26 4.46-2.26 2.2 0 4.16 0.96 5.56 2.5l-1.46 1.46c-0.82-1.2-2.42-2.12-4.1-2.12-0.02 0-1.78 0-2.46 1.28-0.26 0.5-0.32 1.16-0.14 1.68 0.4 1.1 1.54 1.36 3.14 1.84 1.9 0.58 4.04 1.02 4.8 3.04z"/>
   </g>
-  <g transform="matrix(.9971 0 0 .9971 9.9008 -6.2023)" fill="url(#linearGradient40)" feature="symbol" name="symbol" rel="mainfill">
-   <polygon points="84.338 39.434 92.342 39.434 92.342 69.295 42.136 69.295 43.674 68.661 44.094 68.482 88.713 49.997" fill="url(#linearGradient30)"/>
-   <polygon points="15.857 38.283 29.636 38.283 15.857 43.992" fill="url(#linearGradient32)"/>
+  <g transform="matrix(.9971 0 0 .9971 9.9008 -6.2023)" feature="symbol" name="symbol" rel="mainfill">
+   <path d="m84.338 39.434h8.004v29.861h-50.206l1.538-0.634 0.42-0.179 44.619-18.485z" fill="url(#linearGradient30)"/>
+   <path d="m15.857 38.283h13.779l-13.779 5.709z" fill="url(#linearGradient32)"/>
    <g fill="url(#linearGradient36)">
     <path d="m81.79 38.283-7.053-17.019-54.866 22.728-14.757 6.119 3.737 9.026c0.042-0.023 0.086-0.05 0.126-0.063 2.64-1.092 5.662 0.16 6.752 2.797 1.09 2.641-0.162 5.662-2.799 6.755-0.047 0.015-0.092 0.026-0.131 0.045l3.737 9.026 23.049-9.552 1.541-0.636 0.417-0.171 44.619-18.486zm-48.313 26.264 1.271-0.537 0.645 1.548-1.273 0.544zm0.63-2.087-1.273 0.532-0.643-1.552 1.273-0.539zm-1.289-3.109-1.271 0.54-0.645-1.557 1.273-0.532zm-1.285-3.102-1.273 0.538-0.645-1.553 1.273-0.54zm-1.287-3.103-1.271 0.534-0.645-1.552 1.273-0.533zm-1.285-3.107-1.273 0.542-0.642-1.552 1.271-0.538zm-1.285-3.102-1.268 0.535-0.65-1.552 1.271-0.538zm-1.931-4.654 0.645 1.55-1.273 0.542-0.638-1.557zm10.934 26.386-1.273 0.536-0.457-1.108-0.186-0.45 1.271-0.532 0.368 0.883z" fill="url(#linearGradient36)"/>
    </g>

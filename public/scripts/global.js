@@ -244,7 +244,7 @@ function saveEdit(id, schemaOptions, callback) {
     newData[$(this).attr('id')] = value;
   });
   
-  if (grecaptcha) {
+  if (typeof grecaptcha != 'undefined') {
     newData.recaptchaResponse = grecaptcha.getResponse();
   }
   
