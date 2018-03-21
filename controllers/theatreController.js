@@ -24,7 +24,7 @@ exports.logoutGet = function(req, res, next) {
 
 // GET register
 exports.registerGet = function(req, res, next) {
-  res.render('register', {title: registerTitle, errors: req.flash('signupMessage')});
+  res.render('register', {title: registerTitle, errors: req.flash('signupMessage'), recaptcha: true});
 };
 
 // POST contact

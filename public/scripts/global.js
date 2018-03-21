@@ -269,12 +269,12 @@ function saveEdit(id, schemaOptions, callback) {
 ( function detectContactSubmit() {
   $( '#contactForm' ).submit( function formSubmitted(evt) {
     evt.preventDefault();
-    submitForm.call( this );
+    //submitForm.call( this );
   } );
 } )();
 
-function submitForm() {
-  var $form = $( this );
+function submitForm(token) {
+  var $form = $( '#contactForm' );
   var url = $form.attr( 'action' );
   
   var posting = $.post( url, {
