@@ -34,7 +34,7 @@ $(function() {
 
 function resetView() {
   $('#newRow').html('<div class="fields"></div>');
-  $('#newRow').append('<button class="save-row btn btn--primary btn--big g-recaptcha" type="button" data-sitekey="6Ld42E0UAAAAAK7uUS51VAeR0Zl0e7K1WffdTi-J" data-callback="sendReservation">Varaa</button>');
+  $('#newRow').append('<button id="submit" class="save-row btn btn--primary btn--big" type="button">Varaa</button>');
   $( '#newRow' ).append( '<div class="errors"></div>' );
   showForm('newRow', null, schemaOptions, 'new' );
 }
@@ -43,6 +43,13 @@ function resetView() {
 function userEvents(schemaOptions) {
   $('#newRow').on('click', '.save-row', function() {
     saveEdit('newRow', schemaOptions, success);
+  });
+}
+
+function renderRecaptcha() {
+  grecaptcha.render('submit', {
+    sitekey: '6Ld42E0UAAAAAK7uUS51VAeR0Zl0e7K1WffdTi-J',
+    callback: sendReservation
   });
 }
 
