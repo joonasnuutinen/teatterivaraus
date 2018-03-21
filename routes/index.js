@@ -7,7 +7,15 @@ var theatreController = require('../controllers/theatreController');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Etusivu' });
+  var siteUrl = req.protocol + '://' + req.get('host');
+  var og = {
+    url: req.protocol + '://' + req.get('host') + req.originalUrl,
+    type: 'product',
+    title: 'Teatterivaraus - Helpota teatterisi lipunmyyntiä',
+    description: 'Teatterivaraus on uusi palvelu, joka helpottaa lippuvarausten vastaanottamista, kirjaamista ja hallintaa.',
+    image: siteUrl + '/images/og.png'
+  };
+  res.render('index', { title: 'Etusivu', og: og });
 });
 
 /* GET story page. */
