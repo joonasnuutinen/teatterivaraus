@@ -309,7 +309,7 @@ function userEvents(schemaOptions) {
     populateRows(schemaOptions);
   });
   
-  $('#filter').on('input', function() {
+  $('#filter').on('change', function() {
     var printButton = $('#print');
     if ($(this).val() === '') {
       printButton.addClass('hidden');
