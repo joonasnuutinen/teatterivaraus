@@ -3,85 +3,86 @@ extends layout
 block content
   .content
     section.section.section--long
-      h1.page-title Rekisteriseloste
+      .section__content
+        h1.page-title Rekisteriseloste
 
-      p Päivitetty 23.3.2018
+        p Päivitetty 23.3.2018
 
-      h2.secondary-title Terminologia
-      
-      dl
-        dt.dt Teatterivaraus
-        dd.dd Rekisterinpitäjä, katso yhteystiedot kohdasta <a href="#rekisterinpitaja">Rekisterinpitäjä</a>.
+        h2.secondary-title Terminologia
         
-        dt.dt Sinä
-        dt.dt Rekisteröity
-        dd.dd Henkilö, jokaa varaa lippuja Teatterivarauksen kautta.
+        dl
+          dt.dt Teatterivaraus
+          dd.dd Rekisterinpitäjä, katso yhteystiedot kohdasta <a href="#rekisterinpitaja">Rekisterinpitäjä</a>.
+          
+          dt.dt Sinä
+          dt.dt Rekisteröity
+          dd.dd Henkilö, jokaa varaa lippuja Teatterivarauksen kautta.
+          
+          dt.dt Teatteri
+          dd.dd Teatteri, jonka näytelmään olet varannut lippuja.
+
+        h2#rekisterinpitaja.secondary-title Rekisterinpitäjä
         
-        dt.dt Teatteri
-        dd.dd Teatteri, jonka näytelmään olet varannut lippuja.
+        p
+          | Joonas Nuutinen
+          br
+          | Kurkimäentie 19 D 38
+          br
+          | 00940 HELSINKI
 
-      h2#rekisterinpitaja.secondary-title Rekisterinpitäjä
-      
-      p
-        | Joonas Nuutinen
-        br
-        | Kurkimäentie 19 D 38
-        br
-        | 00940 HELSINKI
+        p
+          | Puhelin: 050-354 7670
+          br
+          | Sähköposti:
+          |
+          a(href='mailto:joonas@teatterivaraus.fi') joonas@teatterivaraus.fi
 
-      p
-        | Puhelin: 050-354 7670
-        br
-        | Sähköposti:
-        |
-        a(href='mailto:joonas@teatterivaraus.fi') joonas@teatterivaraus.fi
+        p Y-tunnus: 2477397-2
 
-      p Y-tunnus: 2477397-2
+        h2.secondary-title Mitä tietoja minusta kerätään?
+        
+        p Jotta voit varata lippuja Teatterivarauksen kautta, sinun täytyy kirjoittaa varauslomakkeeseen etu- ja sukunimesi sekä sähköpostiosoitteesi. Lisäksi voit halutessasi antaa puhelinnumerosi ja / tai antaa luvan sähköpostiosoitteesi luovuttamiseen Teatterille tiedotustarkoitukseen. Kun lähetät varauksen, edellä mainitut tiedot sekä valitsemasi näytös, lipputyypit ja kunkin lipputyypin lukumäärä siirretään salattua yhteyttä käyttäen turvalliselle palvelimelle. 
 
-      h2.secondary-title Mitä tietoja minusta kerätään?
-      
-      p Jotta voit varata lippuja Teatterivarauksen kautta, sinun täytyy kirjoittaa varauslomakkeeseen etu- ja sukunimesi sekä sähköpostiosoitteesi. Lisäksi voit halutessasi antaa puhelinnumerosi ja / tai antaa luvan sähköpostiosoitteesi luovuttamiseen Teatterille tiedotustarkoitukseen. Kun lähetät varauksen, edellä mainitut tiedot sekä valitsemasi näytös, lipputyypit ja kunkin lipputyypin lukumäärä siirretään salattua yhteyttä käyttäen turvalliselle palvelimelle. 
+        h2.secondary-title Kuka voi tarkastella tietojani?
+        
+        p Teatterivaraus ja Teatteri voivat tarkastella ja käsitellä varauksesi tietoja erityistä, suojattua yhteyttä käyttäen. Kehittyneiden ja aktiivisten suojausmekanismien avulla minimoidaan mahdollisuus, että ulkopuoliset tahot pääsisivät tietoihisi käsiksi.
 
-      h2.secondary-title Kuka voi tarkastella tietojani?
-      
-      p Teatterivaraus ja Teatteri voivat tarkastella ja käsitellä varauksesi tietoja erityistä, suojattua yhteyttä käyttäen. Kehittyneiden ja aktiivisten suojausmekanismien avulla minimoidaan mahdollisuus, että ulkopuoliset tahot pääsisivät tietoihisi käsiksi.
+        h2.secondary-title Mihin tarkoitukseen tietojani kerätään?
+        
+        p Henkilötietoja kerätään, jotta Teatteri voisi tunnistaa sinut (etu- ja sukunimi) sekä tarvittaessa ottaa sinuun yhteyttä (sähköposti ja puhelin) esityksen peruuntumisen, lisätietojen tarpeen tai muun varaukseesi liittyvän syyn johdosta.
 
-      h2.secondary-title Mihin tarkoitukseen tietojani kerätään?
-      
-      p Henkilötietoja kerätään, jotta Teatteri voisi tunnistaa sinut (etu- ja sukunimi) sekä tarvittaessa ottaa sinuun yhteyttä (sähköposti ja puhelin) esityksen peruuntumisen, lisätietojen tarpeen tai muun varaukseesi liittyvän syyn johdosta.
+        p Jos olet antanut luvan sähköpostiosoitteesi luovuttamiseen Teatterille, Teatteri voi käyttää osoitetta tiedottaakseen tulevista esityksistä.
 
-      p Jos olet antanut luvan sähköpostiosoitteesi luovuttamiseen Teatterille, Teatteri voi käyttää osoitetta tiedottaakseen tulevista esityksistä.
+        p Näin ollen voidaan katsoa, että tietojen käsittely perustuu EU:n tietosuoja-asetuksen 6.1(f) artiklan mukaiseen Teatterivarauksen ja Teatterin oikeutettujen etujen toteutumiseen ja että Rekisteröidyn edut tai perusoikeudet ja -vapaudet eivät syrjäytä näitä etuja.
 
-      p Näin ollen voidaan katsoa, että tietojen käsittely perustuu EU:n tietosuoja-asetuksen 6.1(f) artiklan mukaiseen Teatterivarauksen ja Teatterin oikeutettujen etujen toteutumiseen ja että Rekisteröidyn edut tai perusoikeudet ja -vapaudet eivät syrjäytä näitä etuja.
+        h2.secondary-title Missä tietojani säilytetään?
+        
+        p Henkilötietoja säilytetään tietokannassa palvelimilla, jotka sijaitsevat Dublinissa, Irlannissa. Palvelimet omistaa Amazon Web Services (Seattle, Washington, Yhdysvallat), ja tietokantatoteutuksen tarjoaa ObjectLabs Corporation (San Francisco, Kalifornia, Yhdysvallat).
 
-      h2.secondary-title Missä tietojani säilytetään?
-      
-      p Henkilötietoja säilytetään tietokannassa palvelimilla, jotka sijaitsevat Dublinissa, Irlannissa. Palvelimet omistaa Amazon Web Services (Seattle, Washington, Yhdysvallat), ja tietokantatoteutuksen tarjoaa ObjectLabs Corporation (San Francisco, Kalifornia, Yhdysvallat).
+        h2.secondary-title Kuinka kauan tietojani säilytetään?
+        
+        p Tietojasi säilytetään alkaen siitä, kun lähetät varauksen, ja päättyen enintään yksi kuukausi varaamasi näytelmän viimeisen esityksen jälkeen.
 
-      h2.secondary-title Kuinka kauan tietojani säilytetään?
-      
-      p Tietojasi säilytetään alkaen siitä, kun lähetät varauksen, ja päättyen enintään yksi kuukausi varaamasi näytelmän viimeisen esityksen jälkeen.
+        p <i>Esimerkki:</i> Varaat lippuja Testiteatterin näytelmään Testinäytelmä, jota esitetään aikavälillä 6.7.2018–5.8.2018. Teatterivaraus säilyttää tietojasi enintään 5.9.2018 asti.
 
-      p <i>Esimerkki:</i> Varaat lippuja Testiteatterin näytelmään Testinäytelmä, jota esitetään aikavälillä 6.7.2018–5.8.2018. Teatterivaraus säilyttää tietojasi enintään 5.9.2018 asti.
+        p Jos olet antanut luvan sähköpostiosoitteesi luovuttamiseen Teatterille, tämän tiedon säilytysajan määrittää Teatteri. Saat tarvittaessa lisätietoa suoraan Teatterilta.
 
-      p Jos olet antanut luvan sähköpostiosoitteesi luovuttamiseen Teatterille, tämän tiedon säilytysajan määrittää Teatteri. Saat tarvittaessa lisätietoa suoraan Teatterilta.
+        h2.secondary-title Mitä oikeuksia minulla on tietoihini?
 
-      h2.secondary-title Mitä oikeuksia minulla on tietoihini?
+        p Sinulla on oikeus tarkastella, oikaista ja poistaa sinusta kerättyjä henkilötietoja, oikeus tietojen käsittelyn rajoittamiseen sekä oikeus tietojen siirtämiseen järjestelmästä toiseen.
 
-      p Sinulla on oikeus tarkastella, oikaista ja poistaa sinusta kerättyjä henkilötietoja, oikeus tietojen käsittelyn rajoittamiseen sekä oikeus tietojen siirtämiseen järjestelmästä toiseen.
+        p Sinulla on lisäksi oikeus vastustaa tietojesi käsittelyä sekä Teatterivarauksen ja Teatterin oikeutta siirtää tietoja järjestelmästä toiseen.
 
-      p Sinulla on lisäksi oikeus vastustaa tietojesi käsittelyä sekä Teatterivarauksen ja Teatterin oikeutta siirtää tietoja järjestelmästä toiseen.
+        p Sinulla on myös oikeus peruuttaa suostumus luovuttaa sähköpostiosoitteesi Teatterille tiedotuskäyttöön milloin tahansa.
 
-      p Sinulla on myös oikeus peruuttaa suostumus luovuttaa sähköpostiosoitteesi Teatterille tiedotuskäyttöön milloin tahansa.
+        p Mikäli haluat käyttää oikeuksiasi, voit olla yhteydessä Teatterivaraukseen tai Teatteriin.
 
-      p Mikäli haluat käyttää oikeuksiasi, voit olla yhteydessä Teatterivaraukseen tai Teatteriin.
+        p Edellä mainittujen lisäksi sinulla on oikeus tehdä valitus valvontaviranomaiselle, jos katsot, että tietojesi käsittelyssä rikotaan EU:n tietosuoja-asetusta.
 
-      p Edellä mainittujen lisäksi sinulla on oikeus tehdä valitus valvontaviranomaiselle, jos katsot, että tietojesi käsittelyssä rikotaan EU:n tietosuoja-asetusta.
+        h2.secondary-title Mitä riskejä tietojeni käsittelyyn liittyy?
+        
+        p Digitaaliseen tietojenkäsittelyyn liittyy aina riskejä, kuten rikollisuus, vakoilu, informaatiosota, inhimillinen virhe, tekninen vika tai luonnonkatastrofi, joiden mahdollisuutta ei voi ikinä laajamittaisista suojaustoimenpiteistä huolimatta täysin poistaa.
 
-      h2.secondary-title Mitä riskejä tietojeni käsittelyyn liittyy?
-      
-      p Digitaaliseen tietojenkäsittelyyn liittyy aina riskejä, kuten rikollisuus, vakoilu, informaatiosota, inhimillinen virhe, tekninen vika tai luonnonkatastrofi, joiden mahdollisuutta ei voi ikinä laajamittaisista suojaustoimenpiteistä huolimatta täysin poistaa.
+        p Tietojen säilytyksen tekninen toteutus on tehty yhteistyössä kahden Yhdysvaltoihin rekisteröidyn yrityksen (Amazon Web Services ja Objectlabs Corporation) kanssa. On mahdollista, että Yhdysvaltojen lainsäädäntö ei ole kaikilta osin yhteensopiva EU:n tietosuoja-asetuksen kanssa nyt tai tulevaisuudessa ja siten saattaisi mahdollistaa tietojen käsittelyn sellaisella tavalla, joka ei ole EU:n tietosuoja-asetuksen mukaista.
 
-      p Tietojen säilytyksen tekninen toteutus on tehty yhteistyössä kahden Yhdysvaltoihin rekisteröidyn yrityksen (Amazon Web Services ja Objectlabs Corporation) kanssa. On mahdollista, että Yhdysvaltojen lainsäädäntö ei ole kaikilta osin yhteensopiva EU:n tietosuoja-asetuksen kanssa nyt tai tulevaisuudessa ja siten saattaisi mahdollistaa tietojen käsittelyn sellaisella tavalla, joka ei ole EU:n tietosuoja-asetuksen mukaista.
-
-      p Tällä hetkellä ei ole syytä pitää todennäköisenä, että tietosuojasi olisi edellä mainituista tai muista syistä uhattuna, mutta Teatterivaraus pyrkii reagoimaan mahdollisiin muutoksiin siten, että rekisterin tiedot olisivat mahdollisimman hyvin suojattu kulloisenkin ympäristön mukaan.
+        p Tällä hetkellä ei ole syytä pitää todennäköisenä, että tietosuojasi olisi edellä mainituista tai muista syistä uhattuna, mutta Teatterivaraus pyrkii reagoimaan mahdollisiin muutoksiin siten, että rekisterin tiedot olisivat mahdollisimman hyvin suojattu kulloisenkin ympäristön mukaan.
