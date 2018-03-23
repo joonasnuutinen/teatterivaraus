@@ -38,6 +38,11 @@ router.get('/ota-kayttoon', function(req, res, next) {
   res.render('register', { title: 'Ota käyttöön' });
 });
 
+/* GET privacy page. */
+router.get('/rekisteriseloste', function(req, res, next) {
+  res.render('privacy', { title: 'Rekisteriseloste' });
+});
+
 /* POST to order page. */
 router.post( '/ota-kayttoon', theatreController.contactPost );
 
