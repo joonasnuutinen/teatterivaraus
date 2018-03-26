@@ -353,7 +353,7 @@ exports.customerGet = function(req, res, next) {
     }
 	], function asyncDone(err, results) {
     console.log(results);
-		if (err) return next();
+		if (err || results.theatre.length === 0) return next();
 		var theatre = results.theatre[0];
     
     var title = theatre.name + ': ' + theatre.playName + ' - Teatterivaraus';
