@@ -363,11 +363,20 @@ exports.customerGet = function(req, res, next) {
       columnsEdit: 'firstName lastName email phone show ticketClasses additionalInfo marketingPermission',
     };
     
+    var og = {
+      url: req.protocol + '://' + req.get('host') + req.originalUrl,
+      type: 'product',
+      title: title,
+      description: 'Varaa lippuja esitykseen ' + theatre.playName + '.',
+      image: siteUrl + '/images/og.png'
+    };
+    
     res.render('customerReservation', {
       title: title,
       theatre: theatre,
 			sponsors: results.sponsors,
-      options: options
+      options: options,
+      og: og
     });
 	} );
   

@@ -8,6 +8,12 @@ html(lang='fi')
     <link rel="icon" type="image/png" href="/images/icon.png">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
     link(rel='stylesheet', href='/stylesheets/style.css')
+    if og
+      <meta property="og:url" content="#{og.url}">
+      <meta property="og:type" content="#{og.type}">
+      <meta property="og:title" content="#{og.title}">
+      <meta property="og:description" content="#{og.description}">
+      <meta property="og:image" content="#{og.image}">
     
   body.page.page--reservation
     header.header
