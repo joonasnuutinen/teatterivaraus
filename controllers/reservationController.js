@@ -363,6 +363,7 @@ exports.customerGet = function(req, res, next) {
       columnsEdit: 'firstName lastName email phone show ticketClasses additionalInfo marketingPermission',
     };
     
+    var siteUrl = req.protocol + '://' + req.get('host');
     var og = {
       url: req.protocol + '://' + req.get('host') + req.originalUrl,
       type: 'product',
