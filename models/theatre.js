@@ -22,6 +22,10 @@ var TheatreSchema = Schema({
     type: String
   },
   
+  slug: {
+    type: String
+  },
+  
   password: {
     type: String,
     required: true

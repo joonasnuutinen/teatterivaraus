@@ -330,19 +330,31 @@ exports.printPdf = function(req, res, next) {
 exports.customerGet = function(req, res, next) {
   var theatreId = req.params.theatreId;
 	
-	async.parallel( {
-		theatre: function getTheatre(callback) {
-			Theatre.findById( theatreId ).exec( callback );
+	async.waterfall( [
+		function getTheatre(next) {
+			Theatre.find()
+        .or([{id: theatreId}, {slug: theatreId}])
+        .exec( next );
 		},
-		sponsors: function getSponsors(callback) {
-			Sponsor.find( {theatre: theatreId} )
+		function getSponsors(theatre, next) {
+			Sponsor.find( {theatre: theatre._id} )
 			.sort( [['order', 'ascending']] )
-			.exec( callback );
-		}
-	}, function asyncDone(err, results) {
-    console.log(err);
+			.exec( function dataFound(err, sponsors) {
+        next(err, theatre, sponsors);
+      } );
+		},
+    function (theatre, sponsors, next) {
+      var results = {
+        theatre: theatre,
+        sponsors: sponsors
+      };
+      
+      next(null, results);
+    }
+	], function asyncDone(err, results) {
+    console.log(results);
 		if (err) return next();
-		var theatre = results.theatre;
+		var theatre = results.theatre[0];
     
     var title = theatre.name + ': ' + theatre.playName + ' - Teatterivaraus';
     
@@ -457,7 +469,8 @@ exports.customerPost = function(req, res, next) {
 
 // GET public form
 exports.publicForm = function(req, res, next) {
-  var formUrl = '/' + req.user._id;
+  var id = req.user.slug || req.user._id;
+  var formUrl = '/' + id;
   res.redirect(formUrl);
 };
 
