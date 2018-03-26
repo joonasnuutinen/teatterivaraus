@@ -404,6 +404,7 @@ exports.customerPost = function(req, res, next) {
       var re = /newTicketClass_(\w+)/;
       var match = field.match(re);
       if (match) {
+        req.checkBody(field, 'Lippujen määrän on oltava kokonaisluku ja vähintään 0.').isInt({min: 0});
         req.sanitize(field).escape();
         req.sanitize(field).trim();
         req.sanitize(field).toInt();

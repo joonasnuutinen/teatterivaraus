@@ -20,7 +20,7 @@ var schemaOptions = {
   },
   tickets: {
     unit: 'kpl',
-    input: false
+    input: true
   },
   marketingPermission: {
     label: 'Teatteri saa lähettää minulle sähköpostia tulevista esityksistä.'
@@ -36,7 +36,6 @@ function resetView() {
   $('#newRow').html('<div class="fields"></div>');
   $('#newRow').append('<button id="submit" class="save-row btn btn--primary btn--big" type="button">Varaa</button>');
   $( '#newRow' ).append( '<div class="errors"></div>' );
-  showForm('newRow', null, schemaOptions, 'new' );
 }
 
 // user events
@@ -47,10 +46,19 @@ function userEvents(schemaOptions) {
 }
 
 function renderRecaptcha() {
+  setTimeout(function checkRecaptcha() {
+    if ($('.grecaptcha-badge').length === 0) {
+      console.log('Reload reCAPTCHA');
+      renderRecaptcha();
+    }
+  }, 500);
+  
   grecaptcha.render('submit', {
     sitekey: '6Ld42E0UAAAAAK7uUS51VAeR0Zl0e7K1WffdTi-J',
     callback: sendReservation
   });
+
+  showForm('newRow', null, schemaOptions, 'new' );
 }
 
 function sendReservation() {
