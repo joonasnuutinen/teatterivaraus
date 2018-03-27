@@ -454,6 +454,7 @@ p {
 .form-group--checkboxes .form__label {
   width: calc( 100% - 18px );
   float: right;
+  margin-bottom: .5rem;
 }
 
 .checkbox {
