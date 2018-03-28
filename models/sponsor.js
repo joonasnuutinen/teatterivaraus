@@ -53,7 +53,7 @@ module.exports = mongoose.model('Sponsor', SponsorSchema);
 // filter url
 function filterUrl(input) {
   if ( ! input ) return null;
-  var re = /^(http(?:s)?:\/\/)?([^\/(?!$)]*)(\/?)$/;
+  var re = /^(http(?:s)?:\/\/)?(.*)(\/?)$/;
   var urlParts = input.match( re );
   
   var protocol = urlParts[1] || 'http://';
