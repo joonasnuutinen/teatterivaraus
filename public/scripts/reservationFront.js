@@ -62,7 +62,8 @@ function renderRecaptcha() {
 }
 
 function sendReservation() {
-  saveEdit('newRow', schemaOptions, success);
+  var url = $('.dynamic-content').attr('data-theatre');
+  saveEdit('newRow', schemaOptions, success, url);
   grecaptcha.reset();
 }
 

@@ -334,10 +334,12 @@ exports.customerGet = function(req, res, next) {
 		function getTheatre(next) {
 			Theatre.find()
         .or([{id: theatreId}, {slug: theatreId}])
-        .exec( next );
+        .exec( function theatreFound(err, theatre) {
+          next(err, theatre);
+        } );
 		},
 		function getSponsors(theatre, next) {
-			Sponsor.find( {theatre: theatre._id} )
+      Sponsor.find( {theatre: theatre[0]._id} )
 			.sort( [['order', 'ascending']] )
 			.exec( function dataFound(err, sponsors) {
         next(err, theatre, sponsors);

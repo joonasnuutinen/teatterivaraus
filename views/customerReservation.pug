@@ -40,7 +40,7 @@ html(lang='fi')
             h3.small-title= sponsor.name
             
             p
-              | #{sponsor.description}
+              | !{sponsor.description.replace(/\n/g, '<br>')}
               |
               a(href=sponsor.urlHref target="_blank") Lue lisää
               

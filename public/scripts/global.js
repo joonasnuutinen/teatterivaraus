@@ -220,7 +220,7 @@ function capital(string) {
 }
 
 // save row to database
-function saveEdit(id, schemaOptions, callback) {
+function saveEdit(id, schemaOptions, callback, url) {
   var newData = {};
   var ajaxType = 'PUT';
   var ajaxUrl = document.location.pathname + '/' + id;
@@ -231,6 +231,8 @@ function saveEdit(id, schemaOptions, callback) {
     ajaxType = 'POST';
     ajaxUrl = '';
   }
+  
+  if (url) ajaxUrl = url;
   
   $('#' + id + ' .edited-field').each(function() {
     var value;
