@@ -354,7 +354,6 @@ exports.customerGet = function(req, res, next) {
       next(null, results);
     }
 	], function asyncDone(err, results) {
-    console.log(results);
 		if (err || results.theatre.length === 0) return next();
 		var theatre = results.theatre[0];
     
