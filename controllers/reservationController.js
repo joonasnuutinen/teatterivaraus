@@ -332,20 +332,22 @@ exports.customerGet = function(req, res, next) {
 	
 	async.waterfall( [
 		function getTheatre(next) {
-			Theatre.find()
+      Theatre.find()
         .or([{id: theatreId}, {slug: theatreId}])
         .exec( function theatreFound(err, theatre) {
+          if (theatre.length < 1) theatre = null;
           next(err, theatre);
         } );
 		},
 		function getSponsors(theatre, next) {
+      if (!theatre) return next(null, null, null);
       Sponsor.find( {theatre: theatre[0]._id} )
 			.sort( [['order', 'ascending']] )
 			.exec( function dataFound(err, sponsors) {
         next(err, theatre, sponsors);
       } );
 		},
-    function (theatre, sponsors, next) {
+    function combineResults(theatre, sponsors, next) {
       var results = {
         theatre: theatre,
         sponsors: sponsors
@@ -354,7 +356,7 @@ exports.customerGet = function(req, res, next) {
       next(null, results);
     }
 	], function asyncDone(err, results) {
-		if (err || results.theatre.length === 0) return next();
+		if (err || !results.theatre) return next(err);
 		var theatre = results.theatre[0];
     
     var title = theatre.name + ': ' + theatre.playName + ' - Teatterivaraus';
