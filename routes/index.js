@@ -24,9 +24,9 @@ router.get('/tarina', function(req, res, next) {
 });
 
 /* GET support page. */
-router.get('/tuki', function(req, res, next) {
+/*router.get('/tuki', function(req, res, next) {
   res.render('support', { title: 'Tuki' });
-});
+});*/
 
 /* GET contact page. */
 router.get('/yhteystiedot', function(req, res, next) {
@@ -47,9 +47,10 @@ router.get('/rekisteriseloste', function(req, res, next) {
 router.post( '/ota-kayttoon', theatreController.contactPost );
 
 /* GET benefits page. */
+/*
 router.get('/ominaisuudet', function(req, res, next) {
   res.render('benefits', { title: 'Ominaisuudet' });
-});
+});*/
 
 // GET theatre JSON
 router.get('/:theatreId.json', theatreController.json);

@@ -322,6 +322,7 @@ p {
 
 .section--print .section__figure {
   max-width: 600px;
+  margin-top: 2rem;
 }
 
 /*
