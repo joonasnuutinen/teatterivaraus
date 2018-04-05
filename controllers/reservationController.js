@@ -52,13 +52,7 @@ exports.getJSON = function(req, res, next) {
         return matchesShowFilter && reservation.fullName.search(re) != -1;
       });
       
-      reservations.sort(function(a, b) {
-        var aString = a.fullName.toUpperCase();
-        var bString = b.fullName.toUpperCase();
-        if (aString < bString) return -1;
-        if (aString > bString) return 1;
-        return 0;
-      });
+      reservations.sort(sortReservations);
       res.json(reservations);
   });
 };
@@ -301,6 +295,7 @@ exports.printHtml = function(req, res, next) {
     }
   }, function(err, results) {
     if (err) return next(err);
+    results.reservations.sort(sortReservations);
     res.render('printReservations', {
       title: 'Tuloste',
       show: results.show,
@@ -585,4 +580,13 @@ function sendEmailConfirmation(id, theatreId) {
       });
     }
   } );
+}
+
+// Sort reservations based on full name
+function sortReservations(a, b) {
+  var aString = a.fullName.toUpperCase();
+  var bString = b.fullName.toUpperCase();
+  if (aString < bString) return -1;
+  if (aString > bString) return 1;
+  return 0;
 }
