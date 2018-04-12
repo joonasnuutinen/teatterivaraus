@@ -18,7 +18,7 @@ exports.newTicketPost = function(req, res, next) {
   req.checkBody('newName', 'Lippuluokan nimi puuttuu.').notEmpty();
   
   req.checkBody('newPrice', 'Lipun hinta puuttuu.').notEmpty();
-  req.checkBody('newPrice', 'Lipun hinta ei ole luku.').isFloat();
+  req.checkBody('newPrice', 'Lipun hinta ei ole positiivinen luku.').isFloat({min: 0});
   
   req.sanitize('newName').escape();
   req.sanitize('newName').trim();
@@ -112,7 +112,7 @@ exports.put = function(req, res, next) {
   req.checkBody('editedName', 'Lippuluokan nimi puuttuu.').notEmpty();
   
   req.checkBody('editedPrice', 'Lipun hinta puuttuu.').notEmpty();
-  req.checkBody('editedPrice', 'Lipun hinta ei ole luku.').isFloat();
+  req.checkBody('editedPrice', 'Lipun hinta ei ole positiivinen luku.').isFloat({min: 0});
   
   req.sanitize('editedName').escape();
   req.sanitize('editedName').trim();
