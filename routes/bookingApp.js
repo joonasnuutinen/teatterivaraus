@@ -14,6 +14,7 @@ var theatreController = require('../controllers/theatreController');
 var showController = require('../controllers/showController');
 var ticketClassController = require('../controllers/ticketClassController');
 var sponsorController = require('../controllers/sponsorController');
+var docController = require('../controllers/docController');
 
 var login = '/app/kirjaudu';
 var register = '/app/rekisteroidy';
@@ -100,6 +101,11 @@ router.get('/sponsorit/json', isLoggedIn, sponsorController.getJSON);
 router.get('/sponsorit/:id', isLoggedIn, sponsorController.getById);
 router.put('/sponsorit/:id', isLoggedIn, sponsorController.put);
 router.delete('/sponsorit/:id', isLoggedIn, sponsorController.delete);
+
+// ===========================================================================
+// DOCS (ADMIN)
+// ===========================================================================
+router.get('/ohjeet', isLoggedIn, docController.getAdmin);
 
 // SETTINGS =========================================================
 router.get('/asetukset', isLoggedIn, theatreController.settingsGet);

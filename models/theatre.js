@@ -25,6 +25,12 @@ var TheatreSchema = Schema({
   slug: {
     type: String
   },
+	
+	role: {
+		type: String,
+		enum: ['admin', 'theatre'],
+		default: 'theatre'
+	},
   
   password: {
     type: String,
