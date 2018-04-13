@@ -1,3 +1,4 @@
+- var isAdmin = (theatre.role === 'admin');
 doctype html
 html(lang='fi')  
   head
@@ -8,6 +9,8 @@ html(lang='fi')
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/style-app.css')
+    if isAdmin
+      link(rel='stylesheet', href='/stylesheets/admin.css')
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
   
   body.page.page--app
@@ -19,10 +22,12 @@ html(lang='fi')
           != '&#9776;'
         
         ul#nav.navbar__nav.navbar__nav--collapse
-          - var navItems = [{title: 'Varaukset', href: '/app/varaukset'}, {title: 'Varaustilanne', href: '/app/varaustilanne'}, {title: 'Näytökset', href: '/app/naytokset'}, {title: 'Lippujen hinnat', href: '/app/lippujen-hinnat'}, {title: 'Sponsorit', href: '/app/sponsorit'}, {title: 'Asetukset', href: '/app/asetukset'}, {title: 'Julkinen varauslomake', href: '/app/lomake', target: '_blank'}, {title: 'Kirjaudu ulos', href: '/app/kirjaudu-ulos'}];
+          - var navItems;
           
-          if theatre.role === 'admin'
+          if isAdmin
             - navItems = [{title: 'Ohjeet', href: '/app/ohjeet'}, {title: 'Asetukset', href: '/app/asetukset'}, {title: 'Kirjaudu ulos', href: '/app/kirjaudu-ulos'}];
+          else
+            -navItems = [{title: 'Varaukset', href: '/app/varaukset'}, {title: 'Varaustilanne', href: '/app/varaustilanne'}, {title: 'Näytökset', href: '/app/naytokset'}, {title: 'Lippujen hinnat', href: '/app/lippujen-hinnat'}, {title: 'Sponsorit', href: '/app/sponsorit'}, {title: 'Asetukset', href: '/app/asetukset'}, {title: 'Julkinen varauslomake', href: '/app/lomake', target: '_blank'}, {title: 'Kirjaudu ulos', href: '/app/kirjaudu-ulos'}];
           
           each navItem in navItems
             - var isActive = (navItem.title == title)
@@ -36,5 +41,5 @@ html(lang='fi')
     script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f' crossorigin='anonymous')
     script(src='/scripts/global.js')
     script(src='/scripts/appFront.js')
-    if theatre.role === 'admin'
+    if isAdmin
       script(src='/scripts/adminFront.js')

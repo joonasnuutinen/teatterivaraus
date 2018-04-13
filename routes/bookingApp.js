@@ -106,6 +106,9 @@ router.delete('/sponsorit/:id', isLoggedIn, sponsorController.delete);
 // DOCS (ADMIN)
 // ===========================================================================
 router.get('/ohjeet', isLoggedIn, docController.getAdmin);
+router.get('/ohjeet/json', docController.getJSON);
+
+router.post('/ohjeet', isLoggedIn, docController.save);
 
 // SETTINGS =========================================================
 router.get('/asetukset', isLoggedIn, theatreController.settingsGet);

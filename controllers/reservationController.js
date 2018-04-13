@@ -257,7 +257,7 @@ exports.stats = function(req, res, next) {
       total += ticketAmount;
     });
     //console.log(data.shows);
-    res.render('stats', {title: 'Varaustilanne', shows: data.shows, total: total});
+    res.render('stats', {title: 'Varaustilanne', theatre: req.user, shows: data.shows, total: total});
   });
 };
 
