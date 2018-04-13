@@ -1,3 +1,5 @@
+'use strict';
+
 $(function documentReady() {
   const contentObjects = {
     docs: DocContainer
@@ -40,6 +42,7 @@ const DocContainer = {
   },
   
   renderForm: function() {
+    const self = this;
     const $form = $('<form>')
       .addClass('form')
       .attr({
@@ -48,7 +51,7 @@ const DocContainer = {
       })
       .submit(function submitForm(e) {
         e.preventDefault();
-        console.log(this);
+        self.submitForm($(this));
       })
     
     const formFields = [
@@ -70,7 +73,7 @@ const DocContainer = {
       const element = field.element;
       
       const $formField = $('<' + element + '>')
-        .addClass('input')
+        .addClass('input js-input')
         .attr({
           name: field.slug
         });
@@ -82,11 +85,31 @@ const DocContainer = {
       $label.append($formField).appendTo($form);
     });
     
-    $submitButton = $('<button>')
+    const $submitButton = $('<button>')
       .addClass('btn btn--primary')
       .attr('type', 'submit')
       .text('Tallenna');
     
     $form.append($submitButton).appendTo(this.target);
+  },
+  
+  submitForm: function($form) {
+    const url = $form.attr('action');
+    var data = {};
+    
+    $form.find('.js-input').each(function eachInput() {
+      const $field = $(this);
+      const name = $field.attr('name');
+      const value = $field.val();
+      data[name] = value;
+    });
+    
+    console.log(data);
+    
+    /*
+    const posting = $.post(url, {
+      
+    });
+    */
   }
 };

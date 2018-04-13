@@ -17,6 +17,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var expressTitle = require('express-title');
 var compression = require( 'compression' );
 var helmet = require( 'helmet' );
+const MongoStore = require('connect-mongo')(expressSession);
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -26,6 +27,7 @@ var User = require('./models/theatre');
 
 var app = express();
 
+// Load environment variables if in development
 try {
   require('dotenv').load();
 } catch(err) {}
@@ -39,64 +41,12 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 require('./config/passport')(passport);
 
-/*
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({email: username}, function(err, user) {
-      if (err) { return done(err); }
-      if (!user || !user.validPassword(password)) {
-        return done(null, false, {message: 'Virheellinen sähköposti tai salasana'});
-      }
-      return done(null, user);
-    });
-  }
-));
-*/
-
-/*
-// setup emailjs server
-var smtpServer = email.server.connect({
-  user: process.env.SMTP_USER,
-  password: process.env.SMTP_PASSWORD,
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  tls: true
-});
-*/
-
-/*
-// setup passwordless
-passwordless.init(new MongoStore(mongoDB));
-passwordless.addDelivery(function(token, uid, recipient, callback) {
-  var host = process.env.SITE_URL;
-  var emailBody = 'Hei,\n\nKirjaudu sisään käyttäjätilillesi klikkaamalla seuraavaa linkkiä:\n\n' + host + '?token=' + token + '&uid=' + encodeURIComponent(uid) + '\n\nYstävällisin terveisin\n\nTeatterivaraus';
-  // send out token
-  smtpServer.send({
-    text: emailBody,
-    from: 'Teatterivaraus',
-    to: recipient,
-    subject: 'Kirjaudu sisään'
-  }, function(err) {
-    if (err) {
-      console.log(err);
-    }
-    callback(err);
-  });
-});
-*/
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-/*
-// title setup
-app.use(expressTitle('%title% - %base%'));
-app.set('title', 'Teatterivaraus');
-*/
-
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -113,7 +63,7 @@ app.use(expressValidator({
       var month = addLeadingZero(dateArray[1]);
       var day = addLeadingZero(dateArray[0]);
       var dateString = year + '-' + month + '-' + day;
-      //console.log(dateString);
+
       return ! isNaN(Date.parse(dateString));
     },
     isFinnishTime: function(value) {
@@ -134,17 +84,14 @@ app.use(expressSession({
   secret: process.env.SESSION_SECRET,
   saveUninitialized: false,
   resave: false,
-  cookie: {maxAge: 60*60*24*365*10}
+  store: new MongoStore({
+    mongooseConnection: db,
+    touchAfter: 24 * 3600
+  })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-
-/*
-// passwordless middleware
-app.use(passwordless.sessionSupport());
-app.use(passwordless.acceptToken( { successRedirect: '/app' } ));
-*/
 
 app.use('/app', bookingApp);
 app.use('/', index);
