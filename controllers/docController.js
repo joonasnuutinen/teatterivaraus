@@ -83,3 +83,20 @@ exports.save = [
     }
   }
 ];
+
+// Delete doc from database
+exports.delete = function(req, res, next) {
+  if (req.user.role !== 'admin') {
+      res.send({ errors: [{ msg: 'Käyttö estetty' }] });
+      return;
+  }
+  
+  Doc.findByIdAndRemove(req.params.id, function removeTried(err) {
+    if (err) {
+      res.send({ errors: [{ msg: err }] });
+      return;
+    }
+    
+    res.send({ msg: 'Ohje on poistettu.' });
+  });
+}

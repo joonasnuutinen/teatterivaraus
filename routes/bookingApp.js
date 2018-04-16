@@ -110,6 +110,8 @@ router.get('/ohjeet/json', docController.getJSON);
 
 router.post('/ohjeet', isLoggedIn, docController.save);
 
+router.delete('/ohjeet/:id', isLoggedIn, docController.delete);
+
 // SETTINGS =========================================================
 router.get('/asetukset', isLoggedIn, theatreController.settingsGet);
 

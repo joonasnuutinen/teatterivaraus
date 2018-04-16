@@ -42,6 +42,44 @@ const DocContainer = {
     this.enableButtons();
   },
   
+  deleteFromDatabase: function(id) {
+    
+  },
+  
+  /**
+   * Delete row
+   * @param $row (jQuery object) Row to be deleted
+   * @return (bool) Whether the row was deleted or not
+   */
+  deleteRow: function($row) {
+    const id = $row.attr('data-id');
+    
+    if (!id) return;
+    
+    const self = this;
+    
+    if (confirm('Haluatko varmasti poistaa ohjeen?')) {
+      const url = document.location.pathname + '/' + id;
+      
+      // Delete from database
+      $.ajax({
+        url: url,
+        type: 'DELETE'
+      }).done(function deleteDone(response) {
+        if (response.errors) {
+          self.printErrors(response.errors, $row);
+          return;
+        }
+        
+        // Delete from local memory
+        delete self.docs[id];
+        
+        // Remove from DOM
+        $row.remove();
+      });
+    }
+  },
+  
   /**
    * Disable buttons during editing
    */
@@ -119,10 +157,13 @@ const DocContainer = {
       .addClass('btn btn--danger js-disable-in-edit')
       .text('Poista')
       .click(function deleteButtonClicked() {
-        console.log('delete');
+        self.deleteRow($row);
       });
     
-    $row.append($title, $editButton, $deleteButton);
+    const $message = $('<div>')
+      .addClass('message');
+    
+    $row.append($title, $editButton, $deleteButton, $message);
   },
   
   /**
@@ -149,6 +190,26 @@ const DocContainer = {
         
         $docs.append($row);
       });
+    });
+  },
+  
+  /**
+   * Print errors
+   * @param errors (array [{ msg: '...' }, ... ]) Errors to be printed
+   * @param $target (jQuery object) Where the errors will be printed
+   * @param append (bool) Append after existing content (default: false)
+   */
+  printErrors: function(errors, $target, append) {
+    if (!append) {
+      $target.html('');
+    }
+    
+    errors.forEach(function eachError(error) {
+      $messageContent = $('<div>')
+        .addClass('message__content message__content--error')
+        .text(error.msg);
+        
+      $target.append($messageContent);
     });
   },
   
