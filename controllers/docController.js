@@ -23,6 +23,14 @@ exports.getJSON = function(req, res, next) {
   Doc.find().exec(function docsFound(err, docs) {
     if (err) return next(err);
     
+    docs.sort(function alphaSort(a, b) {
+      var aString = a.title.toUpperCase();
+      var bString = b.title.toUpperCase();
+      if (aString < bString) return -1;
+      if (aString > bString) return 1;
+      return 0;
+    });
+    
     res.json(docs);
   });
 }
@@ -47,7 +55,25 @@ exports.save = [
   
   // Sanitize HTML
   (req, res, next) => {
-    req.body.content = sanitizeHtml(req.body.content);
+    const defaults = sanitizeHtml.defaults;
+    
+    const options = {
+      allowedTags: defaults.allowedTags.concat(['aside']),
+      allowedAttributes: {
+        '*': ['class', 'width', 'height'],
+        a: ['href', 'name', 'target'],
+        iframe: ['src', 'frameborder', 'allow', 'allowfullscreen'],
+        img: ['src']
+      },
+      allowedIframeHostnames: ['www.youtube-nocookie.com']
+    };
+    
+    const original = req.body.content;
+    const clean = sanitizeHtml(req.body.content, options);
+    
+    console.log(`sanitizeHtml compare: ${original.localeCompare(clean)}`);
+
+    req.body.content = clean;
     next();
   },
   
