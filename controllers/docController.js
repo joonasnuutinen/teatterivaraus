@@ -65,9 +65,6 @@ exports.save = [
     
     var doc = new Doc(data);
     
-    console.log(data);
-    console.log(doc);
-    
     if (!data._id) {
       // Save as a new doc
       doc.save(callback);
@@ -82,7 +79,7 @@ exports.save = [
         return;
       }
       
-      res.send({ msg: 'Ohje on tallennettu.' });
+      res.send({ msg: 'Ohje on tallennettu.', data: doc });
     }
   }
 ];

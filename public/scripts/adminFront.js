@@ -18,13 +18,18 @@ $(function documentReady() {
 
 // Prototype for doc methods
 const DocContainer = {
-  // Add new doc
+  /** 
+   * Add new doc
+   */
   addNew: function() {
     this.disableButtons();
     this.renderForm(this.target.find('#new-doc'), 'data-row');
   },
   
-  // Cancel edit
+  /** 
+   * Cancel edit
+   * @param $form (jQuery object) Form that we want to cancel editing
+   */
   cancelEdit: function($form) {
     const $row = $form.parent();
     this.hideForm($form);
@@ -37,47 +42,63 @@ const DocContainer = {
     this.enableButtons();
   },
   
-  // Disable buttons during editing
+  /**
+   * Disable buttons during editing
+   */
   disableButtons: function() {
     this.target.find('.js-disable-in-edit')
       .prop('disabled', true);
   },
   
-  // Edit row
-  // $row: Row as jQuery object
+  /**
+   * Edit row
+   * @param $row (jQuery object) Row to be edited
+   */
   editRow: function($row) {
     this.disableButtons();
     $row.html('');
     this.renderForm($row);
   },
   
-  // Enable buttons after editing
+  /**
+   * Enable buttons after editing
+   */
   enableButtons: function() {
     this.target.find('.js-disable-in-edit')
       .prop('disabled', false);
   },
   
-  // Get form id
+  /**
+   * Get form id
+   * @param $form (jQuery object) Form whose id we want
+   * @return (string|null) The id that was retrieved
+   */
   formId: function($form) {
     const id = $form.parent().attr('data-id') || null;
     return id;
   },
   
-  // Hide form
-  // $form: Form to be hidden
+  /**
+   * Hide form
+   * @param $form (jQuery object) Form to be hidden
+   */
   hideForm: function($form) {
     $form.remove();
   },
   
-  // Initialize docs
-  // $target: The jQuery object to render docs to
+  /**
+   * Initialize docs
+   * @param $target (jQuery object) Where to render the docs to
+   */
   init: function($target) {
     this.target = $target;
     this.render();
   },
   
-  // Populate one row
-  // $row: Row to be populated
+  /**
+   * Populate one row
+   * @param $row (jQuery object) Row to be populated
+   */
   populateOne: function($row) {
     const id = $row.attr('data-id');
     const doc = this.docs[id];
@@ -96,18 +117,26 @@ const DocContainer = {
     
     const $deleteButton = $('<button>')
       .addClass('btn btn--danger js-disable-in-edit')
-      .text('Poista');
+      .text('Poista')
+      .click(function deleteButtonClicked() {
+        console.log('delete');
+      });
     
     $row.append($title, $editButton, $deleteButton);
   },
   
-  // Populate all rows
+  /**
+   * Populate all rows
+   */
   populateRows: function() {
     this.docs = {};
     const url = document.location.pathname + '/json';
     const self = this;
     
     $.getJSON(url, function processData(data) {
+      const $docs = self.target.find('#docs');
+      $docs.html('');
+      
       data.forEach(function eachDoc(doc) {
         const id = doc._id;
         self.docs[id] = doc;
@@ -118,12 +147,14 @@ const DocContainer = {
         
         self.populateOne($row);
         
-        self.target.find('#docs').append($row);
+        $docs.append($row);
       });
     });
   },
   
-  // Render dynamic elements
+  /**
+   * Render dynamic elements
+   */
   render: function() {
     const self = this;
     const $addNewButton = $('<button>')
@@ -144,9 +175,11 @@ const DocContainer = {
     this.populateRows();
   },
   
-  // Render form
-  // $target: Where the form will be rendered
-  // customClass: Optional custom classes for the form
+  /**
+   * Render form
+   * @param $target (jQuery object) Where the form will be rendered
+   * @param customClass (optional string) Custom class for the form
+   */
   renderForm: function($target, customClass) {
     customClass = customClass || '';
     const self = this;
@@ -221,7 +254,9 @@ const DocContainer = {
     $form.append($submitButton, $cancelButton).appendTo($target);
   },
   
-  // Submit form
+  /**
+   * Submit form
+   */
   submitForm: function($form) {
     const url = $form.attr('action');
     var data = {};
@@ -235,16 +270,24 @@ const DocContainer = {
     });
     
     const id = this.formId($form);
+    const isNew = !id;
     
-    if (id) {
+    if (!isNew) {
+      // We're editing an existing row, so include the id
       data._id = id;
     }
     
     const posting = $.post(url, data);
     
     posting.done(function postingDone(response) {
-      self.docs[id] = data;
+      const doc = response.data;
+      self.docs[doc._id] = doc;
+      
       self.cancelEdit($form);
+      
+      if (isNew) {
+        self.populateRows();
+      }
     });
   }
 };
