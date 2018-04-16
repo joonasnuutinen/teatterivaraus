@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  .content
+    section.section.section--long
+      .section__content
+        h1.page-title= title
+        
+        each doc in docs
+          article.article.box
+            h2.article__title= doc.title
+            
+            .article__content
+              | !{doc.html}
+      

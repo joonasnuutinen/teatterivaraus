@@ -9,6 +9,17 @@ const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const sanitizeHtml = require('sanitize-html');
 
+// Render public docs page
+exports.getPublic = function(req, res, next) {
+  Doc.find().exec(function docsFound(err, docs) {
+    if (err) return next(err);
+    
+    docs.sort(alphaSort);
+    
+    res.render('docs', { title: 'Ohjeet', docs: docs });
+  });
+};
+
 // GET docs admin page
 exports.getAdmin = function(req, res, next) {
   const theatre = req.user;
@@ -23,17 +34,11 @@ exports.getJSON = function(req, res, next) {
   Doc.find().exec(function docsFound(err, docs) {
     if (err) return next(err);
     
-    docs.sort(function alphaSort(a, b) {
-      var aString = a.title.toUpperCase();
-      var bString = b.title.toUpperCase();
-      if (aString < bString) return -1;
-      if (aString > bString) return 1;
-      return 0;
-    });
+    docs.sort(alphaSort);
     
     res.json(docs);
   });
-}
+};
 
 // POST doc to database
 exports.save = [
@@ -125,4 +130,24 @@ exports.delete = function(req, res, next) {
     
     res.send({ msg: 'Ohje on poistettu.' });
   });
+};
+
+/*
+  =============================================
+  Functions
+  =============================================
+*/
+
+/**
+ * Sort docs alphabetically
+ * @param a (Object { title: ... }) First item to be compared
+ * @param b (Object { title: ... }) Second item to be compared
+ * @return (-1|0|1) -1 if a < b, 1 if a > b, 0 if a == b
+ */ 
+function alphaSort(a, b) {
+  var aString = a.title.toUpperCase();
+  var bString = b.title.toUpperCase();
+  if (aString < bString) return -1;
+  if (aString > bString) return 1;
+  return 0;
 }
