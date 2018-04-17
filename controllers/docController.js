@@ -4,19 +4,45 @@
 
 var Theatre = require('../models/theatre');
 var Doc = require('../models/doc');
+const Setting = require('../models/setting');
 
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const sanitizeHtml = require('sanitize-html');
 
+const async = require('async');
+
 // Render public docs page
 exports.getPublic = function(req, res, next) {
-  Doc.find().exec(function docsFound(err, docs) {
+  async.parallel({
+    docs: function(callback) {
+      Doc.find().exec(callback);
+    },
+    
+    settings: function(callback) {
+      Setting.findOne().exec(callback);
+    }
+  }, function(err, data) {
     if (err) return next(err);
     
-    docs.sort(alphaSort);
+    var orderedDocs = [];
+    const docOrder = data.settings.docOrder;
+    var docs = data.docs;
     
-    res.render('docs', { title: 'Ohjeet', docs: docs });
+    if (docOrder.length === 0) {
+      orderedDocs = docs;
+    } else {
+      docOrder.forEach(function eachDoc(docId) {
+        const i = docs.findIndex(function findById(doc) {
+          return docId.equals(doc._id);
+        });
+        
+        orderedDocs.push(docs[i]);
+        docs.splice(i, 1);
+      });
+    }
+    
+    res.render('docs', { title: 'Ohjeet', docs: orderedDocs });
   });
 };
 
@@ -31,12 +57,35 @@ exports.getAdmin = function(req, res, next) {
 
 // GET docs in JSON format
 exports.getJSON = function(req, res, next) {
-  Doc.find().exec(function docsFound(err, docs) {
+  async.parallel({
+    docs: function(callback) {
+      Doc.find().exec(callback);
+    },
+    
+    settings: function(callback) {
+      Setting.findOne().exec(callback);
+    }
+  }, function(err, data) {
     if (err) return next(err);
     
-    docs.sort(alphaSort);
+    var orderedDocs = [];
+    const docOrder = data.settings.docOrder;
+    var docs = data.docs;
     
-    res.json(docs);
+    if (docOrder.length === 0) {
+      orderedDocs = docs;
+    } else {
+      docOrder.forEach(function eachDoc(docId) {
+        const i = docs.findIndex(function findById(doc) {
+          return docId.equals(doc._id);
+        });
+        
+        orderedDocs.push(docs[i]);
+        docs.splice(i, 1);
+      });
+    }
+    
+    res.json(orderedDocs);
   });
 };
 
@@ -115,11 +164,37 @@ exports.save = [
   }
 ];
 
+// Save order
+exports.saveOrder = function(req, res, next) {
+  if (req.user.role !== 'admin') {
+    res.send({ errors: [{ msg: 'Käyttö estetty' }] });
+    return;
+  }
+  
+  Setting.findOne().exec(function settingFound(err, setting) {
+    if (err) return next(err);
+    
+    if (!setting) {
+      setting = new Setting();
+    }
+    
+    setting.docOrder = req.body['docOrder[]'];
+    
+    setting.save(function settingSaved(err) {
+      if (err) {
+        res.send({ errors: err });
+      } else {
+        res.send({ msg: 'Järjestyksen vaihto onnistui.' });
+      }
+    });
+  });
+};
+
 // Delete doc from database
 exports.delete = function(req, res, next) {
   if (req.user.role !== 'admin') {
-      res.send({ errors: [{ msg: 'Käyttö estetty' }] });
-      return;
+    res.send({ errors: [{ msg: 'Käyttö estetty' }] });
+    return;
   }
   
   Doc.findByIdAndRemove(req.params.id, function removeTried(err) {

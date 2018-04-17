@@ -133,6 +133,34 @@ const DocContainer = {
     this.render();
   },
   
+  move: function($row, direction) {
+    var $row2;
+    
+    switch (direction) {
+      case 'up':
+        $row.prev().insertAfter($row);
+        break;
+      case 'down':
+        $row.next().insertBefore($row);
+        break;
+      default:
+        return false;
+    }
+    
+    var order = [];
+    
+    $('.data-row').each(function eachRow() {
+      order.push($(this).attr('data-id'));
+    });
+    
+    $.post(document.location.pathname + '/order', { docOrder: order })
+      .done(function postingDone(response) {
+        //console.log(response);
+      });
+    
+    return true;
+  },
+  
   /**
    * Populate one row
    * @param $row (jQuery object) Row to be populated
@@ -159,11 +187,32 @@ const DocContainer = {
       .click(function deleteButtonClicked() {
         self.deleteRow($row);
       });
+      
+      const $upButton = $('<button>')
+        .addClass('btn btn--secondary js-disable-in-edit')
+        .text('Nosta')
+        .click(function upButtonClicked() {
+          self.move($row, 'up');
+        });
+        
+      const $downButton = $('<button>')
+        .addClass('btn btn--secondary js-disable-in-edit')
+        .text('Laske')
+        .click(function downButtonClicked() {
+          self.move($row, 'down');
+        });
     
     const $message = $('<div>')
       .addClass('message');
     
-    $row.append($title, $editButton, $deleteButton, $message);
+    $row.append(
+      $title,
+      $editButton,
+      $deleteButton,
+      $upButton,
+      $downButton,
+      $message
+    );
   },
   
   /**

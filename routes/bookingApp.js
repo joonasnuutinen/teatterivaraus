@@ -109,6 +109,7 @@ router.get('/ohjeet', isLoggedIn, docController.getAdmin);
 router.get('/ohjeet/json', docController.getJSON);
 
 router.post('/ohjeet', isLoggedIn, docController.save);
+router.post('/ohjeet/order', isLoggedIn, docController.saveOrder);
 
 router.delete('/ohjeet/:id', isLoggedIn, docController.delete);
 
