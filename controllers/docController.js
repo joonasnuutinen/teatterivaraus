@@ -25,22 +25,7 @@ exports.getPublic = function(req, res, next) {
   }, function(err, data) {
     if (err) return next(err);
     
-    var orderedDocs = [];
-    const docOrder = data.settings.docOrder;
-    var docs = data.docs;
-    
-    if (docOrder.length === 0) {
-      orderedDocs = docs;
-    } else {
-      docOrder.forEach(function eachDoc(docId) {
-        const i = docs.findIndex(function findById(doc) {
-          return docId.equals(doc._id);
-        });
-        
-        orderedDocs.push(docs[i]);
-        docs.splice(i, 1);
-      });
-    }
+    var orderedDocs = orderDocs(data.docs, data.settings.docOrder);
     
     res.render('docs', { title: 'Ohjeet', docs: orderedDocs });
   });
@@ -68,22 +53,7 @@ exports.getJSON = function(req, res, next) {
   }, function(err, data) {
     if (err) return next(err);
     
-    var orderedDocs = [];
-    const docOrder = data.settings.docOrder;
-    var docs = data.docs;
-    
-    if (docOrder.length === 0) {
-      orderedDocs = docs;
-    } else {
-      docOrder.forEach(function eachDoc(docId) {
-        const i = docs.findIndex(function findById(doc) {
-          return docId.equals(doc._id);
-        });
-        
-        orderedDocs.push(docs[i]);
-        docs.splice(i, 1);
-      });
-    }
+    var orderedDocs = orderDocs(data.docs, data.settings.docOrder);
     
     res.json(orderedDocs);
   });
@@ -225,4 +195,32 @@ function alphaSort(a, b) {
   if (aString < bString) return -1;
   if (aString > bString) return 1;
   return 0;
+}
+
+/**
+ * Order docs
+ * @param docs (Array) Docs to order
+ * @param docOrder (Array) The order of docs by _id
+ * @return (Array) Ordered docs
+ */
+function orderDocs(docs, docOrder) {
+  var orderedDocs = [];
+  
+  if (!docs || docOrder.length === 0) {
+    // No order is specified so return the original docs
+    return docs;
+  }
+  
+  docOrder.forEach(function eachDoc(docId) {
+    const i = docs.findIndex(function findById(doc) {
+      return docId.equals(doc._id);
+    });
+    
+    orderedDocs.push(docs[i]);
+    
+    // We don't need the doc anymore so remove it from the original array
+    docs.splice(i, 1);
+  });
+  
+  return orderedDocs;
 }
