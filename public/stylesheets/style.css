@@ -413,6 +413,15 @@ p {
   ============================================================================
 */
 
+.nav-in__list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.nav-in__item {
+  margin-bottom: .25em;
+}
+
 .article__title {
   margin-top: .5rem;
 }

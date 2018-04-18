@@ -8,11 +8,10 @@ block content
         
         nav.nav-in
           ul.nav-in__list
-          
-          each doc in docs
-            li.nav-in__item
-              - const url = '#' + doc.slug;
-              a.nav-in__link(href=url)= doc.title
+            each doc in docs
+              li.nav-in__item
+                - const url = '#' + doc.slug;
+                a.nav-in__link(href=url)= doc.title
           
         
         each doc in docs
