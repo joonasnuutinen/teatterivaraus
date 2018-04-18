@@ -28,6 +28,10 @@ DocSchema.virtual('html').get(function htmlGetter() {
   return html.replace('\n', '');
 });
 
+DocSchema.virtual('slug').get(function slugGetter() {
+  return this.title.replace(/ /g, '_');
+});
+
 DocSchema.set('timestamps');
 
 // Show virtuals
