@@ -333,9 +333,13 @@ function userEvents(schemaOptions) {
   
   $( '#changePassword' ).submit( function passwordChangeSubmitted(evt) {
     evt.preventDefault();
-    console.log('change password submitted');
     changePassword.call( this );
   } );
+  
+  $('#settings').submit(function settingsSubmitted(evt) {
+    evt.preventDefault();
+    saveSettings.call(this);
+  });
 }
 
 // ================================================================
@@ -487,6 +491,30 @@ function changeOrder( $row1, $row2, schemaOptions ) {
       cancelEdit( null, schemaOptions );
     }
   } );
+}
+
+// save settings
+function saveSettings() {
+  const $form = $(this);
+  const url = $form.attr('action');
+  
+  var data = {};
+  
+  $form.find('input').each(function eachField() {
+    const $field = $(this);
+    data[$field.attr('name')] = $field.val();
+  });
+  
+  $.post(url, data).done(function postingDone(result) {
+    const $messageArea = $form.find('.message');
+    console.log(!!result.errors);
+    if (result.errors) {
+      printMessage(result.errors, 'error', $messageArea);
+    } else {
+      printMessage('Asetukset on tallennettu.', 'success', $messageArea);
+    }
+  });
+  
 }
 
 // change password

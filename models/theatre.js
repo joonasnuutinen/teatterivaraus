@@ -32,6 +32,10 @@ var TheatreSchema = Schema({
 		default: 'theatre'
 	},
   
+  capacity: {
+    type: Number
+  },
+  
   password: {
     type: String,
     required: true

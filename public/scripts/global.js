@@ -304,3 +304,21 @@ function submitForm(token) {
     }
   } );
 }
+
+function printMessage(message, type, $target) {
+  var formattedMessage = '';
+  
+  if (Array.isArray(message)) {
+    message.forEach(function(item) {
+      formattedMessage += item.msg + '<br>';
+    });
+  } else {
+    formattedMessage = message;
+  }
+  
+  $message = $('<div>')
+    .addClass('message__content message__content--' + type)
+    .text(formattedMessage);
+  
+  $target.html($message);
+}

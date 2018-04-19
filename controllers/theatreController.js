@@ -7,6 +7,9 @@ var registerTitle = 'Tilaa';
 var mailgun = require( 'mailgun-js' );
 var request = require('request');
 
+const { body, validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
+
 try {
   require('dotenv').load();
 } catch(err) {}
@@ -105,34 +108,41 @@ exports.settingsGet = function(req, res, next) {
 };
 
 // POST settings
-exports.settingsPost = function(req, res, next) {
-  req.checkBody('playName', 'Kirjoita näytelmän nimi.').notEmpty();
+exports.settingsPost = [
+  // Validate fields
+  body('playName', 'Kirjoita näytelmän nimi.').isLength({ min: 1 }).trim(),
+  body('capacity', 'Virheellinen varausten enimmäismäärä.').optional({ checkFalsy: true }).isInt({ min: 0 }),
   
-  req.sanitize('playName').escape();
-  req.sanitize('playName').trim();
-  req.sanitize('playDescription').escape();
-  req.sanitize('playDescription').trim();
+  // Sanitize fields
+  sanitizeBody('playName').trim().escape(),
+  sanitizeBody('playDescription').trim().escape(),
+  sanitizeBody('capacity').toInt(),
   
-  var errors = req.validationErrors();
-  
-  var theatre = new Theatre({
-    name: req.user.name,
-    email: req.user.email,
-    playName: req.body.playName,
-    playDescription: req.body.playDescription,
-    _id: req.user._id
-  });
-  
-  if (errors) {
-    res.render('settings', {title: 'Asetukset', theatre: theatre, errors: errors});
-    return;
+  // Process request
+  (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+      res.send({ errors: errors.array() });
+      return;
+    }
+    
+    Theatre.findById(req.user._id).exec(function theatreFound(err, theatre) {
+      if (err) {
+        res.send({ errors: err });
+        return;
+      }
+      
+      for (let key in req.body) {
+        theatre[key] = req.body[key];
+      }
+      
+      theatre.save(function settingsSaved(err) {
+        res.send({ errors: err });
+      });
+    });
   }
-  
-  Theatre.findByIdAndUpdate(req.user._id, theatre, {}, function(err, updated) {
-    if (err) return next(err);
-    res.redirect('/app/asetukset');
-  });
-}
+];
 
 // POST change password
 exports.changePassword = function changePassword(req, res, next) {
