@@ -130,7 +130,7 @@ exports.post = function(req, res, next) {
         }
       });
     } else {
-      message.errors = message.errors.concat(errors.useFirstErrorOnly().array());
+      message.errors = message.errors.concat(errors.array({ onlyFirstError: true }));
     }
     
     res.send(message);
@@ -202,7 +202,7 @@ exports.put = function(req, res, next) {
         }
       });
     } else {
-      message.errors = message.errors.concat(errors.useFirstErrorOnly().array());
+      message.errors = message.errors.concat(errors.array({ onlyFirstError: true }));
     }
     
     res.send(message);
@@ -256,7 +256,7 @@ exports.stats = function(req, res, next) {
       data.shows[showIndex].reservationCount += ticketAmount;
       total += ticketAmount;
     });
-    //console.log(data.shows);
+    
     res.render('stats', {title: 'Varaustilanne', theatre: req.user, shows: data.shows, total: total});
   });
 };
@@ -467,7 +467,7 @@ exports.customerPost = function(req, res, next) {
           }
         });
       } else {
-        message.errors = message.errors.concat(errors.useFirstErrorOnly().array());
+        message.errors = message.errors.concat(errors.array({ onlyFirstError: true }));
       }
       
       message.data = reservation;
