@@ -1,8 +1,11 @@
+'use strict';
+
 var async = require('async');
 var Theatre = require('../models/theatre');
 var Contact = require('../models/contact');
 var Show = require('../models/show');
 var TicketClass = require('../models/ticketClass');
+var Reservation = require('../models/reservation');
 var registerTitle = 'Tilaa';
 var mailgun = require( 'mailgun-js' );
 var request = require('request');
@@ -94,7 +97,7 @@ exports.contactPost = function(req, res, next) {
           });
           
         } else {
-          response.errors = response.errors.concat( errors.useFirstErrorOnly().array() );
+          response.errors = response.errors.concat( errors.array({ onlyFirstError: true }) );
           res.send( response );
         }
       });
@@ -177,7 +180,7 @@ exports.changePassword = function changePassword(req, res, next) {
         } );
       }
     } else {
-      response.errors = response.errors.concat(errors.useFirstErrorOnly().array());
+      response.errors = response.errors.concat(errors.array({ onlyFirstError: true }));
       res.send( response );
     }
   } );
@@ -187,19 +190,44 @@ exports.changePassword = function changePassword(req, res, next) {
 exports.json = function(req, res, next) {
   async.parallel({
     theatre: function(callback) {
-      Theatre.findById(req.params.theatreId, 'name playName playDescription').exec(callback);
+      Theatre.findById(req.params.theatreId, 'name playName playDescription capacity').exec(callback);
     },
     shows: function(callback) {
-      Show.find({theatre: req.params.theatreId}).sort([['begins', 'ascending']]).exec(callback);
+      Show.find({theatre: req.params.theatreId})
+        .lean({ virtuals: true })
+        .sort([['begins', 'ascending']])
+        .exec(callback);
     },
     ticketClasses: function(callback) {
       TicketClass.find({theatre: req.params.theatreId})
         .sort([['price', 'descending'], ['name', 'ascending']])
         .exec(callback);
+    },
+    reservations: function(callback) {
+      Reservation.find({ theatre: req.params.theatreId }).exec(callback);
     }
   }, function(err, data) {
     if (err) return next(err);
+
+    data.shows.forEach(function(show) {
+      show.reservationCount = 0;
+      show.remaining = data.theatre.capacity;
+    });
+    
+    data.reservations.forEach(function(reservation) {
+      var showId = reservation.show;
+      var ticketAmount = reservation.total.tickets;
+      var showIndex = data.shows.findIndex(function(show) {
+        return showId.equals(show._id);
+      });
+      
+      var thisShow = data.shows[showIndex];
+      thisShow.reservationCount += ticketAmount;
+      thisShow.remaining -= ticketAmount;
+    });
+    
     data.theatre.shows = data.shows;
+    
     data.theatre.ticketClasses = data.ticketClasses;
     res.json(data.theatre);
   });

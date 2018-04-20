@@ -54,7 +54,7 @@ exports.post = function(req, res, next) {
         });
       } else {
         //console.log('errors');
-        message.errors = message.errors.concat(errors.useFirstErrorOnly().array());
+        message.errors = message.errors.concat(errors.array({ onlyFirstError: true }));
       }
       
       res.send(message);
@@ -120,7 +120,7 @@ exports.put = function(req, res, next) {
         }
       });
     } else {
-      message.errors = message.errors.concat(errors.useFirstErrorOnly().array());
+      message.errors = message.errors.array({ onlyFirstError: true }));
     }
     
     res.send(message);

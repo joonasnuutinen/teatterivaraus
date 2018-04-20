@@ -41,7 +41,7 @@ exports.newTicketPost = function(req, res, next) {
       });
     } else {
       res.send({
-        errors: errors.useFirstErrorOnly().array()
+        errors: errors.array({ onlyFirstError: true })
       });
     }
   });
@@ -139,7 +139,7 @@ exports.put = function(req, res, next) {
         }
       });
     } else {
-      message.errors = message.errors.concat(errors.useFirstErrorOnly().array());
+      message.errors = message.errors.concat(errors.array({ onlyFirstError: true }));
     }
     
     res.send(message);
