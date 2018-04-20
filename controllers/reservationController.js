@@ -323,6 +323,78 @@ exports.printPdf = function(req, res, next) {
 
 // GET customer reservation form
 exports.customerGet = function(req, res, next) {
+  Theatre.findOne({ slug: req.params.theatreId }).exec(function(err, theatre) {
+    if (err || !theatre) return next(err);
+    
+    const id = theatre.id;
+    
+    async.parallel({
+      shows: function(callback) {
+        Show
+          .find({ theatre: id })
+          .lean({ virtuals: true })
+          .sort([['begins', 'ascending']])
+          .exec(callback);
+      },
+      
+      sponsors: function(callback) {
+        Sponsor
+          .find({ theatre: id })
+          .sort([['order', 'ascending']])
+          .exec(callback);
+      },
+      
+      reservations: function(callback) {
+        Reservation
+          .find({ theatre: id })
+          .exec(callback);
+      },
+      
+      ticketClasses: function(callback) {
+        TicketClass
+          .find({ theatre: id })
+          .sort([['price', 'descending'], ['name', 'ascending']])
+          .exec(callback);
+      }
+    }, function asyncDone(err, data) {
+      const title = theatre.name + ': ' + theatre.playName + ' - Teatterivaraus';
+      const siteUrl = req.protocol + '://' + req.get('host');
+      const og = {
+        url: req.protocol + '://' + req.get('host') + req.originalUrl,
+        type: 'product',
+        title: title,
+        description: 'Varaa lippuja esitykseen ' + theatre.playName + '.',
+        image: siteUrl + '/images/og.png'
+      };
+      
+      data.shows.forEach(function(show) {
+        show.reservationCount = 0;
+        show.remaining = theatre.capacity;
+      });
+      
+      data.reservations.forEach(function(reservation) {
+        var showId = reservation.show;
+        var ticketAmount = reservation.total.tickets;
+        var showIndex = data.shows.findIndex(function(show) {
+          return showId.equals(show._id);
+        });
+        
+        var thisShow = data.shows[showIndex];
+        thisShow.reservationCount += ticketAmount;
+        thisShow.remaining -= ticketAmount;
+      });
+      
+      res.render('customerReservation', {
+        title: title,
+        theatre: theatre,
+        shows: data.shows,
+        ticketClasses: data.ticketClasses,
+        sponsors: data.sponsors,
+        og: og
+      });
+    });
+  });
+  /*
   var theatreId = req.params.theatreId;
 	
 	async.waterfall( [
@@ -379,9 +451,7 @@ exports.customerGet = function(req, res, next) {
     });
 	} );
   
-  Theatre.findById(theatreId).exec(function(err, theatre) {
-    
-  });
+  */
 };
 
 // POST customer reservation form
@@ -423,22 +493,22 @@ exports.customerPost = function(req, res, next) {
       }
     }
     
-    req.checkBody('newFirstName', 'Etunimi puuttuu.').notEmpty();
-    req.checkBody('newLastName', 'Sukunimi puuttuu.').notEmpty();
-    req.checkBody('newEmail', 'Sähköposti puuttuu.').notEmpty();
-    req.checkBody('newEmail', 'Virheellinen sähköposti.').isEmail();
-    req.checkBody('newShow', 'Näytöstä ei ole valittu.').notEmpty();
+    req.checkBody('firstName', 'Etunimi puuttuu.').notEmpty();
+    req.checkBody('lastName', 'Sukunimi puuttuu.').notEmpty();
+    req.checkBody('email', 'Sähköposti puuttuu.').notEmpty();
+    req.checkBody('email', 'Virheellinen sähköposti.').isEmail();
+    req.checkBody('show', 'Näytöstä ei ole valittu.').notEmpty();
     
-    req.sanitize('newLastName').escape();
-    req.sanitize('newLastName').trim();
-    req.sanitize('newFirstName').escape();
-    req.sanitize('newFirstName').trim();
-    req.sanitize('newEmail').escape();
-    req.sanitize('newEmail').trim();
-    req.sanitize('newPhone').escape();
-    req.sanitize('newPhone').trim();
-    req.sanitize('newAdditionalInfo').escape();
-    req.sanitize('newAdditionalInfo').trim();
+    req.sanitize('lastName').escape();
+    req.sanitize('lastName').trim();
+    req.sanitize('firstName').escape();
+    req.sanitize('firstName').trim();
+    req.sanitize('email').escape();
+    req.sanitize('email').trim();
+    req.sanitize('phone').escape();
+    req.sanitize('phone').trim();
+    req.sanitize('additionalInfo').escape();
+    req.sanitize('additionalInfo').trim();
     
     req.getValidationResult().then(function(errors) {
       if (errors.isEmpty()) {

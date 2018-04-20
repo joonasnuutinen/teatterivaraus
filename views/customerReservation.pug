@@ -13,6 +13,7 @@ html(lang='fi')
       <meta property="og:title" content="#{og.title}">
       <meta property="og:description" content="#{og.description}">
       <meta property="og:image" content="#{og.image}">
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     
   body.page.page--reservation
     header.header
@@ -28,8 +29,50 @@ html(lang='fi')
         if (theatre.playDescription && false)
           p= theatre.playDescription
         
-        .dynamic-content(data-schema=options.schema data-columns-edit=options.columnsEdit data-theatre=theatre._id)
-          .dataRow.new-row.data-row--new#newRow
+        form#reservation-form.form(action='' method='POST')
+          label Etunimi
+            input.input(name='firstName' type='text' required)
+          
+          label Sukunimi
+            input.input(name='lastName' type='text' required)
+          
+          label Sähköposti
+            input.input(name='email' type='email' required)
+          
+          label Puhelin (valinnainen)
+            input.input(name='phone' type='tel')
+          
+          label Näytös
+            select.input(name='show' required)
+              each show in shows
+                option(value=show._id data-remaining=show.remaining)= show.beginsPretty
+          
+          each ticketClass in ticketClasses
+            - fieldName = 'ticketClass_' + ticketClass.id;
+            label(for=fieldName)
+              | #{ticketClass.fullName}
+              .remaining
+                | Jäljellä:
+                |
+                span.remaining__amount
+                |
+                kpl
+            .input-group
+              input.input.input--narrow(name=fieldName id=fieldName type='number' min='0' value='0')
+              span.unit.input-group-addon kpl
+              
+          label Lisätietoja (valinnainen)
+            textarea.input(name='additionalInfo')
+            
+          .form-group.form-group--checkboxes
+            input#marketingPermission.checkbox(name='marketingPermission' type='checkbox')
+            label.form__label(for='marketingPermission') Teatteri saa lähettää minulle sähköpostia tulevista esityksistä
+          
+          <div class="g-recaptcha" data-sitekey="6LergVQUAAAAAIZ1pUdfYwCKMRxHUb0qbtXjjQ6d" data-callback="recaptchaSuccess" data-expired-callback="recaptchaExpired"></div>
+          
+          button#submitForm.btn.btn--primary.btn--big(type='submit' disabled) Varaa
+          
+          .message
         
       if sponsors.length > 0
         section.box
@@ -47,6 +90,4 @@ html(lang='fi')
         a(href='/rekisteriseloste' target='_blank') Rekisteriseloste
   
   script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f' crossorigin='anonymous')
-  script(src='/scripts/global.js')
   script(src='/scripts/reservationFront.js')
-  <script src="https://www.google.com/recaptcha/api.js?onload=renderRecaptcha&render=explicit" async defer></script>

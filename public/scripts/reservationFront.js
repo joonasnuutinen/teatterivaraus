@@ -1,70 +1,54 @@
-var schemaOptions = {
-  lastName: {
-    label: 'Sukunimi'
-  },
-  firstName: {
-    label: 'Etunimi'
-  },
-  email: {
-    label: 'Sähköposti'
-  },
-  phone: {
-    label: 'Puhelin (valinnainen)'
-  },
-  show: {
-    label: 'Näytös'
-  },
-  additionalInfo: {
-    label: 'Lisätietoja (valinnainen)',
-    textArea: true
-  },
-  tickets: {
-    unit: 'kpl',
-    input: true
-  },
-  marketingPermission: {
-    label: 'Teatteri saa lähettää minulle sähköpostia tulevista esityksistä.'
-  }
-};
-
-$(function() {
-  //userEvents();
-  resetView();
+$(function documentReady() {
+  $('#reservation-form').submit(function(evt) {
+    evt.preventDefault();
+    sendReservation($(this));
+  });
 });
 
-function resetView() {
-  $('#newRow').html('<div class="fields"></div>');
-  $('#newRow').append('<button id="submit" class="save-row btn btn--primary btn--big" type="button">Varaa</button>');
-  $( '#newRow' ).append( '<div class="errors"></div>' );
+function recaptchaSuccess() {
+  $('#submitForm').prop('disabled', false);
 }
 
-// user events
-function userEvents(schemaOptions) {
-  $('#newRow').on('click', '.save-row', function() {
-    saveEdit('newRow', schemaOptions, success);
-  });
+function recaptchaExpired() {
+  $('#submitForm').prop('disabled', true);
 }
 
-function renderRecaptcha() {
-  setTimeout(function checkRecaptcha() {
-    if ($('.grecaptcha-badge').length === 0) {
-      console.log('Reload reCAPTCHA');
-      renderRecaptcha();
-    }
-  }, 500);
+function sendReservation($form) {
+  const url = $form.attr('action');
   
-  grecaptcha.render('submit', {
-    sitekey: '6Ld42E0UAAAAAK7uUS51VAeR0Zl0e7K1WffdTi-J',
-    callback: sendReservation
+  var data = {};
+  
+  $form.find('input, select, textarea').each(function eachField() {
+    data[$(this).attr('name')] = $(this).val();
   });
-
-  showForm('newRow', null, schemaOptions, 'new' );
-}
-
-function sendReservation() {
-  var url = $('.dynamic-content').attr('data-theatre');
-  saveEdit('newRow', schemaOptions, success, url);
-  grecaptcha.reset();
+  
+  console.log(data);
+  /*
+  var posting = $.post(url, {
+    name: $form.find( 'input[name="name"]' ).val(),
+    email: $form.find( 'input[name="email"]' ).val(),
+    playName: $form.find( 'input[name="playName"]' ).val(),
+    beginning: $form.find( 'input[name="beginning"]' ).val(),
+    ending: $form.find( 'input[name="ending"]' ).val(),
+    additionalInfo: $form.find( 'textarea[name="additionalInfo"]' ).val(),
+    recaptchaResponse: grecaptcha.getResponse()
+  } );
+  
+  posting.done( function postingDone( data ) {
+    if (data.errors) {
+      var errors = '';
+      data.errors.forEach(function(error) {
+        errors += error.msg + '<br>';
+      });
+      $( '#message' ).html( '<div class="message__content message__content--error">' + errors + '</div>' );
+      grecaptcha.reset();
+    } else {
+      $( '#message' ).html( '<div class="message__content message__content--success">' + data.message + '</div>' );
+      $form.find( 'input' ).val( '' );
+      $( '#contactForm' ).slideUp();
+    }
+  } );
+  */
 }
 
 function success(id, schemaOptions, data) {

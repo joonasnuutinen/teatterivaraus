@@ -10,6 +10,12 @@ function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {
   var columns = $('.dynamic-content').attr('data-columns-edit').split(' ');
   var jsonUrl = '/' + $('.dynamic-content').attr('data-theatre') + '.json';
   
+  var $form = $('<form>')
+    .attr({
+      method: 'POST',
+      action: ''
+    });
+  
   var $fieldsDiv = $('<div>').addClass('fields');
   
   $.getJSON(jsonUrl, function(theatre) {
@@ -38,14 +44,15 @@ function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {
     });
     
     //var $errors = $( '<div>' ).addClass( 'errors' );
+    $form.html($fieldsDiv);
 
     $('#' + id + ' > .fields')
-      .replaceWith($fieldsDiv)
+      .replaceWith($form);
       //.append( $errors );
     
     updateRemaining();
     
-    if ( callback ) callback();
+    if ( callback ) callback(id);
   });
 }
 
@@ -111,42 +118,47 @@ function createTextGroup(data, schemaOptions, idPrefix, column) {
   var unit = schemaOptions[column].unit; 
   var inputId = idPrefix + capital(column);
   
-  var textDiv = document.createElement('div');
+  var textDiv = $('<div>');
   
-  var textLabel = document.createElement('label');
-  textLabel.setAttribute('for', inputId);
-  textLabel.textContent = schemaOptions[column].label;
+  var textLabel = $('<label>')
+    .attr('for', inputId)
+    .text(schemaOptions[column].label);
   
   var textInput;
   
   if (schemaOptions[column].textArea) {
-    textInput = document.createElement('TEXTAREA');
+    textInput = $('<textarea>');
   } else {
-    textInput = document.createElement('input');
-    textInput.setAttribute('type', 'text');
+    textInput = $('<input>')
+      .attr('type', 'text');
   }
 
-  textInput.className = 'edited-field input';
-  textInput.id = inputId;
-  textInput.placeholder = placeholder ? placeholder : '';
-  textInput.value = data ? data[column] : '';
+  textInput.addClass('edited-field input')
+    .attr({
+      id: inputId,
+      placeholder: (placeholder) ? placeholder : '',
+    })
+    .val((data) ? data[column] : '');
+  
+  if (schemaOptions[column].required) {
+    textInput.prop('required', true);
+  }
   
   if (schemaOptions[column].hidden) {
-    textInput.setAttribute('type', 'hidden');
+    textInput.attr('type', 'hidden');
     textLabel = '';
-    textDiv.appendChild(textInput);
+    textDiv.append(textInput);
   } else if (unit) {
-    var unitSpan = document.createElement('span');
-    unitSpan.className = 'unit input-group-addon';
-    unitSpan.textContent = unit ? unit : '';
-    textDiv.className = 'input-group';
-    textInput.className += ' input--narrow';
-    textDiv.appendChild(textInput);
-    textDiv.appendChild(unitSpan);
+    var unitSpan = $('span')
+      .addClass('unit input-group-addon')
+      .text((unit) ? unit : '');
+    
+    textDiv.addClass('input-group');
+    textInput.addClass('input--narrow');
+    textDiv.append(textInput, unitSpan);
   } else {
-    textDiv.className = 'form-group';
-    textDiv.appendChild(textLabel);
-    textDiv.appendChild(textInput);
+    textDiv.addClass('form-group');
+    textDiv.append(textLabel, textInput);
     textLabel = '';
   }
   
