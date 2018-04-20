@@ -1,6 +1,8 @@
 // ===================================================================
 // GLOBAL FUNCTIONS ==================================================
 // ===================================================================
+'use strict';
+const REMAINING_TRESHOLD = 50;
 
 // create and show form
 function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {  
@@ -224,8 +226,15 @@ function populateSelect(node, data, shows, showPast) {
 
 // update remaining counter
 function updateRemaining() {
-  $('.remaining__amount').text(getRemaining());
+  const remaining = getRemaining();
+  $('.remaining__amount').text(remaining);
   setMaxTickets();
+  
+  if (remaining <= REMAINING_TRESHOLD) {
+    $('.remaining').addClass('remaining--visible');
+  } else {
+    $('.remaining').removeClass('remaining--visible');
+  }
 }
 
 // get remaining ticket amount

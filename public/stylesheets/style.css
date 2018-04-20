@@ -505,6 +505,15 @@ p {
   margin: 1rem 0;
 }
 
+.remaining {
+  display: none;
+  font-size: .9em;
+}
+
+.remaining--visible {
+  display: inline;
+}
+
 /*
   ============================================================================
   # Buttons
