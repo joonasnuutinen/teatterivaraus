@@ -120,7 +120,7 @@ exports.put = function(req, res, next) {
         }
       });
     } else {
-      message.errors = message.errors.array({ onlyFirstError: true }));
+      message.errors = message.errors.array({ onlyFirstError: true });
     }
     
     res.send(message);
