@@ -8,8 +8,7 @@ function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {
   var columns = $('.dynamic-content').attr('data-columns-edit').split(' ');
   var jsonUrl = '/' + $('.dynamic-content').attr('data-theatre') + '.json';
   
-  var fieldsDiv = document.createElement('div');
-  fieldsDiv.className = 'fields';
+  var $fieldsDiv = $('<div>').addClass('fields');
   
   $.getJSON(jsonUrl, function(theatre) {
     columns.forEach(function(column) {
@@ -32,15 +31,17 @@ function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {
         formGroup = createTextGroup(data, schemaOptions, idPrefix, column);
       }
       
-      if (formGroup[0] !== '') fieldsDiv.appendChild(formGroup[0]);
-      fieldsDiv.appendChild(formGroup[1]);
+      if (formGroup[0] !== '') $fieldsDiv.append(formGroup[0]);
+      $fieldsDiv.append(formGroup[1]);
     });
     
     //var $errors = $( '<div>' ).addClass( 'errors' );
 
     $('#' + id + ' > .fields')
-      .replaceWith(fieldsDiv)
+      .replaceWith($fieldsDiv)
       //.append( $errors );
+    
+    updateRemaining();
     
     if ( callback ) callback();
   });
@@ -48,53 +49,58 @@ function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {
 
 // create form group for ticket classes
 function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
-  var ticketClassesDiv = document.createElement('div');
-  ticketClassesDiv.className = 'ticket-classes';
+  var $ticketClassesDiv = $('<div>').addClass('ticket-classes');
   
   ticketClasses.forEach(function(ticketClass, index) {
     var inputId = idPrefix + 'TicketClass_' + ticketClass._id;
     
-    var formGroupDiv = document.createElement('div');
-    formGroupDiv.className = 'input-group';
+    var $formGroupDiv = $('<div>').addClass('input-group');
     
-    var ticketClassLabel = document.createElement('label');
-    ticketClassLabel.setAttribute('for', inputId);
-    ticketClassLabel.textContent = ticketClass.fullName;
+    var $ticketClassLabel = $('<label>')
+      .attr('for', inputId)
+      .text(ticketClass.fullName)
+      .append('<br><span class="remaining">Jäljellä: <span class="remaining__amount"></span> kpl</span>');
     
-    var numberField;
+    var $numberField;
     
     if (schemaOptions.tickets.input) {
-      numberField = document.createElement('input');
-      numberField.setAttribute('type', 'number');
-      numberField.className = 'edited-field input input--narrow';
-      numberField.min = '0';
-      numberField.value = data && data.tickets[index] ? data.tickets[index].amount : '0';
+      const originalAmount = (data && data.tickets[index]) ? data.tickets[index].amount : 0;
+      
+      $numberField = $('<input>')
+        .addClass('edited-field input input--narrow')
+        .attr({
+          type: 'number',
+          min: 0
+        })
+        .val(originalAmount)
+        .attr('data-original-amount', originalAmount)
+        .on('input', function numberFieldInput() {
+          updateRemaining();
+        });
     } else {
-      numberField = document.createElement('select');
-      numberField.className = 'edited-field input input--narrow';
+      $numberField = $('<select>')
+        .addClass('edited-field input input--narrow');
       
       for (var i = 0; i <= 10; i++) {
         var numberOption = document.createElement('option');
         numberOption.value = i;
         numberOption.text = i;
-        numberField.add(numberOption);
+        $numberField.append(numberOption);
       }
     }
     
-    numberField.id = inputId;
+    $numberField.attr('id', inputId);
  
     var unitSpan = document.createElement('span');
     unitSpan.className = 'unit input-group-addon';
     unitSpan.textContent = 'kpl';
     
-    formGroupDiv.appendChild(numberField);
-    formGroupDiv.appendChild(unitSpan);
+    $formGroupDiv.append($numberField, unitSpan);
     
-    ticketClassesDiv.appendChild(ticketClassLabel);
-    ticketClassesDiv.appendChild(formGroupDiv);
+    $ticketClassesDiv.append($ticketClassLabel, $formGroupDiv);
   });
   
-  return ['', ticketClassesDiv];
+  return ['', $ticketClassesDiv];
 }
 
 // create form group for text input
@@ -173,21 +179,22 @@ function createCheckboxGroup(data, schemaOptions, idPrefix, column) {
 function createShowGroup(data, schemaOptions, idPrefix, shows, showPast) {
   var selectId = idPrefix + 'Show';
   
-  var showDiv = document.createElement('div');
-  showDiv.className = 'form-group';
+  var showDiv = $('<div>')
+    .addClass('form-group');
   
-  var showLabel = document.createElement('label');
-  showLabel.setAttribute('for', selectId);
-  showLabel.textContent = schemaOptions.show.label;
+  var showLabel = $('<label>')
+    .attr('for', selectId)
+    .text(schemaOptions.show.label);
   
-  var showSelect = document.createElement('select');
-  showSelect.className = 'edited-field show-select input';
-  showSelect.id = selectId;
+  var showSelect = $('<select>')
+    .addClass('edited-field show-select input')
+    .attr('id', selectId)
+    .change(updateRemaining);
   
   showSelect = populateSelect(showSelect, data, shows, showPast);
   
-  showDiv.appendChild(showLabel);
-  showDiv.appendChild(showSelect);
+  showDiv.append(showLabel);
+  showDiv.append(showSelect);
   
   return ['', showDiv];
 }
@@ -196,22 +203,61 @@ function createShowGroup(data, schemaOptions, idPrefix, shows, showPast) {
 function populateSelect(node, data, shows, showPast) {
   shows.forEach(function(show) {
     var isPast = new Date() > Date.parse( show.begins );
-    var optionObject = document.createElement('option');
-    optionObject.value = show._id;
-    optionObject.text = show.beginsPretty;
+    var optionObject = $('<option>')
+      .val(show._id)
+      .attr('data-remaining', show.remaining)
+      .text(show.beginsPretty);
     
     if ( ( isPast || ! show.enable ) && ! showPast ) {
-      optionObject.disabled = true;
+      optionObject.prop('disabled', true);
     }
     
-    node.add(optionObject);
+    node.append(optionObject);
   });
   //console.log( data );
   if (data) {
-    node.value = data.show._id;
+    node.val(data.show._id);
   }
   
   return node;
+}
+
+// update remaining counter
+function updateRemaining() {
+  $('.remaining__amount').text(getRemaining());
+  setMaxTickets();
+}
+
+// get remaining ticket amount
+function getRemaining() {
+  return getRemainingAtLoad() - getUserTickets();
+}
+
+// get remaining at load-time
+function getRemainingAtLoad() {
+  const $showSelect = $('select[id$=Show]');
+  const $selectedOption = $showSelect.children('option[value="' + $showSelect.val() + '"]');
+  return $selectedOption.attr('data-remaining');
+}
+
+// set max ticket amount
+function setMaxTickets() {
+  $('.ticket-classes').find('input, select').each(function eachTicketField() {
+    const maxValue = getRemaining() + +$(this).val();
+    $(this).attr('max', maxValue);
+  });
+}
+
+// get user tickets
+function getUserTickets() {
+  var userTickets = 0;
+  
+  $('.ticket-classes').find('input, select').each(function eachTicketField() {
+    const $this = $(this);
+    userTickets += +$this.val() - +$this.attr('data-original-amount');
+  });
+  
+  return userTickets;
 }
 
 // capitalize first letter of string
@@ -318,7 +364,7 @@ function printMessage(message, type, $target) {
   
   $message = $('<div>')
     .addClass('message__content message__content--' + type)
-    .text(formattedMessage);
+    .html(formattedMessage);
   
   $target.html($message);
 }

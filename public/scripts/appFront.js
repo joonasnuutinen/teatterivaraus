@@ -507,7 +507,7 @@ function saveSettings() {
   
   $.post(url, data).done(function postingDone(result) {
     const $messageArea = $form.find('.message');
-    console.log(!!result.errors);
+    //console.log(!!result.errors);
     if (result.errors) {
       printMessage(result.errors, 'error', $messageArea);
     } else {
