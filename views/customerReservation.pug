@@ -29,7 +29,8 @@ html(lang='fi')
         if (theatre.playDescription && false)
           p= theatre.playDescription
         
-        form#reservation-form.form(action='' method='POST')
+        - const formUrl = '/' + theatre.id
+        form#reservation-form.form(action=formUrl method='POST')
           label Etunimi
             input.input(name='firstName' type='text' required)
           
@@ -43,23 +44,26 @@ html(lang='fi')
             input.input(name='phone' type='tel')
           
           label Näytös
-            select.input(name='show' required)
+            select#newShow.input(name='show' required)
               each show in shows
-                option(value=show._id data-remaining=show.remaining)= show.beginsPretty
+                - const isDisabled = ( isPast || ! show.enable || show.remaining < 1 );
+                - const additionalInfo = (show.remaining < 1) ? ' LOPPUUNMYYTY' : '';
+                option(value=show._id data-remaining=show.remaining disabled=isDisabled)= show.beginsPretty + additionalInfo
           
-          each ticketClass in ticketClasses
-            - fieldName = 'ticketClass_' + ticketClass.id;
-            label(for=fieldName)
-              | #{ticketClass.fullName}
-              .remaining
-                | Jäljellä:
-                |
-                span.remaining__amount
-                |
-                kpl
-            .input-group
-              input.input.input--narrow(name=fieldName id=fieldName type='number' min='0' value='0')
-              span.unit.input-group-addon kpl
+          .ticket-classes
+            each ticketClass in ticketClasses
+              - fieldName = 'ticketClass_' + ticketClass.id;
+              label
+                | #{ticketClass.fullName}
+                .remaining
+                  | Lippuja jäljellä:
+                  |
+                  span.remaining__amount
+                  |
+                  | kpl
+                .input-group
+                  input.input.input--narrow.js-ticket-input(name=fieldName type='number' min='0' value='0')
+                  span.unit.input-group-addon kpl
               
           label Lisätietoja (valinnainen)
             textarea.input(name='additionalInfo')
@@ -72,7 +76,7 @@ html(lang='fi')
           
           button#submitForm.btn.btn--primary.btn--big(type='submit' disabled) Varaa
           
-          .message
+        .message
         
       if sponsors.length > 0
         section.box
@@ -90,4 +94,5 @@ html(lang='fi')
         a(href='/rekisteriseloste' target='_blank') Rekisteriseloste
   
   script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f' crossorigin='anonymous')
+  script(src='/scripts/global.js')
   script(src='/scripts/reservationFront.js')

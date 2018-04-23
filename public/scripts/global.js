@@ -275,7 +275,8 @@ function getUserTickets() {
   
   $('.ticket-classes').find('input, select').each(function eachTicketField() {
     const $this = $(this);
-    userTickets += +$this.val() - +$this.attr('data-original-amount');
+    const originalAmount = +$this.attr('data-original-amount') || 0;
+    userTickets += +$this.val() - originalAmount;
   });
   
   return userTickets;
@@ -383,7 +384,7 @@ function printMessage(message, type, $target) {
     formattedMessage = message;
   }
   
-  $message = $('<div>')
+  const $message = $('<div>')
     .addClass('message__content message__content--' + type)
     .html(formattedMessage);
   

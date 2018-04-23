@@ -27,51 +27,12 @@ var ShowSchema = Schema({
   }
 });
 
-/*
-// virtual for year
-ShowSchema
-  .virtual('year')
-  .get(function() {
-    return moment(this.begins).format('YYYY');
-});
-
-// virtual for month
-ShowSchema
-  .virtual('month')
-  .get(function() {
-    return moment(this.begins).format('M');
-});
-
-// virtual for day
-ShowSchema
-  .virtual('day')
-  .get(function() {
-    return moment(this.begins).format('D');
-});
-*/
-
 // virtual for weekday
 ShowSchema
   .virtual('weekday')
   .get(function() {
     return moment(this.begins).format('d');
 });
-
-/*
-// virtual for hour
-ShowSchema
-  .virtual('hour')
-  .get(function() {
-    return moment(this.begins).format('H');
-});
-
-// virtual for minute
-ShowSchema
-  .virtual('minute')
-  .get(function() {
-    return moment(this.begins).format('mm');
-});
-*/
 
 // virtual for lite date
 ShowSchema
@@ -103,11 +64,17 @@ ShowSchema
     return moment(this.begins).format('H.mm');
 });
 
+// Virtual for isPast
+ShowSchema
+  .virtual('isPast')
+  .get(function() {
+    return (new Date() > Date.parse( this.begins ));
+});
+
 ShowSchema.plugin(mongooseLeanVirtuals);
 
-
 // show virtuals
-ShowSchema.set('toJSON', {virtuals: true});
+ShowSchema.set('toJSON', { virtuals: true });
 
 // export model
 module.exports = mongoose.model('Show', ShowSchema);

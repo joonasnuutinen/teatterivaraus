@@ -508,10 +508,11 @@ p {
 .remaining {
   display: none;
   font-size: .9em;
+  color: red;
 }
 
 .remaining--visible {
-  display: inline;
+  display: block;
 }
 
 /*
