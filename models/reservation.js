@@ -95,7 +95,8 @@ ReservationSchema.virtual('total').get(function() {
     tickets: 0,
     price: 0,
     priceString: '',
-    code: ''
+    code: '',
+    restricted: {}
   };
   this.tickets.forEach(function(ticket) {
     var amount = ticket.amount;
@@ -106,6 +107,10 @@ ReservationSchema.virtual('total').get(function() {
     
     if (amount !== 0) {
       codeArray.push(amount.toString() + ' × ' + ticketClass.fullName);
+      
+      if (ticketClass.max < Infinity) {
+        total.restricted[ticketClass._id] = amount;
+      }
     }
   });
   
@@ -114,15 +119,6 @@ ReservationSchema.virtual('total').get(function() {
   
   return total;
 });
-
-/*
-// virtual for reservations
-ReservationSchema.virtual('subReservations', {
-  ref: 'SubReservation',
-  localField: '_id',
-  foreignField: 'reservation'
-});
-*/
 
 // show virtuals
 ReservationSchema.set('toJSON', {virtuals: true});

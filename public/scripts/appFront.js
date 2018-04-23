@@ -10,6 +10,13 @@ $(function() {
       name: {
         label: 'Lippuluokan nimi',
         placeholder: 'esim. Opiskelijat'
+      },
+      max: {
+        label: 'Varattavissa',
+        placeholder: 'Ei rajoitettu',
+        unit: 'kpl',
+        number: true,
+        min: 0
       }
     },
     

@@ -2,7 +2,7 @@
 // GLOBAL FUNCTIONS ==================================================
 // ===================================================================
 'use strict';
-const REMAINING_TRESHOLD = 50;
+const REMAINING_THRESHOLD = 50;
 
 // create and show form
 function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {  
@@ -132,6 +132,14 @@ function createTextGroup(data, schemaOptions, idPrefix, column) {
     textInput = $('<input>')
       .attr('type', 'text');
   }
+  
+  if (schemaOptions[column].number) {
+    textInput.attr('type', 'number');
+    
+    if (schemaOptions[column].min !== undefined) {
+      textInput.attr('min', schemaOptions[column].min);
+    }
+  }
 
   textInput.addClass('edited-field input')
     .attr({
@@ -149,7 +157,7 @@ function createTextGroup(data, schemaOptions, idPrefix, column) {
     textLabel = '';
     textDiv.append(textInput);
   } else if (unit) {
-    var unitSpan = $('span')
+    var unitSpan = $('<span>')
       .addClass('unit input-group-addon')
       .text((unit) ? unit : '');
     
@@ -238,33 +246,52 @@ function populateSelect(node, data, shows, showPast) {
 
 // update remaining counter
 function updateRemaining() {
-  const remaining = getRemaining();
-  $('.remaining__amount').text(remaining);
-  setMaxTickets();
-  
-  if (remaining <= REMAINING_TRESHOLD) {
-    $('.remaining').addClass('remaining--visible');
-  } else {
-    $('.remaining').removeClass('remaining--visible');
-  }
+  $('.remaining__amount').each(function eachTicketClass() {
+    const $this = $(this);
+    const id = $this.attr('data-id');
+    const remaining = getRemaining(id);
+    
+    $this.text(remaining);
+    
+    if (remaining <= REMAINING_THRESHOLD) {
+      $this.parent().addClass('remaining--visible');
+    } else {
+      $this.parent().removeClass('remaining--visible');
+    }
+    
+    setMaxTickets(id);
+  });
 }
 
 // get remaining ticket amount
-function getRemaining() {
-  return getRemainingAtLoad() - getUserTickets();
+function getRemaining(id) {
+  const remainingAtLoad = getRemainingAtLoad();
+  var remainingId = Infinity;
+  
+  if (id && remainingAtLoad[id]) {
+    const $ticketField = $('.js-ticket-input[name="ticketClass_' + id + '"]');
+    const userInput = $ticketField.val();
+    remainingId = remainingAtLoad[id] - userInput;
+  }
+  
+  const remainingTotal = remainingAtLoad.total - getUserTickets();
+  
+  return (remainingId < remainingTotal) ? remainingId : remainingTotal;
 }
 
 // get remaining at load-time
 function getRemainingAtLoad() {
   const $showSelect = $('select[id$=Show]');
   const $selectedOption = $showSelect.children('option[value="' + $showSelect.val() + '"]');
-  return $selectedOption.attr('data-remaining');
+  const remaining = JSON.parse($selectedOption.attr('data-remaining'));
+
+  return remaining;
 }
 
 // set max ticket amount
-function setMaxTickets() {
-  $('.ticket-classes').find('input, select').each(function eachTicketField() {
-    const maxValue = getRemaining() + +$(this).val();
+function setMaxTickets(id) {
+  $('.ticket-classes').find('input[name="ticketClass_' + id + '"]').each(function eachTicketField() {
+    const maxValue = getRemaining(id) + +$(this).val();
     $(this).attr('max', maxValue);
   });
 }

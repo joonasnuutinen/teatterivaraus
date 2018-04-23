@@ -2,6 +2,7 @@ $(function documentReady() {
   updateRemaining();
   
   $('.js-ticket-input').on('input', updateRemaining);
+  $('select[name="show"]').change(updateRemaining);
   
   $('#reservation-form').submit(function(evt) {
     evt.preventDefault();

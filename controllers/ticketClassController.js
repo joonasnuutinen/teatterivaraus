@@ -1,51 +1,61 @@
 var TicketClass = require('../models/ticketClass');
 var Reservation = require('../models/reservation');
 
+const { body, validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
+
 // ticket prices
 exports.ticketPrices = function(req, res, next) {
   var options = {
     schema: 'ticketClass',
     columnsView: 'name priceWithSymbol',
-    columnsEdit: 'name price'
+    columnsEdit: 'name price max'
   };
   res.render('rows', {title: 'Lippujen hinnat', options: options, theatre: req.user});
 };
 
 // POST new class
-exports.newTicketPost = function(req, res, next) {
-  req.body.newPrice = req.body.newPrice.replace(',', '.');
+exports.newTicketPost = [
+  // Replace comma with dot
+  (req, res, next) => {
+    req.body.newPrice = req.body.newPrice.replace(',', '.');
+    next();
+  },
   
-  req.checkBody('newName', 'Lippuluokan nimi puuttuu.').notEmpty();
+  // Validate input
+  body('newName', 'Lippuluokan nimi puuttuu.').isLength({ min: 1 }).trim(),
+  body('newPrice').isLength({ min: 1 }).trim().withMessage('Lipun hinta puuttuu')
+    .isFloat({ min: 0 }).withMessage('Lipun hinta ei ole positiivinen luku.'),
+  body('newMax', 'Virheellinen maksimimäärä').optional({ checkFalsy: true }).isInt(),
   
-  req.checkBody('newPrice', 'Lipun hinta puuttuu.').notEmpty();
-  req.checkBody('newPrice', 'Lipun hinta ei ole positiivinen luku.').isFloat({min: 0});
+  // Sanitize input
+  sanitizeBody('newName').escape().trim(),
+  sanitizeBody('newPrice').escape().trim().toFloat(),
+  sanitizeBody('newMax').escape().trim().toInt(),
   
-  req.sanitize('newName').escape();
-  req.sanitize('newName').trim();
-  req.sanitize('newPrice').escape();
-  req.sanitize('newPrice').trim();
-  req.sanitize('newPrice').toFloat();
-  
-  req.getValidationResult().then(function(errors) {
-    if (errors.isEmpty()) {
-      var ticketClass = new TicketClass({
-        price: req.body.newPrice,
-        theatre: req.user._id,
-        name: req.body.newName
-      });
-  
-      ticketClass.save(function(err) {
-        res.send(
-          (err === null) ? {errors: []} : {errors: [{msg:'Tallennus epäonnistui, yritä uudelleen.'}]}
-        );
-      });
-    } else {
-      res.send({
-        errors: errors.array({ onlyFirstError: true })
-      });
+  // Process request
+  (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+      res.send({ errors: errors.array({ onlyFirstError: true }) });
+      return;
     }
-  });
-};
+    
+    var ticketClass = new TicketClass({
+      price: req.body.newPrice,
+      theatre: req.user._id,
+      name: req.body.newName,
+      max: req.body.newMax
+    });
+    
+    ticketClass.save(function(err) {
+      res.send(
+        (err === null) ? { errors: [] } : { errors: [{ msg:'Tallennus epäonnistui, yritä uudelleen.' }] }
+      );
+    });
+  }
+];
 
 // ticket prices JSON get
 exports.ticketPricesJSON = function(req, res, next) {
@@ -59,7 +69,7 @@ exports.ticketPricesJSON = function(req, res, next) {
 
 // GET one ticket class by id via AJAX
 exports.getById = function(req, res, next) {
-  TicketClass.findById(req.params.id, 'name price')
+  TicketClass.findById(req.params.id)
     .exec(function(err, data) {
       if (err) return next(err);
       res.json(data);
@@ -106,42 +116,49 @@ exports.delete = function(req, res, next) {
 };
 
 // PUT to ticket class via AJAX
-exports.put = function(req, res, next) {
-  req.body.editedPrice = req.body.editedPrice.replace(',', '.');
-  
-  req.checkBody('editedName', 'Lippuluokan nimi puuttuu.').notEmpty();
-  
-  req.checkBody('editedPrice', 'Lipun hinta puuttuu.').notEmpty();
-  req.checkBody('editedPrice', 'Lipun hinta ei ole positiivinen luku.').isFloat({min: 0});
-  
-  req.sanitize('editedName').escape();
-  req.sanitize('editedName').trim();
-  req.sanitize('editedPrice').escape();
-  req.sanitize('editedPrice').trim();
-  req.sanitize('editedPrice').toFloat();
-  
-  req.getValidationResult().then(function(errors) {
-    var message = {
-      errors: []
-    };
+exports.put = [
+  // Replace comma with dot
+  (req, res, next) => {
+    console.log('replace start');
     
-    if (errors.isEmpty()) {
-      var ticketClass = new TicketClass({
-        price: req.body.editedPrice,
-        theatre: req.user._id,
-        name: req.body.editedName,
-        _id: req.params.id
-      });
-      
-      TicketClass.findByIdAndUpdate(req.params.id, ticketClass, {}, function(err) {
-        if (err) {
-          message.errors.push('Muokkaus epäonnistui, yritä uudelleen.');
-        }
-      });
-    } else {
-      message.errors = message.errors.concat(errors.array({ onlyFirstError: true }));
+    req.body.editedPrice = req.body.editedPrice.replace(',', '.');
+    console.log('replace done');
+    next();
+  },
+  
+  // Validate input
+  body('editedName', 'Lippuluokan nimi puuttuu.').isLength({ min: 1 }).trim(),
+  body('editedPrice').isLength({ min: 1 }).trim().withMessage('Lipun hinta puuttuu')
+    .isFloat({ min: 0 }).withMessage('Lipun hinta ei ole positiivinen luku.'),
+  body('editedMax', 'Virheellinen maksimimäärä').isInt(),
+  
+  // Sanitize input
+  sanitizeBody('editedName').escape().trim(),
+  sanitizeBody('editedPrice').escape().trim().toFloat(),
+  sanitizeBody('editedMax').escape().trim().toInt(),
+  
+  // Process request
+  (req, res, next) => {
+    console.log('process start');
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+      res.send({ errors: errors.array({ onlyFirstError: true }) });
+      return;
     }
     
-    res.send(message);
-  });
-};
+    var ticketClass = new TicketClass({
+      price: req.body.editedPrice,
+      theatre: req.user._id,
+      name: req.body.editedName,
+      max: req.body.editedMax,
+      _id: req.params.id
+    });
+    
+    TicketClass.findByIdAndUpdate(req.params.id, ticketClass, {}, function(err) {
+      res.send(
+        (err === null) ? { errors: [] } : { errors: [{ msg: 'Muokkaus epäonnistui, yritä uudelleen.' }] }
+      );
+    });
+  }
+];

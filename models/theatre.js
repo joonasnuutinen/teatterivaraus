@@ -33,7 +33,8 @@ var TheatreSchema = Schema({
 	},
   
   capacity: {
-    type: Number
+    type: Number,
+    default: Infinity
   },
   
   password: {

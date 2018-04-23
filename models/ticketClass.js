@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var currency = '€';
+const currency = '€';
 
 var TicketClassSchema = Schema({
   price: {
@@ -19,6 +19,11 @@ var TicketClassSchema = Schema({
   name: {
     type: String,
     required: true
+  },
+  
+  max: {
+    type: Number,
+    default: Infinity
   }
 });
 

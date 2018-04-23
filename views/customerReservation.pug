@@ -47,7 +47,7 @@ html(lang='fi')
             select#newShow.input(name='show' required)
               each show in shows
                 - const isDisabled = ( isPast || ! show.enable || show.remaining < 1 );
-                - const additionalInfo = (show.remaining < 1) ? ' LOPPUUNMYYTY' : '';
+                - const additionalInfo = (show.remaining.total < 1) ? ' LOPPUUNMYYTY' : '';
                 option(value=show._id data-remaining=show.remaining disabled=isDisabled)= show.beginsPretty + additionalInfo
           
           .ticket-classes
@@ -58,7 +58,7 @@ html(lang='fi')
                 .remaining
                   | Lippuja jäljellä:
                   |
-                  span.remaining__amount
+                  span.remaining__amount(data-id=ticketClass._id)
                   |
                   | kpl
                 .input-group

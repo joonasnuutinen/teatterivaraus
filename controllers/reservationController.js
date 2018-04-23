@@ -374,7 +374,11 @@ exports.customerGet = function(req, res, next) {
       
       data.shows.forEach(function(show) {
         show.reservationCount = 0;
-        show.remaining = theatre.capacity;
+        show.remaining = { total: theatre.capacity };
+        
+        data.ticketClasses.forEach(function eachTicketClass(ticketClass) {
+          show.remaining[ticketClass._id] = ticketClass.max;
+        });
       });
       
       data.reservations.forEach(function(reservation) {
@@ -386,7 +390,11 @@ exports.customerGet = function(req, res, next) {
         
         var thisShow = data.shows[showIndex];
         thisShow.reservationCount += ticketAmount;
-        thisShow.remaining -= ticketAmount;
+        thisShow.remaining.total -= ticketAmount;
+        
+        for (let ticketClass in reservation.total.restricted) {
+          thisShow.remaining[ticketClass] -= reservation.total.restricted[ticketClass];
+        }
       });
       
       res.render('customerReservation', {
