@@ -32,7 +32,11 @@ function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {
       
       // add checkbox
       } else if ( column == 'marketingPermission' || column == 'enable' ) {
-        formGroup = createCheckboxGroup( data, schemaOptions, idPrefix, column )
+        formGroup = createCheckboxGroup( data, schemaOptions, idPrefix, column );
+      
+      // add image
+      } else if (column == 'image') {
+        formGroup = createImageGroup(data, schemaOptions, idPrefix, column);
       
       // add text input
       } else {
@@ -204,6 +208,27 @@ function createCheckboxGroup(data, schemaOptions, idPrefix, column) {
   checkboxDiv.appendChild( checkboxLabel );
   
   return ['', checkboxDiv];
+}
+
+// create form group for image
+function createImageGroup(data, schemaOptions, idPrefix, column) {
+  const inputId = idPrefix + capital(column);
+  const columnOptions = schemaOptions[column];
+  
+  const $imageGroup = $('<div>').addClass('form-group');
+  const $imageLabel = $('<label>').text(columnOptions.label);
+  
+  const $input = $('<input>')
+    .addClass('edited-field input')
+    .attr({
+      id: inputId,
+      type: 'file',
+      accept: 'image/*'
+    });
+  
+  $imageLabel.append($input).appendTo($imageGroup);
+  
+  return ['', $imageGroup];
 }
 
 // create form group for show

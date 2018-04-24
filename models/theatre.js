@@ -44,6 +44,14 @@ var TheatreSchema = Schema({
     default: 0
   },
   
+  reservationInstruction: {
+    type: String
+  },
+  
+  emailInstruction: {
+    type: String
+  },
+  
   password: {
     type: String,
     required: true

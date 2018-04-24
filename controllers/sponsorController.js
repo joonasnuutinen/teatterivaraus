@@ -5,7 +5,7 @@ exports.sponsors = function(req, res, next) {
   var options = {
     schema: 'sponsor',
     columnsView: 'name description urlView order',
-    columnsEdit: 'name description url order',
+    columnsEdit: 'name description url image order',
   };
   res.render('rows', {title: 'Sponsorit', options: options, theatre: req.user});
 };

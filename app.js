@@ -18,6 +18,7 @@ var expressTitle = require('express-title');
 var compression = require( 'compression' );
 var helmet = require( 'helmet' );
 const MongoStore = require('connect-mongo')(expressSession);
+const fileUpload = require('express-fileupload');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -79,6 +80,9 @@ app.use( compression() ); // compress all routes
 app.use( helmet() );
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Configure file upload
+app.use(fileUpload());
 
 // configure passport
 app.use(expressSession({
