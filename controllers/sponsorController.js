@@ -1,14 +1,56 @@
 var Sponsor = require('../models/sponsor.js');
 
+const { body, validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
+
 // GET sponsors
 exports.sponsors = function(req, res, next) {
-  var options = {
-    schema: 'sponsor',
-    columnsView: 'name description urlView order',
-    columnsEdit: 'name description url image order',
-  };
-  res.render('rows', {title: 'Sponsorit', options: options, theatre: req.user});
+  res.render('dynamic', { title: 'Sponsorit', content: 'sponsors', theatre: req.user });
 };
+
+// POST sponsor to database
+exports.save = [
+  // Validate input
+  body('name', 'Nimi puuttuu').isLength({ min: 1 }).trim(),
+  body('description', 'Kuvaus puuttuu').isLength({ min: 1 }).trim(),
+  body('url').isLength({ min: 1 }).trim().withMessage('Web-osoite puuttuu')
+    .isURL().withMessage('Virheellinen web-osoite'),
+  
+  // Sanitize input
+  sanitizeBody('name').trim().escape(),
+  sanitizeBody('description').trim().escape(),
+  sanitizeBody('url').trim(),
+  
+  // Process request
+  (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+      res.send({ errors: errors.array() });
+      return;
+    }
+    
+    var data = req.body;
+    var sponsor = new Sponsor(data);
+    
+    if (!data._id) {
+      // Save as a new doc
+      doc.save(callback);
+    } else {
+      // Update existing sponsor
+      Sponsor.findByIdAndUpdate(data._id, sponsor, {}, callback);
+    }
+    
+    function callback(err) {
+      if (err) {
+        res.send({ errors: 'Tallennus epäonnistui, yritä uudelleen.' });
+        return;
+      }
+      
+      res.send({ msg: 'Sponsori on tallennettu.', data: sponsor });
+    }
+  }
+];
 
 // POST new sponsor
 exports.post = function(req, res, next) {  
@@ -61,8 +103,6 @@ exports.post = function(req, res, next) {
     });
     
   });
-  
-  
 };
 
 // GET sponsors JSON

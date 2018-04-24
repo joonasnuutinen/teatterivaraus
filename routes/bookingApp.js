@@ -94,7 +94,7 @@ router.put('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.put);
 // SPONSORS
 // ===========================================================================
 router.get('/sponsorit', isLoggedIn, sponsorController.sponsors);
-router.post('/sponsorit', isLoggedIn, sponsorController.post);
+router.post('/sponsorit', isLoggedIn, sponsorController.save);
 
 router.get('/sponsorit/json', isLoggedIn, sponsorController.getJSON);
 

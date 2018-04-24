@@ -135,6 +135,48 @@ $(function() {
   } else {
     userEvents( null );
   }
+  
+  const $dynamic = $('#dynamic');
+  
+  if ($dynamic.length > 0) {
+    const contentOptions = {
+      sponsors: {
+        formFields: [
+          {
+            name: 'Nimi',
+            slug: 'name',
+            element: 'input',
+            type: 'text',
+            required: true
+          },
+          {
+            name: 'Kuvaus',
+            slug: 'description',
+            element: 'textarea',
+            required: true
+          },
+          {
+            name: 'Web-osoite',
+            slug: 'url',
+            element: 'input',
+            type: 'url',
+            required: true
+          }
+        ],
+        genitive: 'sponsorin',
+        previewFields: ['name', 'description', 'urlView'],
+        rowType: 'sponsor'
+      }
+    };
+    
+    const contentType = $dynamic.attr('data-content');
+    const options = contentOptions[contentType];
+    
+    if (options) {
+      const contentObject = Object.create(RowContainer);
+      contentObject.init(options);
+    }
+  }
 });
 
 // ================================================================
@@ -145,6 +187,7 @@ $(function() {
 const RowContainer = {
   formFields: [],
   genitive: 'rivin',
+  previewFields: [],
   rows: {},
   rowType: 'row',
   target: $('#dynamic'),
@@ -304,6 +347,21 @@ const RowContainer = {
     const row = this.rows[id];
     const self = this;
     
+    var previewFields = [];
+    
+    this.previewFields.forEach(function eachField(field, i) {
+      var $field;
+      
+      if (i === 0) {
+        $field = $('<h2>').addClass('data-row__title');
+      } else {
+        $field = $('<p>').addClass('data-row__field');
+      }
+      
+      $field.text(row[field]);
+      previewFields.push($field);
+    });
+    
     const $title = $('<h2>')
       .addClass('data-row__title')
       .text(row.title);
@@ -340,7 +398,7 @@ const RowContainer = {
       .addClass('message');
     
     $row.append(
-      $title,
+      previewFields,
       $editButton,
       $deleteButton,
       $upButton,
@@ -479,6 +537,8 @@ const RowContainer = {
       })
       .text('Peruuta');
     
+    const $message = $('<div>').addClass('message');
+    
     $form.append($submitButton, $cancelButton).appendTo($target);
   },
   
@@ -508,6 +568,10 @@ const RowContainer = {
     const posting = $.post(url, data);
     
     posting.done(function postingDone(response) {
+      if (response.errors) {
+        printMessage(response.errors, 'error', );
+      }
+      
       const row = response.data;
       self.rows[row._id] = row;
       
