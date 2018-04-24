@@ -44,9 +44,12 @@ html(lang='fi')
             input.input(name='phone' type='tel')
           
           label Näytös
+            if theatre.closeBefore > 0
+              - const closingTimeString = (Number.isInteger(theatre.closeBefore / 120)) ? theatre.closeBefore / 60 + ' h' : theatre.closeBefore + ' min';
+              .label__info Varaus suljetaan #{closingTimeString} ennen näytöksen alkua
             select#newShow.input(name='show' required)
               each show in shows
-                - const isDisabled = ( isPast || ! show.enable || show.remaining < 1 );
+                - const isDisabled = (show.isClosed || ! show.enable || (show.remaining.total != null && show.remaining.total < 1));
                 - const additionalInfo = (show.remaining.total < 1) ? ' LOPPUUNMYYTY' : '';
                 option(value=show._id data-remaining=show.remaining disabled=isDisabled)= show.beginsPretty + additionalInfo
           

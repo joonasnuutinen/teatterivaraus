@@ -144,6 +144,41 @@ exports.delete = function(req, res, next) {
   });
 };
 
+exports.updateShowData = function(data, theatre) {
+  data.shows.forEach(function(show) {
+    show.reservationCount = 0;
+    show.remaining = { total: theatre.capacity };
+    
+    data.ticketClasses.forEach(function eachTicketClass(ticketClass) {
+      show.remaining[ticketClass._id] = ticketClass.max;
+    });
+    
+    const closingTime = new Date(show.begins);
+    const newMinute = closingTime.getMinutes() - theatre.closeBefore;
+    closingTime.setMinutes(newMinute);
+    
+    show.isClosed = (new Date() > closingTime);
+  });
+  
+  data.reservations.forEach(function(reservation) {
+    var showId = reservation.show;
+    var ticketAmount = reservation.total.tickets;
+    var showIndex = data.shows.findIndex(function(show) {
+      return showId.equals(show._id);
+    });
+    
+    var thisShow = data.shows[showIndex];
+    thisShow.reservationCount += ticketAmount;
+    thisShow.remaining.total -= ticketAmount;
+    
+    for (let ticketClass in reservation.total.restricted) {
+      thisShow.remaining[ticketClass] -= reservation.total.restricted[ticketClass];
+    }
+  });
+  
+  return data;
+};
+
 // ==================================================================
 // OTHER FUNCTIONS ==================================================
 // ==================================================================

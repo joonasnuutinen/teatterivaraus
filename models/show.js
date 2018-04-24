@@ -64,13 +64,6 @@ ShowSchema
     return moment(this.begins).format('H.mm');
 });
 
-// Virtual for isPast
-ShowSchema
-  .virtual('isPast')
-  .get(function() {
-    return (new Date() > Date.parse( this.begins ));
-});
-
 ShowSchema.plugin(mongooseLeanVirtuals);
 
 // show virtuals

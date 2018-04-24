@@ -12,6 +12,8 @@ var Theatre = require('../models/theatre');
 var Sponsor = require( '../models/sponsor' );
 var mailgun = require( 'mailgun-js' );
 
+const showController = require('./showController');
+
 try {
   require('dotenv').load();
 } catch(err) {}
@@ -266,27 +268,6 @@ exports.stats = function(req, res, next) {
   });
 };
 
-/* REMOVED
-// get stats for one show
-exports.showStats = function(req, res, next) {
-  async.parallel({
-    reservations: function(callback) {
-      Reservation.find().exec(callback);
-    },
-    shows: function(callback) {
-      Show.find().sort([['begins', 'ascending']]);
-    },
-    ticketClasses: function(callback) {
-      TicketClass.find().sort([['price', 'descending'], ['name', 'ascending']]).exec(callback);
-    }, function(err, data) {
-      if (err) return next(err);
-      data.ticketClasses.forEach();
-    }
-  });
-  
-};
-*/
-
 // print reservations in html format
 exports.printHtml = function(req, res, next) {
   async.parallel({
@@ -372,30 +353,7 @@ exports.customerGet = function(req, res, next) {
         image: siteUrl + '/images/og.png'
       };
       
-      data.shows.forEach(function(show) {
-        show.reservationCount = 0;
-        show.remaining = { total: theatre.capacity };
-        
-        data.ticketClasses.forEach(function eachTicketClass(ticketClass) {
-          show.remaining[ticketClass._id] = ticketClass.max;
-        });
-      });
-      
-      data.reservations.forEach(function(reservation) {
-        var showId = reservation.show;
-        var ticketAmount = reservation.total.tickets;
-        var showIndex = data.shows.findIndex(function(show) {
-          return showId.equals(show._id);
-        });
-        
-        var thisShow = data.shows[showIndex];
-        thisShow.reservationCount += ticketAmount;
-        thisShow.remaining.total -= ticketAmount;
-        
-        for (let ticketClass in reservation.total.restricted) {
-          thisShow.remaining[ticketClass] -= reservation.total.restricted[ticketClass];
-        }
-      });
+      showController.updateShowData(data, theatre);
       
       res.render('customerReservation', {
         title: title,

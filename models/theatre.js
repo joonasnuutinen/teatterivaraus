@@ -34,7 +34,14 @@ var TheatreSchema = Schema({
   
   capacity: {
     type: Number,
+    set: nanToInfinity,
     default: Infinity
+  },
+  
+  closeBefore: {
+    type: Number,
+    set: nanToZero,
+    default: 0
   },
   
   password: {
@@ -76,3 +83,21 @@ TheatreSchema.methods.validPassword = function(password) {
 
 // export model
 module.exports = mongoose.model('Theatre', TheatreSchema);
+
+// FUNCTIONS ========================================
+function nanToZero(n) {
+  return nanToX(n, 0);
+}
+
+function nanToInfinity(n) {
+  return nanToX(n, Infinity);
+}
+
+function nanToNull(n) {
+  return nanToX(n, null);
+}
+
+function nanToX(n, x) {
+  if (isNaN(n)) return x;
+  return n;
+}

@@ -119,10 +119,7 @@ exports.delete = function(req, res, next) {
 exports.put = [
   // Replace comma with dot
   (req, res, next) => {
-    console.log('replace start');
-    
     req.body.editedPrice = req.body.editedPrice.replace(',', '.');
-    console.log('replace done');
     next();
   },
   
@@ -139,7 +136,6 @@ exports.put = [
   
   // Process request
   (req, res, next) => {
-    console.log('process start');
     const errors = validationResult(req);
     
     if (!errors.isEmpty()) {

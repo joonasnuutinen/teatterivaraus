@@ -65,10 +65,18 @@ function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
     
     var $formGroupDiv = $('<div>').addClass('input-group');
     
+    const $remainingAmount = $('<span>')
+      .addClass('remaining__amount')
+      .attr('data-id', ticketClass._id);
+    
+    const $remaining = $('<div>')
+      .addClass('remaining')
+      .append('Jäljellä: ', $remainingAmount, ' kpl');
+    
     var $ticketClassLabel = $('<label>')
       .attr('for', inputId)
       .text(ticketClass.fullName)
-      .append('<br><span class="remaining">Jäljellä: <span class="remaining__amount"></span> kpl</span>');
+      .append($remaining);
     
     var $numberField;
     
@@ -76,19 +84,20 @@ function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
       const originalAmount = (data && data.tickets[index]) ? data.tickets[index].amount : 0;
       
       $numberField = $('<input>')
-        .addClass('edited-field input input--narrow')
+        .addClass('edited-field input input--narrow js-ticket-input')
         .attr({
           type: 'number',
-          min: 0
+          min: 0,
+          name: inputId
         })
         .val(originalAmount)
         .attr('data-original-amount', originalAmount)
         .on('input', function numberFieldInput() {
-          updateRemaining();
+          updateRemaining(true);
         });
     } else {
       $numberField = $('<select>')
-        .addClass('edited-field input input--narrow');
+        .addClass('edited-field input input--narrow js-ticket-input');
       
       for (var i = 0; i <= 10; i++) {
         var numberOption = document.createElement('option');
@@ -211,7 +220,9 @@ function createShowGroup(data, schemaOptions, idPrefix, shows, showPast) {
   var showSelect = $('<select>')
     .addClass('edited-field show-select input')
     .attr('id', selectId)
-    .change(updateRemaining);
+    .change(function showSelectChanged() {
+      updateRemaining(true);
+    });
   
   showSelect = populateSelect(showSelect, data, shows, showPast);
   
@@ -227,7 +238,7 @@ function populateSelect(node, data, shows, showPast) {
     var isPast = new Date() > Date.parse( show.begins );
     var optionObject = $('<option>')
       .val(show._id)
-      .attr('data-remaining', show.remaining)
+      .attr('data-remaining', JSON.stringify(show.remaining))
       .text(show.beginsPretty);
     
     if ( ( isPast || ! show.enable ) && ! showPast ) {
@@ -245,7 +256,7 @@ function populateSelect(node, data, shows, showPast) {
 }
 
 // update remaining counter
-function updateRemaining() {
+function updateRemaining(allowOver) {
   $('.remaining__amount').each(function eachTicketClass() {
     const $this = $(this);
     const id = $this.attr('data-id');
@@ -259,7 +270,7 @@ function updateRemaining() {
       $this.parent().removeClass('remaining--visible');
     }
     
-    setMaxTickets(id);
+    if (!allowOver) setMaxTickets(id);
   });
 }
 
@@ -269,7 +280,7 @@ function getRemaining(id) {
   var remainingId = Infinity;
   
   if (id && remainingAtLoad[id]) {
-    const $ticketField = $('.js-ticket-input[name="ticketClass_' + id + '"]');
+    const $ticketField = $('.js-ticket-input[name$="icketClass_' + id + '"]');
     const userInput = $ticketField.val();
     remainingId = remainingAtLoad[id] - userInput;
   }
@@ -284,6 +295,10 @@ function getRemainingAtLoad() {
   const $showSelect = $('select[id$=Show]');
   const $selectedOption = $showSelect.children('option[value="' + $showSelect.val() + '"]');
   const remaining = JSON.parse($selectedOption.attr('data-remaining'));
+  
+  for (let key in remaining) {
+    if (remaining[key] === null) remaining[key] = Infinity;
+  }
 
   return remaining;
 }
@@ -407,6 +422,8 @@ function printMessage(message, type, $target) {
     message.forEach(function(item) {
       formattedMessage += item.msg + '<br>';
     });
+  } else if (typeof message == 'object') {
+    formattedMessage = 'Virhe: "' + message.message + '". Kopioi tämä viesti ja ota yhteyttä tukeen.';
   } else {
     formattedMessage = message;
   }

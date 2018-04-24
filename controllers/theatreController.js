@@ -10,6 +10,8 @@ var registerTitle = 'Tilaa';
 var mailgun = require( 'mailgun-js' );
 var request = require('request');
 
+const showController = require('./showController');
+
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
@@ -115,18 +117,20 @@ exports.settingsPost = [
   // Validate fields
   body('playName', 'Kirjoita näytelmän nimi.').isLength({ min: 1 }).trim(),
   body('capacity', 'Virheellinen varausten enimmäismäärä.').optional({ checkFalsy: true }).isInt({ min: 0 }),
+  body('closeBefore', 'Virheellinen varausten sulkemisaika.').optional({ checkFalsy: true }).isInt({ min: 0 }),
   
   // Sanitize fields
   sanitizeBody('playName').trim().escape(),
   sanitizeBody('playDescription').trim().escape(),
   sanitizeBody('capacity').toInt(),
+  sanitizeBody('closeBefore').toInt(),
   
   // Process request
   (req, res, next) => {
     const errors = validationResult(req);
     
     if (!errors.isEmpty()) {
-      res.send({ errors: errors.array() });
+      res.send({ errors: errors.array({ onlyFirstError: true }) });
       return;
     }
     
@@ -209,22 +213,9 @@ exports.json = function(req, res, next) {
   }, function(err, data) {
     if (err) return next(err);
 
-    data.shows.forEach(function(show) {
-      show.reservationCount = 0;
-      show.remaining = data.theatre.capacity;
-    });
+    showController.updateShowData(data, data.theatre);
     
-    data.reservations.forEach(function(reservation) {
-      var showId = reservation.show;
-      var ticketAmount = reservation.total.tickets;
-      var showIndex = data.shows.findIndex(function(show) {
-        return showId.equals(show._id);
-      });
-      
-      var thisShow = data.shows[showIndex];
-      thisShow.reservationCount += ticketAmount;
-      thisShow.remaining -= ticketAmount;
-    });
+    console.log(data.shows);
     
     data.theatre.shows = data.shows;
     
