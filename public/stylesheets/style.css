@@ -476,6 +476,7 @@ p {
   margin: .1rem 0 .7rem;
   border: 1px solid #bbb;
   border-radius: 2px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .input--narrow {
