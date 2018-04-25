@@ -211,7 +211,7 @@ const Input = {
     if (attr.accept) $formField.attr('accept', attr.accept);
     if (value != '') $formField.val(value);
     
-    return $formField;
+    return $label.append($formField);
   }
 };
 
