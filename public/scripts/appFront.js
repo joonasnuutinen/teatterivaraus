@@ -143,24 +143,31 @@ $(function() {
       sponsors: {
         formFields: [
           {
-            name: 'Nimi',
+            label: 'Nimi',
             slug: 'name',
             element: 'input',
             type: 'text',
             required: true
           },
           {
-            name: 'Kuvaus',
+            label: 'Kuvaus',
             slug: 'description',
             element: 'textarea',
             required: true
           },
           {
-            name: 'Web-osoite',
+            label: 'Web-osoite',
             slug: 'url',
             element: 'input',
             type: 'url',
             required: true
+          },
+          {
+            label: 'Kuva',
+            slug: 'image',
+            element: 'input',
+            type: 'file',
+            accept: 'image/*'
           }
         ],
         genitive: 'sponsorin',
@@ -182,6 +189,31 @@ $(function() {
 // ================================================================
 // OBJECTS
 // ================================================================
+
+const Input = {
+  create: function(attr, value) {
+    const $label = $('<label>').text(attr.label);
+    const element = attr.element;
+    const slug = attr.slug;
+    
+    const $formField = $('<' + element + '>')
+      .addClass('input js-input')
+      .attr({
+        name: slug
+      })
+      .prop('required', attr.required);
+    
+    if (element == 'input') {
+      $formField.attr('type', attr.type);
+    }
+    
+    if (attr.class) $formField.addClass(attr.class);
+    if (attr.accept) $formField.attr('accept', attr.accept);
+    if (value != '') $formField.val(value);
+    
+    return $formField;
+  }
+};
 
 // Prototype for row methods
 const RowContainer = {
@@ -498,30 +530,13 @@ const RowContainer = {
       });
     
     this.formFields.forEach(function eachFormField(field) {
-      const $label = $('<label>').text(field.name);
-      const element = field.element;
-      const slug = field.slug;
-      
-      const $formField = $('<' + element + '>')
-        .addClass('input js-input')
-        .attr({
-          name: slug
-        })
-        .prop('required', field.required);
-      
-      if (element == 'input') {
-        $formField.attr('type', field.type);
-      }
-      
-      const customClass = field.class;
-      
-      if (customClass) $formField.addClass(customClass);
-      
+      // TODO
       const id = $target.attr('data-id');
-      
-      if (id) $formField.val(self.rows[id][slug]);
-      
-      $label.append($formField).appendTo($form);
+      const name = field.slug;
+      const value = (id) ? self.rows[id][name] : '';
+      const $formField = Object.create(Input).create(field, value);
+
+      $form.append($formField);
     });
     
     const $submitButton = $('<button>')
