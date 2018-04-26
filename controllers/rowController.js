@@ -23,5 +23,5 @@ exports.orderRows = function(rows, rowOrder) {
     rows.splice(i, 1);
   });
   
-  return orderedRows;
+  return orderedRows.concat(rows);
 };

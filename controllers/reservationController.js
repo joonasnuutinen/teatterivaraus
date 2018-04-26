@@ -327,6 +327,7 @@ exports.customerGet = function(req, res, next) {
       sponsors: function(callback) {
         Sponsor
           .find({ theatre: id })
+          .sort([['order', 'ascending']])
           .exec(callback);
       },
       

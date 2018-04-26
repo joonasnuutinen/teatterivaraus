@@ -114,7 +114,7 @@ exports.post = function(req, res, next) {
 
 // GET sponsors JSON
 exports.getJSON = function(req, res, next) {
-  Sponsor.find({theatre: req.user._id}).exec(function(err, sponsors) {
+  Sponsor.find({theatre: req.user._id}).sort([['order', 'ascending']]).exec(function(err, sponsors) {
     if (err) return next(err);
     
     const orderedSponsors = rowController.orderRows(sponsors, req.user.sponsorOrder);
