@@ -5,6 +5,7 @@
 var Theatre = require('../models/theatre');
 var Doc = require('../models/doc');
 const Setting = require('../models/setting');
+const rowController = require('./rowController');
 
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -53,7 +54,7 @@ exports.getJSON = function(req, res, next) {
   }, function(err, data) {
     if (err) return next(err);
     
-    var orderedDocs = orderDocs(data.docs, data.settings.docOrder);
+    var orderedDocs = rowController.orderRows(data.docs, data.settings.docOrder);
     
     res.json(orderedDocs);
   });

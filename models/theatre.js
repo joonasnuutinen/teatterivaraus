@@ -52,6 +52,11 @@ var TheatreSchema = Schema({
     type: String
   },
   
+  sponsorOrder: {
+    type: [Schema.Types.ObjectId],
+    ref: 'Sponsor'
+  },
+  
   password: {
     type: String,
     required: true

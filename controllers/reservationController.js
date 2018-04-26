@@ -13,6 +13,7 @@ var Sponsor = require( '../models/sponsor' );
 var mailgun = require( 'mailgun-js' );
 
 const showController = require('./showController');
+const rowController = require('./rowController');
 
 try {
   require('dotenv').load();
@@ -326,7 +327,6 @@ exports.customerGet = function(req, res, next) {
       sponsors: function(callback) {
         Sponsor
           .find({ theatre: id })
-          .sort([['order', 'ascending']])
           .exec(callback);
       },
       
@@ -354,6 +354,8 @@ exports.customerGet = function(req, res, next) {
       };
       
       showController.updateShowData(data, theatre);
+      
+      data.sponsors = rowController.orderRows(data.sponsors, theatre.sponsorOrder);
       
       res.render('customerReservation', {
         title: title,

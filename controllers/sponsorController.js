@@ -1,5 +1,8 @@
-var Sponsor = require('../models/sponsor.js');
+var Sponsor = require('../models/sponsor');
+const Theatre = require('../models/theatre');
+const rowController = require('./rowController');
 const aws = require('aws-sdk');
+const async = require('async');
 
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -111,12 +114,13 @@ exports.post = function(req, res, next) {
 
 // GET sponsors JSON
 exports.getJSON = function(req, res, next) {
-  Sponsor.find({theatre: req.user._id})
-    .sort([['order', 'ascending']])
-    .exec(function(err, sponsors) {
-      if (err) return next(err);
-      res.json(sponsors);
-    });
+  Sponsor.find({theatre: req.user._id}).exec(function(err, sponsors) {
+    if (err) return next(err);
+    
+    const orderedSponsors = rowController.orderRows(sponsors, req.user.sponsorOrder);
+    
+    res.json(orderedSponsors);
+  });
 };
 
 // get one sponsor in JSON format
@@ -214,5 +218,26 @@ exports.delete = function(req, res, next) {
     }
     
     res.end();
+  });
+};
+
+// Save order
+exports.order = function(req, res, next) {
+  Theatre.findById(req.user._id).exec(function theatreFound(err, theatre) {
+    if (err) return next(err);
+    
+    if (!theatre) {
+      theatre = new Theatre();
+    }
+    
+    theatre.sponsorOrder = req.body['sponsorOrder[]'];
+    
+    theatre.save(function theatreSaved(err) {
+      if (err) {
+        res.send({ errors: err });
+      } else {
+        res.send({ msg: 'Järjestyksen vaihto onnistui.' });
+      }
+    });
   });
 };

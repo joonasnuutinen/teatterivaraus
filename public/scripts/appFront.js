@@ -432,6 +432,12 @@ const RowContainer = {
     $form.remove();
   },
   
+  /**
+   * Move row
+   * @param $row (jQuery object) Row to move
+   * @param direction (String 'up'|'down')
+   * @return (Boolean) Whether the row was moved or not
+   */
   move: function($row, direction) {
     var $row2;
     
@@ -458,7 +464,9 @@ const RowContainer = {
     
     $.post(document.location.pathname + '/order', data)
       .done(function postingDone(response) {
-        //console.log(response);
+        if (response.errors) {
+          printMessage('Järjestyksen vaihto epäonnistui.', 'error', $row.find('.message'));
+        }
       });
     
     return true;
