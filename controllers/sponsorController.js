@@ -209,16 +209,10 @@ exports.put = function(req, res, next) {
 // DELETE sponsor via AJAX
 exports.delete = function(req, res, next) {
   Sponsor.findByIdAndRemove(req.params.id, function(err) {
-    var message = {
-      errors: []
-    };
-    
     if (err) {
-      message.errors.push({
-        msg: 'Sponsorin poisto epäonnistui, yritä uudelleen.'
-      });
+      res.write({ error: 'Sponsorin poisto epäonnistui, yritä uudelleen.' });
     }
     
-    res.send(message);
+    res.end();
   });
 };

@@ -375,15 +375,15 @@ const RowContainer = {
         type: 'DELETE'
       }).done(function deleteDone(response) {
         if (response.errors) {
-          self.printErrors(response.errors, $row);
+          self.printErrors(response.errors, $row.find('.message'));
           return;
         }
+
+        // Remove from DOM
+        $row.remove();
         
         // Delete from local memory
         delete self.rows[id];
-        
-        // Remove from DOM
-        $row.remove();
       });
     }
   },
@@ -487,16 +487,12 @@ const RowContainer = {
       $field.text(row[field]);
       previewFields.push($field);
     });
-    
-    const $title = $('<h2>')
-      .addClass('data-row__title')
-      .text(row.title);
         
     const $editButton = $('<button>')
       .addClass('btn btn--primary js-disable-in-edit')
       .text('Muokkaa')
       .click(function editButtonClicked() {
-        self.editRow($(this).parent());
+        self.editRow($row);
       });
     
     const $deleteButton = $('<button>')
