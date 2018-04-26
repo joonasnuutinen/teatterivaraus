@@ -612,6 +612,24 @@ p {
   margin-bottom: .5rem;
 }
 
+.sponsors {
+  text-align: center;
+}
+
+.sponsor {
+  margin: 1rem 0;
+  border-top: 1px solid #ccc;
+}
+
+.sponsor__title {
+  margin: .5rem 0;
+}
+
+.sponsor__image {
+  width: auto;
+  max-width: 100%;
+}
+
 /*
   ============================================================================
   # Uncategorized

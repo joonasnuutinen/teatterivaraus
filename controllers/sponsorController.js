@@ -13,9 +13,7 @@ exports.sponsors = function(req, res, next) {
 exports.save = [
   // Validate input
   body('name', 'Nimi puuttuu').isLength({ min: 1 }).trim(),
-  body('description', 'Kuvaus puuttuu').isLength({ min: 1 }).trim(),
-  body('url').isLength({ min: 1 }).trim().withMessage('Web-osoite puuttuu')
-    .isURL().withMessage('Virheellinen web-osoite'),
+  body('url', 'Virheellinen web-osoite').optional({ checkFalsy: true }).isURL(),
   body('imageUrl', 'Virheellinen kuva').optional({ checkFalsy: true }).isURL(),
   
   // Sanitize input
@@ -38,6 +36,7 @@ exports.save = [
       description: req.body.description,
       url: req.body.url,
       imageUrl: req.body.imageUrl,
+      theatre: req.user._id,
       _id: req.body._id
     });
     
@@ -65,14 +64,10 @@ exports.save = [
 exports.post = function(req, res, next) {  
   Sponsor.count({theatre: req.user._id}, function(err, sponsorCount) {
     if (err) return next(err);
-    
-    //console.log(req.body);
   
     req.checkBody('newName', 'Nimi puuttuu.').notEmpty();
     req.checkBody('newDescription', 'Kuvaus puuttuu.').notEmpty();
     req.checkBody('newUrl', 'Web-osoite puuttuu.').notEmpty();
-    
-    //console.log('pre-isUrl');
     
     req.checkBody('newUrl', 'Virheellinen web-osoite.').isURL();
     

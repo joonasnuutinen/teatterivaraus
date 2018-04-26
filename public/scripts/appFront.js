@@ -152,15 +152,13 @@ $(function() {
           {
             label: 'Kuvaus',
             slug: 'description',
-            element: 'textarea',
-            required: true
+            element: 'textarea'
           },
           {
             label: 'Web-osoite',
             slug: 'url',
             element: 'input',
-            type: 'url',
-            required: true
+            type: 'url'
           },
           {
             label: 'Kuva',
@@ -263,22 +261,25 @@ const Input = {
     
     if (element == 'input') {
       $formField.attr('type', attr.type);
-      
-      if (attr.type == 'url') {
-        $formField.change(function fieldChanged() {
-          const $this = $(this);
-          const fieldValue = $this.val();
-          if (fieldValue && !/http:\/\/|https:\/\//.test(fieldValue)) {
-            $this.val('http://' + fieldValue);
-          }
-        });
-      }
     }
     
     if (attr.class) $formField.addClass(attr.class);
     if (attr.accept) $formField.attr('accept', attr.accept);
     
     if (value && value != '') $formField.val(value);
+    
+    if (element == 'input' && attr.type == 'url') {
+      function addProtocol() {
+        const $this = $(this);
+        const fieldValue = $this.val();
+        if (fieldValue && !/http:\/\/|https:\/\//.test(fieldValue)) {
+          $this.val('http://' + fieldValue);
+        }
+      }
+      
+      $formField.change(addProtocol);
+      addProtocol.call($formField);
+    }
     
     return $formField;
   },
@@ -679,7 +680,7 @@ const RowContainer = {
     
     posting.done(function postingDone(response) {
       if (response.errors) {
-        printMessage(response.errors, 'error', $form.find('.message'));
+        return printMessage(response.errors, 'error', $form.find('.message'));
       }
       
       const row = response.data;

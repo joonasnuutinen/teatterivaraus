@@ -82,16 +82,20 @@ html(lang='fi')
         .message
         
       if sponsors.length > 0
-        section.box
+        section.box.sponsors
           h2.secondary-title.secondary-title--box Yhteistyössä
           
           each sponsor in sponsors
-            h3.small-title= sponsor.name
-            
-            p
-              | !{sponsor.description.replace(/\n/g, '<br>')}
-              |
-              a(href=sponsor.urlHref target="_blank") Lue lisää
+            section.sponsor
+              h3.sponsor__title= sponsor.name
+              
+              if sponsor.imageUrl
+                img.sponsor__image(src=sponsor.imageUrl)
+              
+              p
+                | !{sponsor.description.replace(/\n/g, '<br>')}
+                |
+                a(href=sponsor.urlHref target="_blank") Lue lisää
               
       p.privacy
         a(href='/rekisteriseloste' target='_blank') Rekisteriseloste

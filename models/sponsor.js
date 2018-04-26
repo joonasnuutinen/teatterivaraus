@@ -9,13 +9,11 @@ var SponsorSchema = Schema({
   },
   
   description: {
-    type: String,
-    required: true
+    type: String
   },
   
   url: {
-    type: String,
-    required: true
+    type: String
   },
   
   imageUrl: {
@@ -38,14 +36,14 @@ var SponsorSchema = Schema({
 SponsorSchema
   .virtual('urlView')
   .get(function() {
-    return filterUrl( this.url ).view;
+    return (this.url) ? filterUrl(this.url).view : null;
 });
 
 // virtual for url href
 SponsorSchema
   .virtual('urlHref')
   .get(function() {
-    return filterUrl( this.url ).href;
+    return (this.url) ? filterUrl( this.url ).href : null;
 });
 
 // show virtuals
