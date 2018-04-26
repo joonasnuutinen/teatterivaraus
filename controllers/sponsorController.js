@@ -39,8 +39,7 @@ exports.save = [
       description: req.body.description,
       url: req.body.url,
       imageUrl: req.body.imageUrl,
-      theatre: req.user._id,
-      _id: req.body._id
+      theatre: req.user._id
     });
     
     if (!req.body._id) {
@@ -48,6 +47,7 @@ exports.save = [
       sponsor.save(callback);
     } else {
       // Update existing sponsor
+      sponsor._id = req.body._id;
       Sponsor.findByIdAndUpdate(req.body._id, sponsor, {}, callback);
     }
     

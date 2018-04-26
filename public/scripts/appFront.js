@@ -356,6 +356,22 @@ const RowContainer = {
   },
   
   /**
+   * Create row
+   * @param row (Object) Row data
+   * @return (jQuery object) Created row
+   */
+  createRow: function(row) {
+    const id = row._id;
+    this.rows[id] = row;
+    
+    const $row = $('<div>')
+      .addClass('data-row')
+      .attr('data-id', id);
+    
+    return this.populateOne($row);
+  },
+  
+  /**
    * Delete row
    * @param $row (jQuery object) Row to be deleted
    * @return (bool) Whether the row was deleted or not
@@ -453,29 +469,15 @@ const RowContainer = {
         return false;
     }
     
-    var order = [];
-    
-    $('.data-row').each(function eachRow() {
-      order.push($(this).attr('data-id'));
-    });
-    
-    var data = {};
-    const orderKey = this.rowType + 'Order';
-    data[orderKey] = order;
-    
-    $.post(document.location.pathname + '/order', data)
-      .done(function postingDone(response) {
-        if (response.errors) {
-          printMessage('Järjestyksen vaihto epäonnistui.', 'error', $row.find('.message'));
-        }
-      });
-    
+    this.postOrder();
+
     return true;
   },
   
   /**
    * Populate one row
    * @param $row (jQuery object) Row to be populated
+   * @return (jQuery object) The populated row
    */
   populateOne: function($row) {
     const id = $row.attr('data-id');
@@ -536,6 +538,8 @@ const RowContainer = {
       $downButton,
       $message
     );
+    
+    return $row;
   },
   
   /**
@@ -551,18 +555,33 @@ const RowContainer = {
       $rows.html('');
       
       data.forEach(function eachRow(row) {
-        const id = row._id;
-        self.rows[id] = row;
-        
-        const $row = $('<div>')
-          .addClass('data-row')
-          .attr('data-id', id);
-        
-        self.populateOne($row);
+        const $row = self.createRow(row);
         
         $rows.append($row);
       });
     });
+  },
+  
+  /**
+   * Post row order
+   */
+  postOrder: function() {
+    var order = [];
+    
+    $('.data-row').each(function eachRow() {
+      order.push($(this).attr('data-id'));
+    });
+    
+    var data = {};
+    const orderKey = this.rowType + 'Order';
+    data[orderKey] = order;
+    
+    $.post(document.location.pathname + '/order', data)
+      .done(function postingDone(response) {
+        if (response.errors) {
+          alert('Järjestyksen vaihto epäonnistui.');
+        }
+      });
   },
   
   /**
@@ -694,7 +713,9 @@ const RowContainer = {
       self.cancelEdit($form);
       
       if (isNew) {
-        self.populateRows();
+        const $newRow = self.createRow(row);
+        self.target.find('#rows').prepend($newRow);
+        self.postOrder();
       }
     });
   }
