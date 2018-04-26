@@ -168,7 +168,8 @@ $(function() {
             slug: 'image',
             element: 'input',
             type: 'file',
-            accept: 'image/png, image/jpeg'
+            accept: 'image/png, image/jpeg',
+            preview: true
           }
         ],
         genitive: 'sponsorin',
@@ -193,6 +194,7 @@ $(function() {
 
 const Input = {
   create: function(attr, data) {
+    const self = this;
     const $label = $('<label>').text(attr.label);
     
     if (attr.info) {
@@ -200,7 +202,9 @@ const Input = {
       $label.append($info);
     }
     
-    var formFields = [this.inputElement(attr, data[attr.slug])];
+    const value = (data) ? data[attr.slug] : '';
+    
+    const $formField = this.inputElement(attr, value).appendTo($label);
     
     if (attr.element == 'input' && attr.type == 'file') {
       // Add hidden upload url field
@@ -211,36 +215,37 @@ const Input = {
         type: 'hidden'
       };
       
-      const hiddenValue = data[hiddenSlug] || '';
-      console.log(data);
+      const hiddenValue = (data) ? data[hiddenSlug] : '';
+      const $hiddenField = this.inputElement(hiddenAttr, hiddenValue).appendTo($label);
+      var $preview = this.preview(hiddenValue, $formField, $hiddenField);
       
-      formFields.push(this.inputElement(hiddenAttr, hiddenValue));
+      if (attr.preview === true) {
+        $preview.insertBefore($formField);
+      }
       
-      formFields[0].change(function fileChanged() {
-        formFields[1].val('');
+      $formField.change(function fileChanged() {
+        $hiddenField.val('');
+        $preview.remove();
+        
         const file = this.files[0];
+        if (file == null) return;
         
         if (attr.accept) {
           const reString = attr.accept.replace(', ', '|');
           const re = new RegExp(reString);
           
           if (!re.test(file.type)) {
-            formFields[0].val('');
+            $formField.val('');
             return alert('Virheellinen tiedostomuoto.');
           }
         }
         
-        if (file == null) return;
-        
         getSignedRequest(file, function fileUploaded(url) {
-          formFields[1].val(url);
+          $hiddenField.val(url);
+          if (attr.preview === true) $preview = self.preview(url, $formField, $hiddenField).insertBefore($formField);
         });
       });
     }
-    
-    formFields.forEach(function eachField($field) {
-      $label.append($field);
-    });
     
     return $label;
   },
@@ -266,6 +271,30 @@ const Input = {
     if (value && value != '') $formField.val(value);
     
     return $formField;
+  },
+  
+  preview: function(src, $inputField, $hiddenField) {
+    const $preview = $('<div>').addClass('preview');
+    
+    if (src) {
+      const $previewImg = $('<img>')
+        .addClass('preview__img')
+        .attr('src', src)
+        .appendTo($preview);
+      const $deleteFile = $('<a>')
+        .addClass('delete-file')
+        .attr('href', '#')
+        .text('Poista')
+        .click(function deleteFileClicked(e) {
+          e.preventDefault();
+          $inputField.val('');
+          $hiddenField.val('');
+          $preview.remove();
+        })
+        .appendTo($preview);
+    }
+    
+    return $preview;
   }
 };
 

@@ -471,7 +471,7 @@ p {
 .input {
   display: block;
   width: 100%;
-  max-width: 30em;
+  max-width: 30rem;
   padding: .4em;
   margin: .1rem 0 .7rem;
   border: 1px solid #bbb;

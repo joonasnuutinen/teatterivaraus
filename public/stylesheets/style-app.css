@@ -152,6 +152,14 @@
   margin: 0 0 .25rem;
 }
 
+.preview {
+  max-width: 30rem;
+}
+
+.preview--hidden {
+  display: none;
+}
+
 /*
   ============================================================================
   # Tables
