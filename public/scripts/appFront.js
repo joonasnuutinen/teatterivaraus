@@ -1,3 +1,4 @@
+'use strict';
 // document ready
 $(function() {
   // options for different schemas
@@ -921,9 +922,9 @@ function userEvents(schemaOptions) {
 // ================================================================
 
 function getSignedRequest(file, callback) {
-  file.name = encodeURIComponent(file.name);
-  file.type = encodeURIComponent(file.type);
-  const url = document.location.pathname + '/sign-s3?fileName=' + file.name + '&fileType=' + file.type;
+  const url = document.location.pathname + '/sign-s3?fileName=' + encodeURIComponent(file.name) + '&fileType=' + encodeURIComponent(file.type);
+  
+  console.log(url);
   
   $.get(url, function success(data, status, xhr) {
     if (xhr.status !== 200) {

@@ -136,7 +136,8 @@ exports.getById = function(req, res, next) {
 exports.signS3 = function(req, res, next) {
   const s3 = new aws.S3();
   const folder = `uploads/${req.user.slug}/`;
-  const fileName = folder + req.query.fileName;
+  const fileName = folder + encodeURIComponent(req.query.fileName);
+  console.log(fileName);
   const fileType = req.query.fileType;
   
   const acceptedFileTypes = ['image/jpeg', 'image/png'];
