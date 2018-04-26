@@ -17,10 +17,12 @@ exports.orderRows = function(rows, rowOrder) {
       return rowId.equals(row._id);
     });
     
-    orderedRows.push(rows[i]);
-    
-    // We don't need the row anymore so remove it from the original array
-    rows.splice(i, 1);
+    if (i != -1) {
+      orderedRows.push(rows[i]);
+      
+      // We don't need the row anymore so remove it from the original array
+      rows.splice(i, 1);
+    }    
   });
   
   return orderedRows.concat(rows);

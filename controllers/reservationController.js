@@ -356,14 +356,15 @@ exports.customerGet = function(req, res, next) {
       
       showController.updateShowData(data, theatre);
       
-      data.sponsors = rowController.orderRows(data.sponsors, theatre.sponsorOrder);
+      const orderedSponsors = rowController.orderRows(data.sponsors, theatre.sponsorOrder);
+      console.log(orderedSponsors);
       
       res.render('customerReservation', {
         title: title,
         theatre: theatre,
         shows: data.shows,
         ticketClasses: data.ticketClasses,
-        sponsors: data.sponsors,
+        sponsors: orderedSponsors,
         og: og
       });
     });
