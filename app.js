@@ -19,6 +19,7 @@ var compression = require( 'compression' );
 var helmet = require( 'helmet' );
 const MongoStore = require('connect-mongo')(expressSession);
 const fileUpload = require('express-fileupload');
+const aws = require('aws-sdk');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -83,6 +84,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure file upload
 app.use(fileUpload());
+
+// Configure AWS region
+aws.config.region = 'eu-west-1';
 
 // configure passport
 app.use(expressSession({

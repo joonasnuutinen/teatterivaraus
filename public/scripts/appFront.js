@@ -164,10 +164,11 @@ $(function() {
           },
           {
             label: 'Kuva',
+            info: 'Tiedostomuoto: JPEG tai PNG',
             slug: 'image',
             element: 'input',
             type: 'file',
-            accept: 'image/*'
+            accept: 'image/png, image/jpeg'
           }
         ],
         genitive: 'sponsorin',
@@ -191,8 +192,60 @@ $(function() {
 // ================================================================
 
 const Input = {
-  create: function(attr, value) {
+  create: function(attr, data) {
     const $label = $('<label>').text(attr.label);
+    
+    if (attr.info) {
+      const $info = $('<div>').addClass('label__info').text(attr.info);
+      $label.append($info);
+    }
+    
+    var formFields = [this.inputElement(attr, data[attr.slug])];
+    
+    if (attr.element == 'input' && attr.type == 'file') {
+      // Add hidden upload url field
+      const hiddenSlug = attr.slug + 'Url';
+      const hiddenAttr = {
+        slug: hiddenSlug,
+        element: 'input',
+        type: 'hidden'
+      };
+      
+      const hiddenValue = data[hiddenSlug] || '';
+      console.log(data);
+      
+      formFields.push(this.inputElement(hiddenAttr, hiddenValue));
+      
+      formFields[0].change(function fileChanged() {
+        formFields[1].val('');
+        const file = this.files[0];
+        
+        if (attr.accept) {
+          const reString = attr.accept.replace(', ', '|');
+          const re = new RegExp(reString);
+          
+          if (!re.test(file.type)) {
+            formFields[0].val('');
+            return alert('Virheellinen tiedostomuoto.');
+          }
+        }
+        
+        if (file == null) return;
+        
+        getSignedRequest(file, function fileUploaded(url) {
+          formFields[1].val(url);
+        });
+      });
+    }
+    
+    formFields.forEach(function eachField($field) {
+      $label.append($field);
+    });
+    
+    return $label;
+  },
+  
+  inputElement: function(attr, value) {
     const element = attr.element;
     const slug = attr.slug;
     
@@ -209,9 +262,10 @@ const Input = {
     
     if (attr.class) $formField.addClass(attr.class);
     if (attr.accept) $formField.attr('accept', attr.accept);
-    if (value != '') $formField.val(value);
     
-    return $label.append($formField);
+    if (value && value != '') $formField.val(value);
+    
+    return $formField;
   }
 };
 
@@ -530,11 +584,10 @@ const RowContainer = {
       });
     
     this.formFields.forEach(function eachFormField(field) {
-      // TODO
       const id = $target.attr('data-id');
       const name = field.slug;
-      const value = (id) ? self.rows[id][name] : '';
-      const $formField = Object.create(Input).create(field, value);
+      const data = (id) ? self.rows[id] : null;
+      const $formField = Input.create(field, data);
 
       $form.append($formField);
     });
@@ -554,7 +607,7 @@ const RowContainer = {
     
     const $message = $('<div>').addClass('message');
     
-    $form.append($submitButton, $cancelButton).appendTo($target);
+    $form.append($submitButton, $cancelButton, $message).appendTo($target);
   },
   
   /**
@@ -567,6 +620,9 @@ const RowContainer = {
     
     $form.find('.js-input').each(function eachInput() {
       const $field = $(this);
+      
+      if ($field.attr('type') === 'file') return;
+      
       const name = $field.attr('name');
       const value = $field.val();
       data[name] = value;
@@ -584,7 +640,7 @@ const RowContainer = {
     
     posting.done(function postingDone(response) {
       if (response.errors) {
-        printMessage(response.errors, 'error', );
+        printMessage(response.errors, 'error', $form.find('.message'));
       }
       
       const row = response.data;
@@ -819,6 +875,41 @@ function userEvents(schemaOptions) {
 // ================================================================
 // USER EVENT FUNCTIONS ===========================================
 // ================================================================
+
+function getSignedRequest(file, callback) {
+  file.name = encodeURIComponent(file.name);
+  file.type = encodeURIComponent(file.type);
+  const url = document.location.pathname + '/sign-s3?fileName=' + file.name + '&fileType=' + file.type;
+  
+  $.get(url, function success(data, status, xhr) {
+    if (xhr.status !== 200) {
+      console.log(xhr);
+      return alert('Tiedoston latauksessa tapahtui virhe (getSignedRequest), yritä uudelleen.');
+    }
+    
+    const response = JSON.parse(data);
+    
+    if (response.error) return alert(response.error);
+    
+    uploadFileXhr(file, response.signedRequest, response.url, callback);
+  });
+}
+
+function uploadFileXhr(file, signedRequest, url, callback) {
+  const xhr = new XMLHttpRequest();
+  xhr.open('PUT', signedRequest);
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        if (callback) callback(url);
+      } else {
+        console.log(xhr);
+        alert('Tiedoston latauksessa tapahtui virhe (uploadFile), yritä uudelleen.');
+      }
+    }
+  };
+  xhr.send(file);
+}
 
 // create form for new or edited row
 function editRow(id, schemaOptions, showPast) {

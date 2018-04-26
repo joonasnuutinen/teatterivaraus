@@ -1,4 +1,5 @@
 var Sponsor = require('../models/sponsor.js');
+const aws = require('aws-sdk');
 
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -15,11 +16,13 @@ exports.save = [
   body('description', 'Kuvaus puuttuu').isLength({ min: 1 }).trim(),
   body('url').isLength({ min: 1 }).trim().withMessage('Web-osoite puuttuu')
     .isURL().withMessage('Virheellinen web-osoite'),
+  body('imageUrl', 'Virheellinen kuva').optional({ checkFalsy: true }).isURL(),
   
   // Sanitize input
   sanitizeBody('name').trim().escape(),
   sanitizeBody('description').trim().escape(),
   sanitizeBody('url').trim(),
+  sanitizeBody('imageUrl').trim(),
   
   // Process request
   (req, res, next) => {
@@ -30,19 +33,25 @@ exports.save = [
       return;
     }
     
-    var data = req.body;
-    var sponsor = new Sponsor(data);
+    var sponsor = new Sponsor({
+      name: req.body.name,
+      description: req.body.description,
+      url: req.body.url,
+      imageUrl: req.body.imageUrl,
+      _id: req.body._id
+    });
     
-    if (!data._id) {
-      // Save as a new doc
-      doc.save(callback);
+    if (!req.body._id) {
+      // Save as a new sponsor
+      sponsor.save(callback);
     } else {
       // Update existing sponsor
-      Sponsor.findByIdAndUpdate(data._id, sponsor, {}, callback);
+      Sponsor.findByIdAndUpdate(req.body._id, sponsor, {}, callback);
     }
     
     function callback(err) {
       if (err) {
+        console.log(err);
         res.send({ errors: 'Tallennus epäonnistui, yritä uudelleen.' });
         return;
       }
@@ -107,7 +116,7 @@ exports.post = function(req, res, next) {
 
 // GET sponsors JSON
 exports.getJSON = function(req, res, next) {
-  Sponsor.find({theatre: req.user._id}, 'name description url order')
+  Sponsor.find({theatre: req.user._id})
     .sort([['order', 'ascending']])
     .exec(function(err, sponsors) {
       if (err) return next(err);
@@ -122,6 +131,41 @@ exports.getById = function(req, res, next) {
       if (err) return next(err);
       res.json(data);
     });
+};
+
+// Generate S3 signature
+exports.signS3 = function(req, res, next) {
+  const s3 = new aws.S3();
+  const folder = `uploads/${req.user.slug}/`;
+  const fileName = folder + req.query.fileName;
+  const fileType = req.query.fileType;
+  
+  const acceptedFileTypes = ['image/jpeg', 'image/png'];
+  const reString = acceptedFileTypes.join('|');
+  const re = new RegExp(reString);
+  
+  if (!re.test(fileType)) return res.send(JSON.stringify({ error: 'Virheellinen tiedostomuoto.' }));
+  
+  const S3_BUCKET = process.env.S3_BUCKET;
+  const s3Params = {
+    Bucket: S3_BUCKET,
+    Key: fileName,
+    Expires: 60,
+    ContentType: fileType,
+    ACL: 'public-read'
+  };
+  
+  s3.getSignedUrl('putObject', s3Params, (err, data) => {
+    if (err) return res.end();
+    
+    const returnData = {
+      signedRequest: data,
+      url: 'https://' + S3_BUCKET + '.s3.amazonaws.com/' + fileName
+    }
+    
+    res.write(JSON.stringify(returnData));
+    res.end();
+  });
 };
 
 // update existing sponsor

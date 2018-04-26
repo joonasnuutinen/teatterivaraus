@@ -18,6 +18,10 @@ var SponsorSchema = Schema({
     required: true
   },
   
+  imageUrl: {
+    type: String
+  },
+  
   order: {
     type: Number,
     default: 0

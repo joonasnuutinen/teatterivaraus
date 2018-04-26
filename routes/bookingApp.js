@@ -98,6 +98,8 @@ router.post('/sponsorit', isLoggedIn, sponsorController.save);
 
 router.get('/sponsorit/json', isLoggedIn, sponsorController.getJSON);
 
+router.get('/sponsorit/sign-s3', isLoggedIn, sponsorController.signS3);
+
 router.get('/sponsorit/:id', isLoggedIn, sponsorController.getById);
 router.put('/sponsorit/:id', isLoggedIn, sponsorController.put);
 router.delete('/sponsorit/:id', isLoggedIn, sponsorController.delete);
