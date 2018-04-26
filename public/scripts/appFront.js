@@ -263,6 +263,16 @@ const Input = {
     
     if (element == 'input') {
       $formField.attr('type', attr.type);
+      
+      if (attr.type == 'url') {
+        $formField.change(function fieldChanged() {
+          const $this = $(this);
+          const fieldValue = $this.val();
+          if (fieldValue && !/http:\/\/|https:\/\//.test(fieldValue)) {
+            $this.val('http://' + fieldValue);
+          }
+        });
+      }
     }
     
     if (attr.class) $formField.addClass(attr.class);
