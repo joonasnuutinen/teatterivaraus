@@ -8,7 +8,7 @@ const { sanitizeBody } = require('express-validator/filter');
 exports.ticketPrices = function(req, res, next) {
   var options = {
     schema: 'ticketClass',
-    columnsView: 'name priceWithSymbol',
+    columnsView: 'name priceWithSymbol max',
     columnsEdit: 'name price max'
   };
   res.render('rows', {title: 'Lippujen hinnat', options: options, theatre: req.user});
@@ -46,13 +46,16 @@ exports.newTicketPost = [
       price: req.body.newPrice,
       theatre: req.user._id,
       name: req.body.newName,
-      max: req.body.newMax
+      max: req.body.newMax || Infinity
     });
     
     ticketClass.save(function(err) {
-      res.send(
-        (err === null) ? { errors: [] } : { errors: [{ msg:'Tallennus epäonnistui, yritä uudelleen.' }] }
-      );
+      if (err) {
+        console.log(err);
+        res.send({ errors: [{ msg: 'Tallennus epäonnistui, yritä uudelleen.' }] });
+        return;
+      }
+      res.send({ errors: [] });
     });
   }
 ];
@@ -127,7 +130,7 @@ exports.put = [
   body('editedName', 'Lippuluokan nimi puuttuu.').isLength({ min: 1 }).trim(),
   body('editedPrice').isLength({ min: 1 }).trim().withMessage('Lipun hinta puuttuu')
     .isFloat({ min: 0 }).withMessage('Lipun hinta ei ole positiivinen luku.'),
-  body('editedMax', 'Virheellinen maksimimäärä').isInt(),
+  body('newMax', 'Virheellinen maksimimäärä').optional({ checkFalsy: true }).isInt(),
   
   // Sanitize input
   sanitizeBody('editedName').escape().trim(),

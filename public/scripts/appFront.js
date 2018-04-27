@@ -786,7 +786,10 @@ function populateRows(schemaOptions) {
           var amount = item.total.tickets;
           var unit = (amount == 1) ? 'lippu' : 'lippua';
           allRows += '<div class="tickets">' + amount + ' ' + unit + ', ' + price + '</div>';
-          
+        
+        } else if (column == 'max') {
+          if (item.max) $column = $('<div>').text('Varattavissa ' + item.max + ' kpl');
+        
         // source
         } else if ( column == 'source' ) {
           var sourceName = schemaOptions.source.name[item.source] || 'Tuntematon lähde';
