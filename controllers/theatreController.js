@@ -217,10 +217,7 @@ exports.json = function(req, res, next) {
 
     showController.updateShowData(data, data.theatre);
     
-    console.log(data.shows);
-    
     data.theatre.shows = data.shows;
-    
     data.theatre.ticketClasses = data.ticketClasses;
     res.json(data.theatre);
   });

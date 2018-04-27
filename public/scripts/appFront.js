@@ -762,30 +762,21 @@ function populateRows(schemaOptions) {
       
       var $fields = $( '<div>' ).addClass( 'fields' );
       
-      allRows += '<div class="data-row" id="' + item._id + '">';
-      allRows += '<div class="fields">';
-      
       columns.forEach(function(column) {
         var $column;
         
         // show
         if (column === 'show') {
-          var showText = (item.show !== null) ? item.show.beginsPretty : 'POISTETTU NÄYTÖS';
-          
-          $column = $( '<div>' )
-            .addClass( 'show' )
-            .text( showText );
-          
-          allRows += '<div class="show">';
-          allRows += 
-          allRows += '</div>';
+          const showText = (item.show !== null) ? item.show.beginsPretty : 'POISTETTU NÄYTÖS';
+          $column = $( '<div>' ).addClass( 'show' ).text( showText );
         
         // tickets
         } else if (column === 'tickets') {
-          var price = item.total.priceString;
-          var amount = item.total.tickets;
-          var unit = (amount == 1) ? 'lippu' : 'lippua';
-          allRows += '<div class="tickets">' + amount + ' ' + unit + ', ' + price + '</div>';
+          const price = item.total.priceString;
+          const amount = item.total.tickets;
+          const unit = (amount == 1) ? 'lippu' : 'lippua';
+          const columnText = amount + ' ' + unit + ', ' + price;
+          $column = $('<div>').addClass('tickets').text(columnText);
         
         } else if (column == 'max') {
           if (item.max) $column = $('<div>').text('Varattavissa ' + item.max + ' kpl');
@@ -824,8 +815,6 @@ function populateRows(schemaOptions) {
               $column.html( '<i class="fas fa-question"></i>' );
           }
           
-          allRows += $column.get( 0 ).outerHTML;
-          
         // everything else
         } else if(item[column] !== undefined) {
           var propertyName = (schemaOptions[column] && schemaOptions[column].name) ? schemaOptions[column].name : column;
@@ -838,18 +827,11 @@ function populateRows(schemaOptions) {
           if ( schemaOptions[column] && schemaOptions[column].hidden ) {
             $column.addClass( 'hidden' );
           }
-          
-          allRows += '<div class="' + column;
-          allRows += (schemaOptions[column] && schemaOptions[column].hidden) ? ' hidden' : '';
-          allRows += '" data-property="' + column + '">' + item[column] + '</div>';
         }
         
         $fields.append( $column );
-        
       });
-      
-      allRows += '</div>';
-      
+
       var buttons = '';
       
       buttons += '<button class="edit-row btn btn--primary" type="button" data-row-id="' + item._id + '">Muokkaa</button>';
@@ -863,15 +845,11 @@ function populateRows(schemaOptions) {
       buttons += '<button class="save-row btn btn--primary hidden" type="button">Tallenna</button>';
       buttons += '<button class="cancel-row btn btn--secondary hidden" type="button">Peruuta</button>';
       buttons += '<div class="errors"></div>';
-      allRows += '</div>';
       
       $dataRow.append( $fields ).append( buttons );
       
       $( '.data-rows' ).append( $dataRow );
     });
-    
-    
-    //$('.data-rows').html(allRows);
   });
 }
 
