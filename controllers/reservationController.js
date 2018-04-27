@@ -505,8 +505,8 @@ function sendEmailConfirmation(id, theatreId) {
     
       sponsors.forEach( function eachSponsor(sponsor) {
         body += sponsor.name + '\n';
-        body += sponsor.description + '\n';
-        body += 'Lue lisää: ' + sponsor.urlHref + '\n\n';
+        body += (sponsor.description) ? sponsor.description + '\n' : '';
+        body += (sponsor.urlHref) ? 'Lue lisää: ' + sponsor.urlHref + '\n\n' : '';
       } );
     }
 
