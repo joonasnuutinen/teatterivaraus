@@ -38,7 +38,7 @@ exports.getAdmin = function(req, res, next) {
   
   if (theatre.role !== 'admin') return next();
     
-  res.render('docsAdmin', {title: 'Ohjeet', theatre: theatre});
+  res.render('dynamic', { title: 'Ohjeet', content: 'docs', theatre: theatre });
 };
 
 // GET docs in JSON format

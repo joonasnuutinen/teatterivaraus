@@ -19,6 +19,7 @@ $(function documentReady() {
         }
       ],
       genitive: 'ohjeen',
+      previewFields: ['title'],
       rowType: 'doc'
     }
   };

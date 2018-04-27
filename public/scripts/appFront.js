@@ -485,7 +485,7 @@ const RowContainer = {
     const self = this;
     
     var previewFields = [];
-    
+
     this.previewFields.forEach(function eachField(field, i) {
       var $field;
       
@@ -622,7 +622,7 @@ const RowContainer = {
     const $rows = $('<div>')
       .addClass('data-rows')
       .attr('id', 'rows');
-    
+
     this.target.append($addNewButton, $newRow, $rows);
     this.populateRows();
   },
@@ -1167,7 +1167,7 @@ function changePassword() {
       });
       $form.parent().find( '.message' ).html( '<div class="message__content message__content--error">' + errors + '</div>' );
     } else {
-      $form.parent().find( '.message' ).html( '<div class="message__content">' + data.message + '</div>' );
+      $form.parent().find( '.message' ).html( '<div class="message__content message__content--success">' + data.message + '</div>' );
       $form.find( 'input' ).val( '' );
     }
   } );
