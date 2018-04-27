@@ -856,7 +856,7 @@ function populateRows(schemaOptions) {
 // initialize filter
 function initFilter() {
   $.getJSON('/app/naytokset/json', function(shows) {
-    populateSelect($('#filter')[0], null, shows, true);
+    populateSelect($('#filter'), null, shows, true);
   });
 }
 
