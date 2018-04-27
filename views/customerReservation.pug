@@ -45,7 +45,7 @@ html(lang='fi')
           
           label Näytös
             if theatre.closeBefore > 0
-              - const closingTimeString = (Number.isInteger(theatre.closeBefore / 120)) ? theatre.closeBefore / 60 + ' h' : theatre.closeBefore + ' min';
+              - const closingTimeString = (Number.isInteger(theatre.closeBefore / 60)) ? theatre.closeBefore / 60 + ' h' : theatre.closeBefore + ' min';
               .label__info Varaus suljetaan #{closingTimeString} ennen näytöksen alkua
             select#newShow.input(name='show' required)
               each show in shows

@@ -357,7 +357,6 @@ exports.customerGet = function(req, res, next) {
       showController.updateShowData(data, theatre);
       
       const orderedSponsors = rowController.orderRows(data.sponsors, theatre.sponsorOrder);
-      console.log(orderedSponsors);
       
       res.render('customerReservation', {
         title: title,
