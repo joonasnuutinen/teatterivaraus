@@ -156,7 +156,10 @@ exports.signS3 = function(req, res, next) {
   };
   
   s3.getSignedUrl('putObject', s3Params, (err, data) => {
-    if (err) return res.end();
+    if (err) {
+      console.log(err);
+      return res.end();
+    }
     
     const returnData = {
       signedRequest: data,
