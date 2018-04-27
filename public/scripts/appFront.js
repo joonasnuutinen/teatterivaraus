@@ -933,7 +933,7 @@ function getSignedRequest(file, callback) {
       console.log(xhr);
       return alert('Tiedoston latauksessa tapahtui virhe (getSignedRequest), yritä uudelleen.');
     }
-    console.log(data);
+
     const response = JSON.parse(data);
     
     if (response.error) return alert(response.error);
