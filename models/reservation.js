@@ -99,7 +99,7 @@ ReservationSchema.virtual('total').get(function() {
     restricted: {}
   };
   this.tickets.forEach(function(ticket) {
-    var amount = ticket.amount;
+    var amount = ticket.amount || 0;
     var ticketClass = ticket.ticketClass;
     
     total.tickets += amount;
