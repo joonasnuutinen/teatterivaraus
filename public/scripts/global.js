@@ -79,17 +79,20 @@ function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
     
     var $ticketClassLabel = $('<label>')
       .attr('for', inputId)
-      .text(ticketClass.fullName)
-      .append($remaining);
+      .text(ticketClass.fullName);
     
+    if (!ticketClass.bypassCounter) {
+      $ticketClassLabel.append($remaining);
+    } else {
+      $ticketClassLabel.addClass('js-bypass-counter');
+    }
+
     var $numberField;
     
     if (schemaOptions.tickets.input) {
       var ticketIndex = -1;
       if (data) {
         ticketIndex = data.tickets.findIndex(function(ticket) {
-          console.log(ticketClass._id);
-          console.log(ticket.ticketClass._id);
           return ticketClass._id == ticket.ticketClass._id;
         });
       }
@@ -108,6 +111,11 @@ function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
         .on('input', function numberFieldInput() {
           updateRemaining(true);
         });
+
+      if (ticketClass.bypassCounter) {
+        $numberField.addClass('js-bypass-counter');
+      }
+
     } else {
       $numberField = $('<select>')
         .addClass('edited-field input input--narrow js-ticket-input');
@@ -351,6 +359,8 @@ function getUserTickets() {
   
   $('.ticket-classes').find('input, select').each(function eachTicketField() {
     const $this = $(this);
+
+    if ($this.hasClass('js-bypass-counter')) return;
     const originalAmount = +$this.attr('data-original-amount') || 0;
     userTickets += +$this.val() - originalAmount;
   });
