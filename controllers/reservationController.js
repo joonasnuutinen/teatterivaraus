@@ -77,143 +77,150 @@ exports.getById = function(req, res, next) {
 
 // POST to reservations
 exports.post = function(req, res, next) {
-  var tickets = [];
+  TicketClass.find({ theatre: req.user._id }).sort([['price', 'descending'], ['name', 'ascending']]).exec(function(err, ticketClasses) {
+    var tickets = [];
   
-  for (var field in req.body) {
-    var re = /newTicketClass_(\w+)/;
-    var match = field.match(re);
-    if (match !== null) {
-      req.checkBody(field, 'Lippujen määrän on oltava kokonaisluku ja vähintään 0.').isInt({min: 0});
-      req.sanitize(field).escape();
-      req.sanitize(field).trim();
-      req.sanitize(field).toInt();
-      if (req.body[field] > 0) {
-        tickets.push({
-          ticketClass: match[1],
-          amount: req.body[field]
-        });
+    for (var field in req.body) {
+      var re = /newTicketClass_(\w+)/;
+      var match = field.match(re);
+      if (match !== null) {
+        req.checkBody(field, 'Lippujen määrän on oltava kokonaisluku ja vähintään 0.').isInt({min: 0});
+        req.sanitize(field).escape();
+        req.sanitize(field).trim();
+        req.sanitize(field).toInt();
+        if (req.body[field] > 0) {
+          tickets.push({
+            ticketClass: match[1],
+            amount: req.body[field],
+            bypassCounter: ticketClasses.find(function(tc) { return tc._id.equals(match[1]); }).bypassCounter
+          });
+        }
       }
     }
-  }
-  
-  req.checkBody('newLastName', 'Sukunimi puuttuu.').notEmpty();
-  req.checkBody('newEmail', 'Virheellinen sähköposti.').optional({checkFalsy: true}).isEmail();
-  
-  req.sanitize('newLastName').escape();
-  req.sanitize('newLastName').trim();
-  req.sanitize('newFirstName').escape();
-  req.sanitize('newFirstName').trim();
-  req.sanitize('newEmail').escape();
-  req.sanitize('newEmail').trim();
-  req.sanitize('newPhone').escape();
-  req.sanitize('newPhone').trim();
-  req.sanitize('newAdditionalInfo').escape();
-  req.sanitize('newAdditionalInfo').trim();
-  
-  req.getValidationResult().then(function(errors) {
-    var message = {
-      errors: []
-    };
     
-    if (errors.isEmpty()) {
-      var reservation = new Reservation({
-        lastName: req.body.newLastName,
-        firstName: req.body.newFirstName,
-        email: req.body.newEmail,
-        phone: req.body.newPhone,
-        show: req.body.newShow,
-        additionalInfo: req.body.newAdditionalInfo,
-        theatre: req.user._id,
-        tickets: tickets,
-        source: 'dashboard',
-        added: Date.now(),
-        marketingPermission: req.body.newMarketingPermission
-      });
-      
-      reservation.markModified('tickets');
-      
-      reservation.save(function(err) {
-        if (err) {
-          message.errors.push('Tallennus epäonnistui, yritä uudelleen.');
-        }
-      });
-    } else {
-      message.errors = message.errors.concat(errors.array({ onlyFirstError: true }));
-    }
+    req.checkBody('newLastName', 'Sukunimi puuttuu.').notEmpty();
+    req.checkBody('newEmail', 'Virheellinen sähköposti.').optional({checkFalsy: true}).isEmail();
     
-    res.send(message);
+    req.sanitize('newLastName').escape();
+    req.sanitize('newLastName').trim();
+    req.sanitize('newFirstName').escape();
+    req.sanitize('newFirstName').trim();
+    req.sanitize('newEmail').escape();
+    req.sanitize('newEmail').trim();
+    req.sanitize('newPhone').escape();
+    req.sanitize('newPhone').trim();
+    req.sanitize('newAdditionalInfo').escape();
+    req.sanitize('newAdditionalInfo').trim();
+    
+    req.getValidationResult().then(function(errors) {
+      var message = {
+        errors: []
+      };
+      
+      if (errors.isEmpty()) {
+        var reservation = new Reservation({
+          lastName: req.body.newLastName,
+          firstName: req.body.newFirstName,
+          email: req.body.newEmail,
+          phone: req.body.newPhone,
+          show: req.body.newShow,
+          additionalInfo: req.body.newAdditionalInfo,
+          theatre: req.user._id,
+          tickets: tickets,
+          source: 'dashboard',
+          added: Date.now(),
+          marketingPermission: req.body.newMarketingPermission
+        });
+        
+        reservation.markModified('tickets');
+        
+        reservation.save(function(err) {
+          if (err) {
+            message.errors.push('Tallennus epäonnistui, yritä uudelleen.');
+          }
+        });
+      } else {
+        message.errors = message.errors.concat(errors.array({ onlyFirstError: true }));
+      }
+      
+      res.send(message);
+    });
   });
+  
 };
 
 // PUT to existing reservation
 exports.put = function(req, res, next) {
-  var tickets = [];
-  
-  for (var field in req.body) {
-    var re = /editedTicketClass_(\w+)/;
-    var match = field.match(re);
-    if (match !== null) {
-      req.checkBody(field, 'Lippujen määrän on oltava kokonaisluku ja vähintään 0.').isInt({min: 0});
-      req.sanitize(field).escape();
-      req.sanitize(field).trim();
-      req.sanitize(field).toInt();
-      if (req.body[field] > 0) {
-        tickets.push({
-          ticketClass: match[1],
-          amount: req.body[field]
-        });
+  TicketClass.find({ theatre: req.user._id }).sort([['price', 'descending'], ['name', 'ascending']]).exec(function(err, ticketClasses) {
+    var tickets = [];
+    
+    for (var field in req.body) {
+      var re = /editedTicketClass_(\w+)/;
+      var match = field.match(re);
+      if (match !== null) {
+        req.checkBody(field, 'Lippujen määrän on oltava kokonaisluku ja vähintään 0.').isInt({min: 0});
+        req.sanitize(field).escape();
+        req.sanitize(field).trim();
+        req.sanitize(field).toInt();
+        if (req.body[field] > 0) {
+          tickets.push({
+            ticketClass: match[1],
+            amount: req.body[field],
+            bypassCounter: ticketClasses.find(function(tc) { return tc._id.equals(match[1]); }).bypassCounter
+          });
+        }
       }
     }
-  }
-  
-  req.checkBody('editedLastName', 'Sukunimi puuttuu.').notEmpty();
-  req.checkBody('editedEmail', 'Virheellinen sähköposti.').optional({checkFalsy: true}).isEmail();
-  
-  req.sanitize('editedLastName').escape();
-  req.sanitize('editedLastName').trim();
-  req.sanitize('editedFirstName').escape();
-  req.sanitize('editedFirstName').trim();
-  req.sanitize('editedEmail').escape();
-  req.sanitize('editedEmail').trim();
-  req.sanitize('editedPhone').escape();
-  req.sanitize('editedPhone').trim();
-  req.sanitize('editedAdditionalInfo').escape();
-  req.sanitize('editedAdditionalInfo').trim();
-  
-  req.getValidationResult().then(function(errors) {
-    var message = {
-      errors: []
-    };
     
-    //console.log( req.body );
+    req.checkBody('editedLastName', 'Sukunimi puuttuu.').notEmpty();
+    req.checkBody('editedEmail', 'Virheellinen sähköposti.').optional({checkFalsy: true}).isEmail();
     
-    if (errors.isEmpty()) {
-      var reservation = new Reservation({
-        lastName: req.body.editedLastName,
-        firstName: req.body.editedFirstName,
-        email: req.body.editedEmail,
-        phone: req.body.editedPhone,
-        show: req.body.editedShow,
-        additionalInfo: req.body.editedAdditionalInfo,
-        theatre: req.user._id,
-        tickets: tickets,
-        edited: Date.now(),
-        _id: req.params.id,
-        marketingPermission: req.body.editedMarketingPermission
-      });
+    req.sanitize('editedLastName').escape();
+    req.sanitize('editedLastName').trim();
+    req.sanitize('editedFirstName').escape();
+    req.sanitize('editedFirstName').trim();
+    req.sanitize('editedEmail').escape();
+    req.sanitize('editedEmail').trim();
+    req.sanitize('editedPhone').escape();
+    req.sanitize('editedPhone').trim();
+    req.sanitize('editedAdditionalInfo').escape();
+    req.sanitize('editedAdditionalInfo').trim();
+    
+    req.getValidationResult().then(function(errors) {
+      var message = {
+        errors: []
+      };
       
-      reservation.markModified('tickets');
+      //console.log( req.body );
+      
+      if (errors.isEmpty()) {
+        var reservation = new Reservation({
+          lastName: req.body.editedLastName,
+          firstName: req.body.editedFirstName,
+          email: req.body.editedEmail,
+          phone: req.body.editedPhone,
+          show: req.body.editedShow,
+          additionalInfo: req.body.editedAdditionalInfo,
+          theatre: req.user._id,
+          tickets: tickets,
+          edited: Date.now(),
+          _id: req.params.id,
+          marketingPermission: req.body.editedMarketingPermission
+        });
+        
+        reservation.markModified('tickets');
 
-      Reservation.findByIdAndUpdate(req.params.id, reservation, {}, function(err) {
-        if (err) {
-          message.errors.push('Muokkaus epäonnistui, yritä uudelleen.');
-        }
-      });
-    } else {
-      message.errors = message.errors.concat(errors.array({ onlyFirstError: true }));
-    }
-    
-    res.send(message);
+        Reservation.findByIdAndUpdate(req.params.id, reservation, {}, function(err) {
+          if (err) {
+            message.errors.push('Muokkaus epäonnistui, yritä uudelleen.');
+          }
+        });
+      } else {
+        message.errors = message.errors.concat(errors.array({ onlyFirstError: true }));
+      }
+      
+      res.send(message);
+    });
   });
 };
 
@@ -418,32 +425,36 @@ exports.customerPost = [
       
       req.body.tickets = [];
       
-      for (let field in req.body) {
-        var re = /ticketClass_(\w+)/;
-        var match = field.match(re);
-        if (match) {
-          req.body.tickets.push({
-            ticketClass: match[1],
-            amount: req.body[field]
-          });
-          delete req.body[field];
+      TicketClass.find({ theatre: req.user._id }).sort([['price', 'descending'], ['name', 'ascending']]).exec(function(err, ticketClasses) {
+
+        for (let field in req.body) {
+          var re = /ticketClass_(\w+)/;
+          var match = field.match(re);
+          if (match) {
+            req.body.tickets.push({
+              ticketClass: match[1],
+              amount: req.body[field],
+              bypassCounter: ticketClasses.find(function(tc) { return tc._id.equals(match[1]); }).bypassCounter
+            });
+            delete req.body[field];
+          }
         }
-      }
-      
-      var reservation = new Reservation(req.body);
-      reservation.theatre = req.params.theatreId;
-      reservation.source = 'webForm';
-      reservation.added = Date.now();
-      
-      reservation.markModified('tickets');
-      
-      reservation.save(function(err) {
-        if (err) {
-          res.send({ errors: 'Varaus epäonnistui, yritä uudelleen.' });
-        } else {
-          sendEmailConfirmation(reservation._id, reservation.theatre);
-          res.send({ errors: null, email: reservation.email });
-        }
+        
+        var reservation = new Reservation(req.body);
+        reservation.theatre = req.params.theatreId;
+        reservation.source = 'webForm';
+        reservation.added = Date.now();
+        
+        reservation.markModified('tickets');
+        
+        reservation.save(function(err) {
+          if (err) {
+            res.send({ errors: 'Varaus epäonnistui, yritä uudelleen.' });
+          } else {
+            sendEmailConfirmation(reservation._id, reservation.theatre);
+            res.send({ errors: null, email: reservation.email });
+          }
+        });
       });
     });
   }

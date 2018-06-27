@@ -18,6 +18,10 @@ $(function() {
         unit: 'kpl',
         number: true,
         min: 0
+      },
+      bypassCounter: {
+        label: 'Älä sisällytä katsojalaskentaan',
+        default: false
       }
     },
     

@@ -63,6 +63,10 @@ var ReservationSchema = Schema({
       type: Number,
       min: 0,
       default: 0
+    },
+
+    bypassCounter: {
+      type: Boolean
     }
   }],
   
@@ -101,8 +105,11 @@ ReservationSchema.virtual('total').get(function() {
   this.tickets.forEach(function(ticket) {
     var amount = ticket.amount || 0;
     var ticketClass = ticket.ticketClass;
-    
-    total.tickets += amount;
+    //console.log(ticketClass);
+    if (!ticket.bypassCounter) {
+      total.tickets += amount;
+    }
+
     total.price += amount * ticketClass.price;
     
     if (amount !== 0) {

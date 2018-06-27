@@ -9,7 +9,7 @@ exports.ticketPrices = function(req, res, next) {
   var options = {
     schema: 'ticketClass',
     columnsView: 'name priceWithSymbol max',
-    columnsEdit: 'name price max'
+    columnsEdit: 'name price max bypassCounter'
   };
   res.render('rows', {title: 'Lippujen hinnat', options: options, theatre: req.user});
 };
@@ -46,7 +46,8 @@ exports.newTicketPost = [
       price: req.body.newPrice,
       theatre: req.user._id,
       name: req.body.newName,
-      max: req.body.newMax || Infinity
+      max: req.body.newMax || Infinity,
+      bypassCounter: req.body.newBypassCounter || false
     });
     
     ticketClass.save(function(err) {
@@ -151,6 +152,7 @@ exports.put = [
       theatre: req.user._id,
       name: req.body.editedName,
       max: req.body.editedMax,
+      bypassCounter: req.body.editedBypassCounter || false,
       _id: req.params.id
     });
     

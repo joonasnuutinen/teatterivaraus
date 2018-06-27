@@ -5,6 +5,10 @@ var Schema = mongoose.Schema;
 const currency = '€';
 
 var TicketClassSchema = Schema({
+  bypassCounter: {
+    type: Boolean
+  },
+
   price: {
     type: Number,
     required: true,

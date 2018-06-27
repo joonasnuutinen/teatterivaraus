@@ -24,6 +24,10 @@ block content
           .input-group
             input.input.input--narrow(type='number' name='closeBefore' min='0' value=(undefined===theatre.closeBefore ? '0' : theatre.closeBefore))
             span.unit.input-group-addon min
+
+        label Lisätietoja-kentän selite
+          .input-group
+            input.input(type='text' name='additionalInfoExplanation' value=(undefined===theatre.additionalInfoExplanation ? '' : theatre.additionalInfoExplanation))
         
         button.btn.btn--primary(type='submit') Tallenna
       

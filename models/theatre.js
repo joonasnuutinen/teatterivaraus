@@ -4,6 +4,10 @@ var bcrypt = require('bcrypt-nodejs');
 var Schema = mongoose.Schema;
 
 var TheatreSchema = Schema({
+  additionalInfoExplanation: {
+    type: String
+  },
+
   name: {
     type: String,
     required: true

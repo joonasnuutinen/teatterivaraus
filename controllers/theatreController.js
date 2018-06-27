@@ -124,6 +124,7 @@ exports.settingsPost = [
   sanitizeBody('playDescription').trim().escape(),
   sanitizeBody('reservationInstruction').trim().escape(),
   sanitizeBody('emailInstruction').trim().escape(),
+  sanitizeBody('additionalInfoExplanation').trim().escape(),
   sanitizeBody('capacity').toInt(),
   sanitizeBody('closeBefore').toInt(),
   

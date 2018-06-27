@@ -31,7 +31,7 @@ function showForm(id, data, schemaOptions, idPrefix, showPast, callback) {
         formGroup = createShowGroup(data, schemaOptions, idPrefix, theatre.shows, showPast);
       
       // add checkbox
-      } else if ( column == 'marketingPermission' || column == 'enable' ) {
+      } else if ( column == 'marketingPermission' || column == 'enable' || column == 'bypassCounter' ) {
         formGroup = createCheckboxGroup( data, schemaOptions, idPrefix, column );
       
       // add image
@@ -85,7 +85,16 @@ function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
     var $numberField;
     
     if (schemaOptions.tickets.input) {
-      const originalAmount = (data && data.tickets[index]) ? data.tickets[index].amount : 0;
+      var ticketIndex = -1;
+      if (data) {
+        ticketIndex = data.tickets.findIndex(function(ticket) {
+          console.log(ticketClass._id);
+          console.log(ticket.ticketClass._id);
+          return ticketClass._id == ticket.ticketClass._id;
+        });
+      }
+
+      const originalAmount = (ticketIndex != -1) ? data.tickets[ticketIndex].amount : 0;
       
       $numberField = $('<input>')
         .addClass('edited-field input input--narrow js-ticket-input')

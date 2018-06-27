@@ -69,6 +69,8 @@ html(lang='fi')
                   span.unit.input-group-addon kpl
               
           label Lisätietoja (valinnainen)
+            if theatre.additionalInfoExplanation
+              .label__info= theatre.additionalInfoExplanation
             textarea.input(name='additionalInfo')
             
           .form-group.form-group--checkboxes
