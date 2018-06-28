@@ -425,7 +425,7 @@ exports.customerPost = [
       
       req.body.tickets = [];
       
-      TicketClass.find({ theatre: req.user._id }).sort([['price', 'descending'], ['name', 'ascending']]).exec(function(err, ticketClasses) {
+      TicketClass.find({ theatre: req.params.theatreId }).sort([['price', 'descending'], ['name', 'ascending']]).exec(function(err, ticketClasses) {
 
         for (let field in req.body) {
           var re = /ticketClass_(\w+)/;
