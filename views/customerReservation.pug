@@ -58,14 +58,19 @@ html(lang='fi')
               - fieldName = 'ticketClass_' + ticketClass.id;
               label
                 | #{ticketClass.fullName}
-                .remaining
-                  | Lippuja jäljellä:
-                  |
-                  span.remaining__amount(data-id=ticketClass._id)
-                  |
-                  | kpl
+                - var inputClass = 'input input--narrow js-ticket-input';
+                
+                if !ticketClass.bypassCounter
+                  .remaining
+                    | Lippuja jäljellä:
+                    |
+                    span.remaining__amount(data-id=ticketClass._id)
+                    |
+                    | kpl
+                else
+                  - inputClass += ' js-bypass-counter';
                 .input-group
-                  input.input.input--narrow.js-ticket-input(name=fieldName type='number' min='0' value='0')
+                  input(class=inputClass name=fieldName type='number' min='0' value='0')
                   span.unit.input-group-addon kpl
               
           label Lisätietoja (valinnainen)

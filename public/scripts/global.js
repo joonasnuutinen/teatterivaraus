@@ -83,8 +83,6 @@ function createTicketClassGroup(data, schemaOptions, ticketClasses, idPrefix) {
     
     if (!ticketClass.bypassCounter) {
       $ticketClassLabel.append($remaining);
-    } else {
-      $ticketClassLabel.addClass('js-bypass-counter');
     }
 
     var $numberField;
