@@ -63,6 +63,15 @@ router.post('/rekisteroidy', passport.authenticate('local-signup', {
   failureFlash: true
 }));
 
+// POST check login status
+router.post('/is-logged-in', function checkLoginStatus(req, res, next) {
+  let resObj = {
+    isLoggedIn: req.isAuthenticated()
+  };
+
+  res.send(resObj);
+});
+
 /* POST change password */
 router.post( '/vaihda-salasana', isLoggedIn, theatreController.changePassword );
 

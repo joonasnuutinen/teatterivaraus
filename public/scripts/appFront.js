@@ -871,7 +871,11 @@ function userEvents(schemaOptions) {
   } );
   
   $('.dynamic-content').on('click', '.edit-row', function() {
-    editRow($(this).attr('data-row-id'), schemaOptions, true);
+    const self = this;
+    ifLoggedIn(function loggedInCallback() {
+      console.log(self);
+      editRow($(self).attr('data-row-id'), schemaOptions, true);
+    });
   });
   
   $('.dynamic-content').on('click', '.delete-row', function() {
@@ -930,7 +934,7 @@ function userEvents(schemaOptions) {
 function getSignedRequest(file, callback) {
   const url = document.location.pathname + '/sign-s3?fileName=' + encodeURIComponent(file.name) + '&fileType=' + encodeURIComponent(file.type);
   
-  console.log(url);
+  //console.log(url);
   
   $.get(url, function success(data, status, xhr) {
     if (xhr.status !== 200) {
@@ -1181,4 +1185,21 @@ function scrollTo(id) {
   //console.log( offset );
   
   $('html, body').scrollTop( offset );
+}
+
+function ifLoggedIn(callback) {
+  $.post(document.location.origin + '/app/is-logged-in').done(function postingDone(res) {
+    console.log(res);
+    if (res.isLoggedIn) {
+      console.log('running callback');
+      callback();
+      return;
+    }
+
+    const $notLoggedIn = $('<div>')
+      .addClass('not-logged-in')
+      .html('<div class="not-logged-in__inner"><h2>Et ole kirjautunut sisään.</h2><a class="btn btn--primary" href="/app">Kirjaudu sisään</a></div>');
+
+    $('.page').append($notLoggedIn); 
+  });
 }
