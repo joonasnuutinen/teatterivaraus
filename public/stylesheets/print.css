@@ -20,7 +20,7 @@ table {
   padding-bottom: 1em;
 }
 
-.price {
+td.price {
   text-align: right;
 }
 
