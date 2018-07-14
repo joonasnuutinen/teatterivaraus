@@ -211,7 +211,9 @@ exports.json = function(req, res, next) {
         .exec(callback);
     },
     reservations: function(callback) {
-      Reservation.find({ theatre: req.params.theatreId }).exec(callback);
+      Reservation.find({ theatre: req.params.theatreId })
+        .populate('tickets.ticketClass')
+        .exec(callback);
     }
   }, function(err, data) {
     if (err) return next(err);

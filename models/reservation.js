@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var moment = require('moment');
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
 var TicketClass = require('./ticketClass');
 
 var Schema = mongoose.Schema;
@@ -67,6 +68,10 @@ var ReservationSchema = Schema({
 
     bypassCounter: {
       type: Boolean
+    },
+
+    max: {
+      type: Number
     }
   }],
   
@@ -102,6 +107,7 @@ ReservationSchema.virtual('total').get(function() {
     code: '',
     restricted: {}
   };
+  //console.log(this.tickets);
   this.tickets.forEach(function(ticket) {
     var amount = ticket.amount || 0;
     var ticketClass = ticket.ticketClass;
@@ -126,6 +132,8 @@ ReservationSchema.virtual('total').get(function() {
   
   return total;
 });
+
+ReservationSchema.plugin(mongooseLeanVirtuals);
 
 // show virtuals
 ReservationSchema.set('toJSON', {virtuals: true});

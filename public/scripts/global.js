@@ -310,7 +310,10 @@ function updateRemaining(allowOver) {
       $this.parent().removeClass('remaining--visible');
     }
     
-    if (!allowOver) setMaxTickets(id);
+    if (!allowOver) {
+      console.log('setting max tickets');
+      setMaxTickets(id);
+    }
   });
 }
 
@@ -322,7 +325,8 @@ function getRemaining(id) {
   if (id && remainingAtLoad[id]) {
     const $ticketField = $('.js-ticket-input[name$="icketClass_' + id + '"]');
     const userInput = $ticketField.val();
-    remainingId = remainingAtLoad[id] - userInput;
+    const originalAmount = +$ticketField.attr('data-original-amount') || 0;
+    remainingId = remainingAtLoad[id] - userInput + originalAmount;
   }
   
   const remainingTotal = remainingAtLoad.total - getUserTickets();

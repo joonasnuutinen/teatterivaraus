@@ -341,6 +341,7 @@ exports.customerGet = function(req, res, next) {
       reservations: function(callback) {
         Reservation
           .find({ theatre: id })
+          .populate('tickets.ticketClass')
           .exec(callback);
       },
       
@@ -360,7 +361,7 @@ exports.customerGet = function(req, res, next) {
         description: 'Varaa lippuja esitykseen ' + theatre.playName + '.',
         image: siteUrl + '/images/og.png'
       };
-      
+      //console.log(data.reservations);
       showController.updateShowData(data, theatre);
       
       const orderedSponsors = rowController.orderRows(data.sponsors, theatre.sponsorOrder);

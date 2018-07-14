@@ -170,9 +170,11 @@ exports.updateShowData = function(data, theatre) {
     var thisShow = data.shows[showIndex];
     thisShow.reservationCount += ticketAmount;
     thisShow.remaining.total -= ticketAmount;
-    
+    //console.log(reservation.total);
     for (let ticketClass in reservation.total.restricted) {
+      //console.log(thisShow.remaining[ticketClass]);
       thisShow.remaining[ticketClass] -= reservation.total.restricted[ticketClass];
+      //console.log(thisShow.remaining[ticketClass]);
     }
   });
   
