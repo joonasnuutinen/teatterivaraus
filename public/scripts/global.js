@@ -311,7 +311,7 @@ function updateRemaining(allowOver) {
     }
     
     if (!allowOver) {
-      console.log('setting max tickets');
+      //console.log('setting max tickets');
       setMaxTickets(id);
     }
   });
@@ -322,15 +322,21 @@ function getRemaining(id) {
   const remainingAtLoad = getRemainingAtLoad();
   var remainingId = Infinity;
   
-  if (id && remainingAtLoad[id]) {
+  if (id && remainingAtLoad[id] !== undefined) {
     const $ticketField = $('.js-ticket-input[name$="icketClass_' + id + '"]');
     const userInput = $ticketField.val();
     const originalAmount = +$ticketField.attr('data-original-amount') || 0;
+    //console.log(remainingAtLoad[id]);
     remainingId = remainingAtLoad[id] - userInput + originalAmount;
   }
   
   const remainingTotal = remainingAtLoad.total - getUserTickets();
-  
+  /*
+  console.log({
+    remainingId: remainingId,
+    remainingTotal: remainingTotal
+  });
+  */
   return (remainingId < remainingTotal) ? remainingId : remainingTotal;
 }
 
@@ -344,6 +350,7 @@ function getRemainingAtLoad() {
     if (remaining[key] === null) remaining[key] = Infinity;
   }
 
+  //console.log(remaining);
   return remaining;
 }
 
