@@ -1,0 +1,11 @@
+extends layout_app
+
+block content
+  .content
+    h1.page-title= title
+
+    ul
+      each theatre in theatres
+        li
+          - var url = '/app/tilastot/' + theatre.id;
+          a(href=url)= theatre.name

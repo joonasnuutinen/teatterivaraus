@@ -148,9 +148,11 @@ exports.updateShowData = function(data, theatre) {
   data.shows.forEach(function(show) {
     show.reservationCount = 0;
     show.remaining = { total: theatre.capacity };
+    show.reserved = {};
     
     data.ticketClasses.forEach(function eachTicketClass(ticketClass) {
       show.remaining[ticketClass._id] = ticketClass.max;
+      show.reserved[ticketClass._id] = 0;
     });
     
     const closingTime = new Date(show.begins);
@@ -176,7 +178,14 @@ exports.updateShowData = function(data, theatre) {
       thisShow.remaining[ticketClass] -= reservation.total.restricted[ticketClass];
       //console.log(thisShow.remaining[ticketClass]);
     }
+
+    // update each ticket class's reservations
+    reservation.tickets.forEach(function(ticket) {
+      thisShow.reserved[ticket.ticketClass._id] += ticket.amount;
+    });
   });
+
+  //console.log(data.shows);
   
   return data;
 };

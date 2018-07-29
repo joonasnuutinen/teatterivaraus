@@ -1,0 +1,49 @@
+extends layout_app
+
+block content
+  .content
+    h1 Tilastot: #{data.theatre.name}
+
+    h2 Esitykset ja lipputyypit
+
+    table.table
+      thead.table__head
+        tr.table__row
+          th.table__header Näytös
+          each ticketClass in data.ticketClasses
+            th.table__header.table__header--number= ticketClass.name
+      tbody.table__body
+        each show in data.shows
+          tr.table__row
+            th.table__header= show.beginsLite
+            each ticketClass in data.ticketClasses
+              td.table__cell.table__cell--number= show.reserved[ticketClass._id]
+
+    h2 Varausten lähde
+
+    h3 Varattuja paikkoja
+
+    table
+      thead
+        tr
+          th Nettivaraus
+          th Manuaalinen varaus
+        tr
+          td= reservationCount.people.webForm
+          td= reservationCount.people.dashboard
+
+    h3 Varauksia
+
+    table
+      tr
+        th Nettivaraus
+        th Manuaalinen varaus
+      tr
+        td= reservationCount.reservations.webForm
+        td= reservationCount.reservations.dashboard
+
+    h2 Sähköpostiosoitteet, joille markkinointilupa
+
+    ul
+      each email in emails
+        li= email

@@ -105,7 +105,8 @@ ReservationSchema.virtual('total').get(function() {
     price: 0,
     priceString: '',
     code: '',
-    restricted: {}
+    restricted: {},
+    //reserved: {}
   };
   //console.log(this.tickets);
   this.tickets.forEach(function(ticket) {
@@ -115,6 +116,14 @@ ReservationSchema.virtual('total').get(function() {
     if (!ticket.bypassCounter) {
       total.tickets += amount;
     }
+
+    /*
+    if (total.reserved[ticketClass]) {
+      total.reserved[ticketClass] += amount;
+    } else {
+      total.reserved[ticketClass] = amount;
+    }
+    */
 
     total.price += amount * ticketClass.price;
     

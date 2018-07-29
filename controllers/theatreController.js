@@ -226,6 +226,81 @@ exports.json = function(req, res, next) {
   });
 };
 
+exports.finalStatsSelect = function(req, res, next) {
+  Theatre.find().sort([['name', 'ascending']]).exec(function(err, theatres) {
+    if (err) return next(err);
+
+    if (req.user.role !== 'admin') return next();
+
+    res.render('finalStatsSelect', {title: 'Tilastot', theatres: theatres, theatre: req.user});
+  });
+};
+
+// GET final stats
+exports.finalStats = function(req, res, next) {
+  if (req.user.role !== 'admin') return next();
+
+  async.parallel({
+    theatre: function(callback) {
+      Theatre.findById(req.params.theatreId, 'name playName playDescription capacity').exec(callback);
+    },
+    shows: function(callback) {
+      Show.find({theatre: req.params.theatreId})
+        .lean({ virtuals: true })
+        .sort([['begins', 'ascending']])
+        .exec(callback);
+    },
+    ticketClasses: function(callback) {
+      TicketClass.find({theatre: req.params.theatreId})
+        .sort([['price', 'descending'], ['name', 'ascending']])
+        .exec(callback);
+    },
+    reservations: function(callback) {
+      Reservation.find({ theatre: req.params.theatreId })
+        .populate('tickets.ticketClass')
+        .exec(callback);
+    }
+  }, function(err, data) {
+    if (err) return next(err);
+
+    showController.updateShowData(data, data.theatre);
+    
+
+    // count online and manual reservations and take emails if permission
+
+    let reservationCount = {
+      people: {
+        webForm: 0,
+        dashboard: 0
+      },
+
+      reservations: {
+        webForm: 0,
+        dashboard: 0
+      }
+    };
+
+    let emails = [];
+
+    data.reservations.forEach(function(reservation) {
+      reservationCount.people[reservation.source] += reservation.total.tickets;
+      reservationCount.reservations[reservation.source]++;
+
+      if (reservation.marketingPermission && emails.indexOf(reservation.email) === -1) {
+        emails.push(reservation.email);
+      }
+    });
+
+    res.render('finalStats', {
+      title: 'Tilastot: ' + data.theatre.name,
+      theatre: req.user,
+      data: data,
+      reservationCount: reservationCount,
+      emails: emails
+    });
+  });
+};
+
 /*
 // GET sent
 exports.sent = function(req, res, next) {

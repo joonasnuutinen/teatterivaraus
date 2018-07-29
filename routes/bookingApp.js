@@ -126,6 +126,13 @@ router.post('/ohjeet/order', isLoggedIn, docController.saveOrder);
 
 router.delete('/ohjeet/:id', isLoggedIn, docController.delete);
 
+// ===========================================================================
+// FINAL STATS (ADMIN)
+// ===========================================================================
+router.get('/tilastot', isLoggedIn, theatreController.finalStatsSelect);
+router.get('/tilastot/:theatreId', isLoggedIn, theatreController.finalStats);
+
+
 // SETTINGS =========================================================
 router.get('/asetukset', isLoggedIn, theatreController.settingsGet);
 
