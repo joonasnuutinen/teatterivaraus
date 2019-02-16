@@ -859,7 +859,7 @@ function populateRows(schemaOptions) {
 
 // initialize filter
 function initFilter() {
-  $.getJSON('/app/naytokset/json', function(shows) {
+  $.getJSON('/naytokset/json', function(shows) {
     populateSelect($('#filter'), null, shows, true);
   });
 }
@@ -1030,7 +1030,7 @@ function cancelEdit(id, schemaOptions, data) {
 function printReservations() {
   var selectedShowId = $('#filter').val();
   var selectedShowName = $('#filter')[0].selectedOptions[0].innerText;
-  var printUrl = '/app/varaukset/tulosta/' + selectedShowId;
+  var printUrl = '/varaukset/tulosta/' + selectedShowId;
   window.open(printUrl, '_blank');
 }
 
@@ -1188,7 +1188,7 @@ function scrollTo(id) {
 }
 
 function ifLoggedIn(callback) {
-  $.post(document.location.origin + '/app/is-logged-in').done(function postingDone(res) {
+  $.post(document.location.origin + '/is-logged-in').done(function postingDone(res) {
     console.log(res);
     if (res.isLoggedIn) {
       console.log('running callback');
@@ -1200,6 +1200,6 @@ function ifLoggedIn(callback) {
       .addClass('not-logged-in')
       .html('<div class="not-logged-in__inner"><h2>Et ole kirjautunut sisään.</h2><a class="btn btn--primary" href="/app">Kirjaudu sisään</a></div>');
 
-    $('.page').append($notLoggedIn); 
+    $('.page').append($notLoggedIn);
   });
 }
