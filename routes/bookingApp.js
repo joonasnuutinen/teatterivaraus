@@ -98,7 +98,7 @@ router.get('/lippujen-hinnat/json', isLoggedIn, ticketClassController.ticketPric
 router.get('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.getById);
 router.delete('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.delete);
 router.put('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.put);
-
+/* DISABLED
 // ===========================================================================
 // SPONSORS
 // ===========================================================================
@@ -114,7 +114,8 @@ router.post('/sponsorit/order', isLoggedIn, sponsorController.order);
 router.get('/sponsorit/:id', isLoggedIn, sponsorController.getById);
 router.put('/sponsorit/:id', isLoggedIn, sponsorController.put);
 router.delete('/sponsorit/:id', isLoggedIn, sponsorController.delete);
-
+*/
+/* MOVE TO WORDPRESS
 // ===========================================================================
 // DOCS (ADMIN)
 // ===========================================================================
@@ -125,7 +126,7 @@ router.post('/ohjeet', isLoggedIn, docController.save);
 router.post('/ohjeet/order', isLoggedIn, docController.saveOrder);
 
 router.delete('/ohjeet/:id', isLoggedIn, docController.delete);
-
+*/
 // SETTINGS =========================================================
 router.get('/asetukset', isLoggedIn, theatreController.settingsGet);
 

@@ -1,5 +1,5 @@
 'use strict';
-
+/* MOVE TO WORDPRESS
 const express = require('express');
 const router = express.Router();
 
@@ -9,3 +9,4 @@ const docController = require('../controllers/docController');
 router.get('/', docController.getPublic);
 
 module.exports = router;
+*/

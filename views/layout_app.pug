@@ -25,9 +25,9 @@ html(lang='fi')
           - var navItems;
           
           if isAdmin
-            - navItems = [{title: 'Ohjeet', href: '/app/ohjeet'}, {title: 'Asetukset', href: '/app/asetukset'}, {title: 'Kirjaudu ulos', href: '/app/kirjaudu-ulos'}];
+            - navItems = [{title: 'Asetukset', href: '/app/asetukset'}, {title: 'Kirjaudu ulos', href: '/app/kirjaudu-ulos'}];
           else
-            -navItems = [{title: 'Varaukset', href: '/app/varaukset'}, {title: 'Varaustilanne', href: '/app/varaustilanne'}, {title: 'Näytökset', href: '/app/naytokset'}, {title: 'Lippujen hinnat', href: '/app/lippujen-hinnat'}, {title: 'Sponsorit', href: '/app/sponsorit'}, {title: 'Asetukset', href: '/app/asetukset'}, {title: 'Julkinen varauslomake', href: '/app/lomake', target: '_blank'}, {title: 'Ohjeet', href: '/ohjeet', target: '_blank'}, {title: 'Kirjaudu ulos', href: '/app/kirjaudu-ulos'}];
+            -navItems = [{title: 'Varaukset', href: '/app/varaukset'}, {title: 'Varaustilanne', href: '/app/varaustilanne'}, {title: 'Näytökset', href: '/app/naytokset'}, {title: 'Lippujen hinnat', href: '/app/lippujen-hinnat'}, {title: 'Asetukset', href: '/app/asetukset'}, {title: 'Julkinen varauslomake', href: '/app/lomake', target: '_blank'}, {title: 'Kirjaudu ulos', href: '/app/kirjaudu-ulos'}];
           
           each navItem in navItems
             - var isActive = (navItem.title == title)

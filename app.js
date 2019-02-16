@@ -105,8 +105,9 @@ app.use(flash());
 app.use('/app', bookingApp);
 app.use('/', index);
 app.use('/users', users);
+/* MOVE TO WORDPRESS
 app.use('/ohjeet', docs);
-
+*/
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
