@@ -27,7 +27,7 @@ exports.loginGet = function(req, res, next) {
 // GET logout
 exports.logoutGet = function(req, res, next) {
   req.logout();
-  res.redirect('/app/kirjaudu');
+  res.redirect('/kirjaudu');
 }
 
 // GET register

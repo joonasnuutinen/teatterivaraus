@@ -25,9 +25,9 @@ html(lang='fi')
           - var navItems;
           
           if isAdmin
-            - navItems = [{title: 'Asetukset', href: '/app/asetukset'}, {title: 'Kirjaudu ulos', href: '/app/kirjaudu-ulos'}];
+            - navItems = [{title: 'Asetukset', href: '/asetukset'}, {title: 'Kirjaudu ulos', href: '/kirjaudu-ulos'}];
           else
-            -navItems = [{title: 'Varaukset', href: '/app/varaukset'}, {title: 'Varaustilanne', href: '/app/varaustilanne'}, {title: 'Näytökset', href: '/app/naytokset'}, {title: 'Lippujen hinnat', href: '/app/lippujen-hinnat'}, {title: 'Asetukset', href: '/app/asetukset'}, {title: 'Julkinen varauslomake', href: '/app/lomake', target: '_blank'}, {title: 'Kirjaudu ulos', href: '/app/kirjaudu-ulos'}];
+            -navItems = [{title: 'Varaukset', href: '/varaukset'}, {title: 'Varaustilanne', href: 'varaustilanne'}, {title: 'Näytökset', href: 'naytokset'}, {title: 'Lippujen hinnat', href: '/lippujen-hinnat'}, {title: 'Asetukset', href: '/asetukset'}, {title: 'Julkinen varauslomake', href: '/lomake', target: '_blank'}, {title: 'Kirjaudu ulos', href: '/kirjaudu-ulos'}];
           
           each navItem in navItems
             - var isActive = (navItem.title == title)

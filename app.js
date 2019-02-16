@@ -102,8 +102,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-app.use('/app', bookingApp);
-app.use('/', index);
+app.use('/', bookingApp);
+//app.use('/', index);
 app.use('/users', users);
 /* MOVE TO WORDPRESS
 app.use('/ohjeet', docs);

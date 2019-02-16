@@ -16,9 +16,10 @@ var ticketClassController = require('../controllers/ticketClassController');
 var sponsorController = require('../controllers/sponsorController');
 var docController = require('../controllers/docController');
 
-var login = '/app/kirjaudu';
-var register = '/app/rekisteroidy';
-var redirectUrl = '/app/varaukset';
+var login = '/kirjaudu';
+var register = '/rekisteroidy';
+var redirectUrl = '/varaukset';
+
 
 // RESERVATIONS =============================
 
@@ -134,6 +135,17 @@ router.post('/asetukset', isLoggedIn, theatreController.settingsPost);
 
 // PUBLIC Form
 router.get('/lomake', isLoggedIn, reservationController.publicForm);
+
+// === FROM index.js
+
+// GET theatre JSON
+router.get('/:theatreId.json', theatreController.json);
+
+/* customer reservation form */
+router.get('/:theatreId', reservationController.customerGet);
+router.post('/:theatreId', reservationController.customerPost);
+
+// ===
 
 // ========================================================
 // FUNCTIONS ==============================================

@@ -32,7 +32,7 @@ const { sanitizeBody } = require('express-validator/filter');
 
 // GET app index page
 exports.index = function(req, res, next) {
-  res.redirect('/app/varaukset');
+  res.redirect('/varaukset');
 };
 
 // GET reservations
