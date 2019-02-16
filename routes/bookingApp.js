@@ -20,6 +20,10 @@ var login = '/kirjaudu';
 var register = '/rekisteroidy';
 var redirectUrl = '/varaukset';
 
+try {
+  require('dotenv').load();
+} catch(err) {}
+
 
 // RESERVATIONS =============================
 
@@ -137,6 +141,11 @@ router.post('/asetukset', isLoggedIn, theatreController.settingsPost);
 router.get('/lomake', isLoggedIn, reservationController.publicForm);
 
 // === FROM index.js
+
+/* GET privacy page. */
+router.get('/rekisteriseloste', function(req, res, next) {
+  res.redirect(process.env.PUBLIC_URL + 'rekisteriseloste');
+});
 
 // GET theatre JSON
 router.get('/:theatreId.json', theatreController.json);
