@@ -1,4 +1,4 @@
-- var isAdmin = (theatre.role === 'admin');
+- var isAdmin = (theatre && theatre.role === 'admin');
 doctype html
 html(lang='fi')  
   head
@@ -16,25 +16,27 @@ html(lang='fi')
   body.page.page--app
     header.header
       nav.navbar
-        a.navbar__brand(href='/app')
+        a.navbar__brand(href='/')
           img.navbar__logo(src='/images/logo.svg' alt='Teatterivaraus-logo')
-        button#nav-toggler.navbar__toggler(type='button')
-          != '&#9776;'
         
-        ul#nav.navbar__nav.navbar__nav--collapse
-          - var navItems;
-          
-          if isAdmin
-            - navItems = [{title: 'Asetukset', href: '/asetukset'}, {title: 'Kirjaudu ulos', href: '/kirjaudu-ulos'}];
-          else
-            -navItems = [{title: 'Varaukset', href: '/varaukset'}, {title: 'Varaustilanne', href: 'varaustilanne'}, {title: 'Näytökset', href: 'naytokset'}, {title: 'Lippujen hinnat', href: '/lippujen-hinnat'}, {title: 'Asetukset', href: '/asetukset'}, {title: 'Julkinen varauslomake', href: '/lomake', target: '_blank'}, {title: 'Kirjaudu ulos', href: '/kirjaudu-ulos'}];
-          
-          each navItem in navItems
-            - var isActive = (navItem.title == title)
-            - var className = (isActive ? 'navbar__item navbar__item--active' : 'navbar__item')
-            - var target = ( navItem.target ) ? navItem.target : '_self'
-            li(class=className)
-              a.navbar__link(href=navItem.href target=target)= navItem.title
+        if theatre
+          button#nav-toggler.navbar__toggler(type='button')
+            != '&#9776;'
+        
+          ul#nav.navbar__nav.navbar__nav--collapse
+            - var navItems;
+            
+            if isAdmin
+              - navItems = [{title: 'Asetukset', href: '/asetukset'}, {title: 'Kirjaudu ulos', href: '/kirjaudu-ulos'}];
+            else
+              -navItems = [{title: 'Varaukset', href: '/varaukset'}, {title: 'Varaustilanne', href: 'varaustilanne'}, {title: 'Näytökset', href: 'naytokset'}, {title: 'Lippujen hinnat', href: '/lippujen-hinnat'}, {title: 'Asetukset', href: '/asetukset'}, {title: 'Julkinen varauslomake', href: '/lomake', target: '_blank'}, {title: 'Kirjaudu ulos', href: '/kirjaudu-ulos'}];
+            
+            each navItem in navItems
+              - var isActive = (navItem.title == title)
+              - var className = (isActive ? 'navbar__item navbar__item--active' : 'navbar__item')
+              - var target = ( navItem.target ) ? navItem.target : '_self'
+              li(class=className)
+                a.navbar__link(href=navItem.href target=target)= navItem.title
     
     block content
     
