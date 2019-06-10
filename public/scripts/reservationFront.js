@@ -8,9 +8,9 @@ $(function documentReady() {
     updateRemaining();
   });
   
-  $('#reservation-form').submit(function(evt) {
-    evt.preventDefault();
-    sendReservation($(this));
+  $('#submitForm').click(function(evt) {
+    //evt.preventDefault();
+    sendReservation($('#reservation-form'));
   });
 });
 
