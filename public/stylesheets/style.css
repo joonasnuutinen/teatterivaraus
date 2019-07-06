@@ -667,6 +667,11 @@ p {
   color: white;
 }
 
+.message__content--warning {
+  background: #ff5200;
+  color: white;
+}
+
 .message__content--success {
   background: #dcfbdc;
 }
