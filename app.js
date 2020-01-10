@@ -9,8 +9,6 @@ var expressSession = require('express-session');
 var flash = require('connect-flash');
 var expressValidator = require('express-validator');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var expressTitle = require('express-title');
 var compression = require( 'compression' );
 var helmet = require( 'helmet' );
 const MongoStore = require('connect-mongo')(expressSession);
@@ -18,8 +16,6 @@ const fileUpload = require('express-fileupload');
 
 var users = require('./routes/users');
 var bookingApp = require('./routes/bookingApp');
-
-var User = require('./models/theatre');
 
 var app = express();
 
