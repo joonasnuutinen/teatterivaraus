@@ -12,7 +12,6 @@ var reservationController = require('../controllers/reservationController');
 var theatreController = require('../controllers/theatreController');
 var showController = require('../controllers/showController');
 var ticketClassController = require('../controllers/ticketClassController');
-var docController = require('../controllers/docController');
 
 var login = '/kirjaudu';
 var register = '/rekisteroidy';
@@ -101,18 +100,6 @@ router.get('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.getById);
 router.delete('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.delete);
 router.put('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.put);
 
-/* MOVE TO WORDPRESS
-// ===========================================================================
-// DOCS (ADMIN)
-// ===========================================================================
-router.get('/ohjeet', isLoggedIn, docController.getAdmin);
-router.get('/ohjeet/json', docController.getJSON);
-
-router.post('/ohjeet', isLoggedIn, docController.save);
-router.post('/ohjeet/order', isLoggedIn, docController.saveOrder);
-
-router.delete('/ohjeet/:id', isLoggedIn, docController.delete);
-*/
 // SETTINGS =========================================================
 router.get('/asetukset', isLoggedIn, theatreController.settingsGet);
 
