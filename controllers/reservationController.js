@@ -2,9 +2,7 @@
 
 var async = require('async');
 var request = require('request');
-var pdf = require('html-pdf');
 var fs = require('fs');
-var email = require('emailjs');
 var Reservation = require('../models/reservation');
 var TicketClass = require('../models/ticketClass');
 var Show = require('../models/show');
@@ -294,23 +292,6 @@ exports.printHtml = function(req, res, next) {
       title: 'Tuloste',
       show: results.show,
       reservations: results.reservations
-    });
-  });
-};
-
-// print reservations in pdf format
-exports.printPdf = function(req, res, next) {
-  var sourceUrl = req.protocol + '://' + req.get('host') + '/app/varaukset/tulosta/' + req.params.id + '.html';
-  request(sourceUrl, function(error, response, body) {
-    if (error) return next(error);
-    var options = {
-      height: '210mm',
-      width: '297mm',
-      border: '19mm'
-    };
-    pdf.create(body, options).toStream(function(err, stream) {
-      if (err) return next(err);
-      stream.pipe(fs.createWriteStream('./tuloste.pdf'));
     });
   });
 };
