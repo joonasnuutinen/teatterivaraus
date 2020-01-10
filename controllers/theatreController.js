@@ -21,7 +21,7 @@ try {
 
 // GET login
 exports.loginGet = function(req, res, next) {
-  res.render('login', {title: 'Kirjaudu', errors: req.flash('passwordless')});
+  res.render('login', {title: 'Kirjaudu'});
 };
 
 // GET logout
