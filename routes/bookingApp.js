@@ -7,13 +7,11 @@ var passport = require('passport');
 // require controller modules
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({extended: false});
-//var passwordless = require('passwordless');
 
 var reservationController = require('../controllers/reservationController');
 var theatreController = require('../controllers/theatreController');
 var showController = require('../controllers/showController');
 var ticketClassController = require('../controllers/ticketClassController');
-var sponsorController = require('../controllers/sponsorController');
 var docController = require('../controllers/docController');
 
 var login = '/kirjaudu';
@@ -35,7 +33,6 @@ router.post('/varaukset', isLoggedIn, reservationController.post);
 
 router.get('/varaukset/json', isLoggedIn, reservationController.getJSON);
 router.get('/varaukset/tulosta/:id', isLoggedIn, reservationController.printHtml);
-//router.get('/varaukset/tulosta/:id.pdf', isLoggedIn, reservationController.printPdf);
 
 router.get('/varaukset/:id', isLoggedIn, reservationController.getById);
 router.put('/varaukset/:id', isLoggedIn, reservationController.put);
@@ -103,23 +100,7 @@ router.get('/lippujen-hinnat/json', isLoggedIn, ticketClassController.ticketPric
 router.get('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.getById);
 router.delete('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.delete);
 router.put('/lippujen-hinnat/:id', isLoggedIn, ticketClassController.put);
-/* DISABLED
-// ===========================================================================
-// SPONSORS
-// ===========================================================================
-router.get('/sponsorit', isLoggedIn, sponsorController.sponsors);
-router.post('/sponsorit', isLoggedIn, sponsorController.save);
 
-router.get('/sponsorit/json', isLoggedIn, sponsorController.getJSON);
-
-router.get('/sponsorit/sign-s3', isLoggedIn, sponsorController.signS3);
-
-router.post('/sponsorit/order', isLoggedIn, sponsorController.order);
-
-router.get('/sponsorit/:id', isLoggedIn, sponsorController.getById);
-router.put('/sponsorit/:id', isLoggedIn, sponsorController.put);
-router.delete('/sponsorit/:id', isLoggedIn, sponsorController.delete);
-*/
 /* MOVE TO WORDPRESS
 // ===========================================================================
 // DOCS (ADMIN)

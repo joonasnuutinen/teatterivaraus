@@ -6,9 +6,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressSession = require('express-session');
-//var passwordless = require('passwordless');
-//var MongoStore = require('passwordless-mongostore');
-//var email = require('emailjs');
 var flash = require('connect-flash');
 var validator = require('validator');
 var expressValidator = require('express-validator');
@@ -19,7 +16,6 @@ var compression = require( 'compression' );
 var helmet = require( 'helmet' );
 const MongoStore = require('connect-mongo')(expressSession);
 const fileUpload = require('express-fileupload');
-const aws = require('aws-sdk');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -84,9 +80,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure file upload
 app.use(fileUpload());
-
-// Configure AWS region
-aws.config.region = 'eu-west-1';
 
 // configure passport
 app.use(expressSession({
