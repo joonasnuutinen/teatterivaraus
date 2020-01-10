@@ -17,7 +17,6 @@ var helmet = require( 'helmet' );
 const MongoStore = require('connect-mongo')(expressSession);
 const fileUpload = require('express-fileupload');
 
-var index = require('./routes/index');
 var users = require('./routes/users');
 var bookingApp = require('./routes/bookingApp');
 
