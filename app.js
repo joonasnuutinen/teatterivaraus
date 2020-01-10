@@ -20,7 +20,6 @@ const fileUpload = require('express-fileupload');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var bookingApp = require('./routes/bookingApp');
-var docs = require('./routes/docs');
 
 var User = require('./models/theatre');
 
@@ -98,9 +97,7 @@ app.use(flash());
 app.use('/', bookingApp);
 //app.use('/', index);
 app.use('/users', users);
-/* MOVE TO WORDPRESS
-app.use('/ohjeet', docs);
-*/
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
