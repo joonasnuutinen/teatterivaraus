@@ -8,7 +8,6 @@ var TicketClass = require('../models/ticketClass');
 var Show = require('../models/show');
 var Theatre = require('../models/theatre');
 var Sponsor = require( '../models/sponsor' );
-var mailgun = require( 'mailgun-js' );
 
 const showController = require('./showController');
 const rowController = require('./rowController');
@@ -16,14 +15,6 @@ const rowController = require('./rowController');
 try {
   require('dotenv').load();
 } catch(err) {}
-
-var smtpServer = email.server.connect({
-  user: process.env.SMTP_USER,
-  password: process.env.SMTP_PASSWORD,
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  tls: true
-});
 
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
