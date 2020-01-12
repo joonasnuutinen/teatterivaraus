@@ -2,7 +2,7 @@
   "name": "teatterivaraus",
   "version": "0.0.0",
   "engines": {
-    "node": "6.11.0"
+    "node": "12.x"
   },
   "private": true,
   "scripts": {
