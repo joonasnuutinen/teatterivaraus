@@ -5,9 +5,6 @@ var passport = require('passport');
 
 
 // require controller modules
-var bodyParser = require('body-parser');
-var urlencodedParser = bodyParser.urlencoded({extended: false});
-
 var reservationController = require('../controllers/reservationController');
 var theatreController = require('../controllers/theatreController');
 var showController = require('../controllers/showController');
