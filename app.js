@@ -12,7 +12,6 @@ var compression = require( 'compression' );
 var helmet = require( 'helmet' );
 const MongoStore = require('connect-mongo')(expressSession);
 
-var users = require('./routes/users');
 var bookingApp = require('./routes/bookingApp');
 
 var app = express();
@@ -83,7 +82,6 @@ app.use(passport.session());
 app.use(flash());
 
 app.use('/', bookingApp);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
