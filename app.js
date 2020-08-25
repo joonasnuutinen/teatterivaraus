@@ -12,7 +12,6 @@ var passport = require('passport');
 var compression = require( 'compression' );
 var helmet = require( 'helmet' );
 const MongoStore = require('connect-mongo')(expressSession);
-const fileUpload = require('express-fileupload');
 
 var users = require('./routes/users');
 var bookingApp = require('./routes/bookingApp');
@@ -70,9 +69,6 @@ app.use( compression() ); // compress all routes
 app.use( helmet() );
 
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Configure file upload
-app.use(fileUpload());
 
 // configure passport
 app.use(expressSession({
