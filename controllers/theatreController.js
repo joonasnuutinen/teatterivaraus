@@ -30,11 +30,6 @@ exports.logoutGet = function(req, res, next) {
   res.redirect('/kirjaudu');
 }
 
-// GET register
-exports.registerGet = function(req, res, next) {
-  res.render('register', {title: registerTitle, errors: req.flash('signupMessage'), recaptcha: true});
-};
-
 // POST contact
 exports.contactPost = function(req, res, next) {
   var response = {

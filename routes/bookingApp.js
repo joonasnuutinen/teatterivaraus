@@ -51,9 +51,6 @@ router.post('/kirjaudu',
 /* GET logout */
 router.get('/kirjaudu-ulos', theatreController.logoutGet);
 
-/* GET register */
-router.get('/rekisteroidy', theatreController.registerGet);
-
 /* POST register */
 router.post('/rekisteroidy', passport.authenticate('local-signup', {
   successRedirect: redirectUrl,
