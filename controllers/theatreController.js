@@ -148,36 +148,3 @@ exports.json = function(req, res, next) {
     res.json(data.theatre);
   });
 };
-
-function sendFormViaEmail(contact) {
-  // ---------------------------------------------------------------------
-  // email body starts ---------------------------------------------------
-  // ---------------------------------------------------------------------
-  var body = 'Teatterin nimi: ' + contact.name + '\n';
-  body += 'Teatterin sähköposti: ' + contact.email + '\n';
-  body += 'Näytelmän nimi: ' + contact.playName + '\n\n';
-  
-  body += 'Otan palvelun käyttöön\n';
-  body += '- alkaen: ' + contact.beginning + '\n';
-  body += '- päättyen: ' + contact.ending + '\n\n';
-  
-  body += 'Lisätietoja: ' + contact.additionalInfo;
-  
-  // ---------------------------------------------------------------------
-  // email body ends -----------------------------------------------------
-  // ---------------------------------------------------------------------
-  
-  var message = {
-    text: body,
-    from: contact.name + ' <' + contact.email + '>',
-    to: process.env.ADMIN_EMAIL,
-    "reply-to": contact.email,
-    subject: 'Teatterivaraus: Yhteydenotto'
-  };
-  
-  var mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN});
-  
-  mailgun.messages().send( message, function mailSent(err) {
-    if (err) console.log( err );
-  });
-}
