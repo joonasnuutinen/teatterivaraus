@@ -149,13 +149,6 @@ exports.json = function(req, res, next) {
   });
 };
 
-/*
-// GET sent
-exports.sent = function(req, res, next) {
-  res.render('sent', {title: 'Kirjautumislinkki lähetetty'});
-};
-*/
-
 function sendFormViaEmail(contact) {
   // ---------------------------------------------------------------------
   // email body starts ---------------------------------------------------
