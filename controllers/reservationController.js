@@ -9,7 +9,6 @@ var Show = require('../models/show');
 var Theatre = require('../models/theatre');
 
 const showController = require('./showController');
-const rowController = require('./rowController');
 
 try {
   require('dotenv').load();

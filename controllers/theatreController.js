@@ -2,7 +2,6 @@
 
 var async = require('async');
 var Theatre = require('../models/theatre');
-var Contact = require('../models/contact');
 var Show = require('../models/show');
 var TicketClass = require('../models/ticketClass');
 var Reservation = require('../models/reservation');
