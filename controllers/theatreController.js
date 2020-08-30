@@ -38,7 +38,6 @@ exports.settingsPost = [
   
   // Sanitize fields
   sanitizeBody('playName').trim().escape(),
-  sanitizeBody('playDescription').trim().escape(),
   sanitizeBody('reservationInstruction').trim().escape(),
   sanitizeBody('emailInstruction').trim().escape(),
   sanitizeBody('additionalInfoExplanation').trim().escape(),
@@ -114,7 +113,7 @@ exports.changePassword = function changePassword(req, res, next) {
 exports.json = function(req, res, next) {
   async.parallel({
     theatre: function(callback) {
-      Theatre.findById(req.params.theatreId, 'name playName playDescription capacity').exec(callback);
+      Theatre.findById(req.params.theatreId, 'name playName capacity').exec(callback);
     },
     shows: function(callback) {
       Show.find({theatre: req.params.theatreId})

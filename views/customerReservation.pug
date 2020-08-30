@@ -26,9 +26,6 @@ html(lang='fi')
         h3.small-title.small-title--box= theatre.name
         h1.page-title= theatre.playName
         
-        if (theatre.playDescription && false)
-          p= theatre.playDescription
-        
         - const formUrl = '/' + theatre.id
         form#reservation-form.form(action=formUrl method='POST')
           label Etunimi
