@@ -1,8 +1,6 @@
-var Theatre = require('../models/theatre');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-
 
 // require controller modules
 var reservationController = require('../controllers/reservationController');
@@ -115,8 +113,6 @@ router.get('/:theatreId.json', theatreController.json);
 /* customer reservation form */
 router.get('/:theatreId', reservationController.customerGet);
 router.post('/:theatreId', reservationController.customerPost);
-
-// ===
 
 // ========================================================
 // FUNCTIONS ==============================================
