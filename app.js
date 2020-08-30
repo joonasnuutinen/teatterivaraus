@@ -1,4 +1,3 @@
-require('newrelic');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -12,9 +11,7 @@ var passport = require('passport');
 var compression = require( 'compression' );
 var helmet = require( 'helmet' );
 const MongoStore = require('connect-mongo')(expressSession);
-const fileUpload = require('express-fileupload');
 
-var users = require('./routes/users');
 var bookingApp = require('./routes/bookingApp');
 
 var app = express();
@@ -37,7 +34,6 @@ require('./config/passport')(passport);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -71,9 +67,6 @@ app.use( helmet() );
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configure file upload
-app.use(fileUpload());
-
 // configure passport
 app.use(expressSession({
   secret: process.env.SESSION_SECRET,
@@ -89,8 +82,6 @@ app.use(passport.session());
 app.use(flash());
 
 app.use('/', bookingApp);
-//app.use('/', index);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

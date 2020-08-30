@@ -2,16 +2,10 @@
 
 var async = require('async');
 var Theatre = require('../models/theatre');
-var Contact = require('../models/contact');
 var Show = require('../models/show');
 var TicketClass = require('../models/ticketClass');
 var Reservation = require('../models/reservation');
-var registerTitle = 'Tilaa';
-var mailgun = require( 'mailgun-js' );
-var request = require('request');
-
 const showController = require('./showController');
-
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
@@ -30,83 +24,6 @@ exports.logoutGet = function(req, res, next) {
   res.redirect('/kirjaudu');
 }
 
-// GET register
-exports.registerGet = function(req, res, next) {
-  res.render('register', {title: registerTitle, errors: req.flash('signupMessage'), recaptcha: true});
-};
-
-// POST contact
-exports.contactPost = function(req, res, next) {
-  var response = {
-    errors: [],
-    success: false
-  };
-    
-  var recaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify';
-  
-  request.post({
-    url: recaptchaUrl,
-    form: {
-      secret: process.env.RECAPTCHA_SECRET,
-      response: req.body.recaptchaResponse
-    }
-  }, function(err, gResponse, body) {
-      var data = JSON.parse(body);
-
-      if (err || ! data.success) {
-        var message = {msg: 'reCAPTCHA-varmennus epäonnistui'};
-        response.errors.push(message);
-      }
-      
-      req.checkBody('name', 'Teatterin nimi puuttuu').notEmpty();
-      req.checkBody('email', 'Sähköpostiosoite puuttuu').notEmpty();
-      
-      req.sanitize('name').escape();
-      req.sanitize('email').escape();
-      req.sanitize('beginning').escape();
-      req.sanitize('ending').escape();
-      req.sanitize('additionalInfo').escape();
-      req.sanitize('playName').escape();
-      req.sanitize('name').trim();
-      req.sanitize('email').trim();
-      req.sanitize('beginning').trim();
-      req.sanitize('ending').trim();
-      req.sanitize('additionalInfo').trim();
-      req.sanitize('playName').trim();
-      
-      req.getValidationResult().then(function(errors) {
-        if (errors.isEmpty() && response.errors.length === 0) {
-          var contact = new Contact({
-            name: req.body.name,
-            email: req.body.email,
-            playName: req.body.playName,
-            beginning: req.body.beginning,
-            ending: req.body.ending,
-            additionalInfo: req.body.additionalInfo
-          });
-          
-          contact.save(function(err) {
-            //console.log( err );
-            if ( err ) {
-              response.errors.push( 'Lähetys epäonnistui, yritä uudelleen.' );
-            } else {
-              response.errors = null;
-              response.message = 'Kiitos viestistä! Saat kirjautumistunnukset antamaasi sähköpostiosoitteeseen vuorokauden sisällä.';
-              response.success = true;
-              sendFormViaEmail( contact );
-            }
-            res.send( response );
-          });
-          
-        } else {
-          response.errors = response.errors.concat( errors.array({ onlyFirstError: true }) );
-          res.send( response );
-        }
-      });
-    }
-  );
-};
-
 // GET settings
 exports.settingsGet = function(req, res, next) {
   res.render('settings', {title: 'Asetukset', theatre: req.user});
@@ -121,7 +38,6 @@ exports.settingsPost = [
   
   // Sanitize fields
   sanitizeBody('playName').trim().escape(),
-  sanitizeBody('playDescription').trim().escape(),
   sanitizeBody('reservationInstruction').trim().escape(),
   sanitizeBody('emailInstruction').trim().escape(),
   sanitizeBody('additionalInfoExplanation').trim().escape(),
@@ -197,7 +113,7 @@ exports.changePassword = function changePassword(req, res, next) {
 exports.json = function(req, res, next) {
   async.parallel({
     theatre: function(callback) {
-      Theatre.findById(req.params.theatreId, 'name playName playDescription capacity').exec(callback);
+      Theatre.findById(req.params.theatreId, 'name playName capacity').exec(callback);
     },
     shows: function(callback) {
       Show.find({theatre: req.params.theatreId})
@@ -225,43 +141,3 @@ exports.json = function(req, res, next) {
     res.json(data.theatre);
   });
 };
-
-/*
-// GET sent
-exports.sent = function(req, res, next) {
-  res.render('sent', {title: 'Kirjautumislinkki lähetetty'});
-};
-*/
-
-function sendFormViaEmail(contact) {
-  // ---------------------------------------------------------------------
-  // email body starts ---------------------------------------------------
-  // ---------------------------------------------------------------------
-  var body = 'Teatterin nimi: ' + contact.name + '\n';
-  body += 'Teatterin sähköposti: ' + contact.email + '\n';
-  body += 'Näytelmän nimi: ' + contact.playName + '\n\n';
-  
-  body += 'Otan palvelun käyttöön\n';
-  body += '- alkaen: ' + contact.beginning + '\n';
-  body += '- päättyen: ' + contact.ending + '\n\n';
-  
-  body += 'Lisätietoja: ' + contact.additionalInfo;
-  
-  // ---------------------------------------------------------------------
-  // email body ends -----------------------------------------------------
-  // ---------------------------------------------------------------------
-  
-  var message = {
-    text: body,
-    from: contact.name + ' <' + contact.email + '>',
-    to: process.env.ADMIN_EMAIL,
-    "reply-to": contact.email,
-    subject: 'Teatterivaraus: Yhteydenotto'
-  };
-  
-  var mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN});
-  
-  mailgun.messages().send( message, function mailSent(err) {
-    if (err) console.log( err );
-  });
-}

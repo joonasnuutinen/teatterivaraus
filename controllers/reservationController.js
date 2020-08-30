@@ -2,15 +2,11 @@
 
 var async = require('async');
 var request = require('request');
-var fs = require('fs');
 var Reservation = require('../models/reservation');
 var TicketClass = require('../models/ticketClass');
 var Show = require('../models/show');
 var Theatre = require('../models/theatre');
-var Sponsor = require( '../models/sponsor' );
-
 const showController = require('./showController');
-const rowController = require('./rowController');
 
 try {
   require('dotenv').load();
@@ -180,8 +176,6 @@ exports.put = function(req, res, next) {
         errors: []
       };
       
-      //console.log( req.body );
-      
       if (errors.isEmpty()) {
         var reservation = new Reservation({
           lastName: req.body.editedLastName,
@@ -303,13 +297,6 @@ exports.customerGet = function(req, res, next) {
           .exec(callback);
       },
       
-      sponsors: function(callback) {
-        Sponsor
-          .find({ theatre: id })
-          .sort([['order', 'ascending']])
-          .exec(callback);
-      },
-      
       reservations: function(callback) {
         Reservation
           .find({ theatre: id })
@@ -333,17 +320,13 @@ exports.customerGet = function(req, res, next) {
         description: 'Varaa lippuja esitykseen ' + theatre.playName + '.',
         image: siteUrl + '/images/og.png'
       };
-      //console.log(data.reservations);
       showController.updateShowData(data, theatre);
-      
-      const orderedSponsors = rowController.orderRows(data.sponsors, theatre.sponsorOrder);
       
       res.render('customerReservation', {
         title: title,
         theatre: theatre,
         shows: data.shows,
         ticketClasses: data.ticketClasses,
-        sponsors: orderedSponsors,
         og: og
       });
     });
@@ -450,17 +433,11 @@ function sendEmailConfirmation(id, theatreId) {
       Reservation.findById( id )
       .populate( 'show theatre tickets.ticketClass' )
       .exec( callback );
-    },
-    sponsors: function findSponsors(callback) {
-      Sponsor.find( {theatre: theatreId} )
-      .sort( [['order', 'ascending']] )
-      .exec( callback );
     }
   }, function asyncDone(err, results) {
     if (err) return;
     
     var reservation = results.reservation;
-    var sponsors = results.sponsors;
     
     // ---------------------------------------------------------------------
     // email body starts ---------------------------------------------------
@@ -482,16 +459,6 @@ function sendEmailConfirmation(id, theatreId) {
     body += reservation.total.code.replace(/<br>/g, '\n') + '\n\n';
     
     body += 'Yhteensä: ' + reservation.total.priceString + '\n\n';
-    
-    if (sponsors.length > 0) {
-      body += 'Yhteistyössä:\n\n';
-    
-      sponsors.forEach( function eachSponsor(sponsor) {
-        body += sponsor.name + '\n';
-        body += (sponsor.description) ? sponsor.description + '\n' : '';
-        body += (sponsor.urlHref) ? 'Lue lisää: ' + sponsor.urlHref + '\n\n' : '';
-      } );
-    }
 
     // ---------------------------------------------------------------------
     // email body ends -----------------------------------------------------
@@ -506,10 +473,6 @@ function sendEmailConfirmation(id, theatreId) {
     };
     
     var mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN});
-    
-    /*smtpServer.send(message, function(err) {
-      if (err) console.log(err);
-    });*/
     
     mailgun.messages().send( message, function mailSent(err) {
       if (err) console.log( err );

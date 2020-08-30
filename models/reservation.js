@@ -107,11 +107,11 @@ ReservationSchema.virtual('total').get(function() {
     code: '',
     restricted: {}
   };
-  //console.log(this.tickets);
+
   this.tickets.forEach(function(ticket) {
     var amount = ticket.amount || 0;
     var ticketClass = ticket.ticketClass;
-    //console.log(ticketClass);
+    
     if (!ticket.bypassCounter) {
       total.tickets += amount;
     }

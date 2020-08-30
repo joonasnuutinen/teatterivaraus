@@ -22,10 +22,6 @@ var TheatreSchema = Schema({
     type: String
   },
   
-  playDescription: {
-    type: String
-  },
-  
   slug: {
     type: String
   },
@@ -46,19 +42,6 @@ var TheatreSchema = Schema({
     type: Number,
     set: nanToZero,
     default: 0
-  },
-  
-  reservationInstruction: {
-    type: String
-  },
-  
-  emailInstruction: {
-    type: String
-  },
-  
-  sponsorOrder: {
-    type: [Schema.Types.ObjectId],
-    ref: 'Sponsor'
   },
   
   password: {
@@ -108,10 +91,6 @@ function nanToZero(n) {
 
 function nanToInfinity(n) {
   return nanToX(n, Infinity);
-}
-
-function nanToNull(n) {
-  return nanToX(n, null);
 }
 
 function nanToX(n, x) {

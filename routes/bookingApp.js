@@ -1,13 +1,8 @@
-var Theatre = require('../models/theatre');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 
-
 // require controller modules
-var bodyParser = require('body-parser');
-var urlencodedParser = bodyParser.urlencoded({extended: false});
-
 var reservationController = require('../controllers/reservationController');
 var theatreController = require('../controllers/theatreController');
 var showController = require('../controllers/showController');
@@ -53,9 +48,6 @@ router.post('/kirjaudu',
 
 /* GET logout */
 router.get('/kirjaudu-ulos', theatreController.logoutGet);
-
-/* GET register */
-router.get('/rekisteroidy', theatreController.registerGet);
 
 /* POST register */
 router.post('/rekisteroidy', passport.authenticate('local-signup', {
@@ -112,7 +104,7 @@ router.get('/lomake', isLoggedIn, reservationController.publicForm);
 
 /* GET privacy page. */
 router.get('/rekisteriseloste', function(req, res, next) {
-  res.redirect(process.env.PUBLIC_URL + 'rekisteriseloste');
+  res.redirect(process.env.PRIVACY_PAGE_URL);
 });
 
 // GET theatre JSON
@@ -121,8 +113,6 @@ router.get('/:theatreId.json', theatreController.json);
 /* customer reservation form */
 router.get('/:theatreId', reservationController.customerGet);
 router.post('/:theatreId', reservationController.customerPost);
-
-// ===
 
 // ========================================================
 // FUNCTIONS ==============================================
