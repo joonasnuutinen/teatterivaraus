@@ -2,12 +2,10 @@
 
 var async = require('async');
 var request = require('request');
-var fs = require('fs');
 var Reservation = require('../models/reservation');
 var TicketClass = require('../models/ticketClass');
 var Show = require('../models/show');
 var Theatre = require('../models/theatre');
-
 const showController = require('./showController');
 
 try {
@@ -178,8 +176,6 @@ exports.put = function(req, res, next) {
         errors: []
       };
       
-      //console.log( req.body );
-      
       if (errors.isEmpty()) {
         var reservation = new Reservation({
           lastName: req.body.editedLastName,
@@ -324,7 +320,6 @@ exports.customerGet = function(req, res, next) {
         description: 'Varaa lippuja esitykseen ' + theatre.playName + '.',
         image: siteUrl + '/images/og.png'
       };
-      //console.log(data.reservations);
       showController.updateShowData(data, theatre);
       
       res.render('customerReservation', {
@@ -478,10 +473,6 @@ function sendEmailConfirmation(id, theatreId) {
     };
     
     var mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN});
-    
-    /*smtpServer.send(message, function(err) {
-      if (err) console.log(err);
-    });*/
     
     mailgun.messages().send( message, function mailSent(err) {
       if (err) console.log( err );

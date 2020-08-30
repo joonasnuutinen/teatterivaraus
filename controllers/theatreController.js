@@ -5,12 +5,7 @@ var Theatre = require('../models/theatre');
 var Show = require('../models/show');
 var TicketClass = require('../models/ticketClass');
 var Reservation = require('../models/reservation');
-var registerTitle = 'Tilaa';
-var mailgun = require( 'mailgun-js' );
-var request = require('request');
-
 const showController = require('./showController');
-
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
