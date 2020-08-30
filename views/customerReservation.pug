@@ -87,28 +87,6 @@ html(lang='fi')
           button#submitForm.btn.btn--primary.btn--big(type='button' disabled) Varaa
           
         .message
-        
-      if sponsors.length > 0
-        section.box.sponsors
-          h2.secondary-title.secondary-title--box Yhteistyössä
-          
-          each sponsor in sponsors
-            if sponsor
-              section.sponsor
-                h3.sponsor__title= sponsor.name
-                
-                if sponsor.imageUrl
-                  if sponsor.urlHref
-                    a(href=sponsor.urlHref target='_blank')
-                      img.sponsor__image(src=sponsor.imageUrl)
-                  else
-                    img.sponsor__image(src=sponsor.imageUrl)
-                
-                p
-                  | !{sponsor.description.replace(/\n/g, '<br>')}
-                  |
-                  if sponsor.urlHref
-                    a(href=sponsor.urlHref target='_blank') Lue lisää
               
       p.privacy
         a(href='/rekisteriseloste' target='_blank') Rekisteriseloste

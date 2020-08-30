@@ -7,7 +7,6 @@ var Reservation = require('../models/reservation');
 var TicketClass = require('../models/ticketClass');
 var Show = require('../models/show');
 var Theatre = require('../models/theatre');
-var Sponsor = require( '../models/sponsor' );
 
 const showController = require('./showController');
 const rowController = require('./rowController');
@@ -303,13 +302,6 @@ exports.customerGet = function(req, res, next) {
           .exec(callback);
       },
       
-      sponsors: function(callback) {
-        Sponsor
-          .find({ theatre: id })
-          .sort([['order', 'ascending']])
-          .exec(callback);
-      },
-      
       reservations: function(callback) {
         Reservation
           .find({ theatre: id })
@@ -336,14 +328,11 @@ exports.customerGet = function(req, res, next) {
       //console.log(data.reservations);
       showController.updateShowData(data, theatre);
       
-      const orderedSponsors = rowController.orderRows(data.sponsors, theatre.sponsorOrder);
-      
       res.render('customerReservation', {
         title: title,
         theatre: theatre,
         shows: data.shows,
         ticketClasses: data.ticketClasses,
-        sponsors: orderedSponsors,
         og: og
       });
     });
@@ -450,17 +439,11 @@ function sendEmailConfirmation(id, theatreId) {
       Reservation.findById( id )
       .populate( 'show theatre tickets.ticketClass' )
       .exec( callback );
-    },
-    sponsors: function findSponsors(callback) {
-      Sponsor.find( {theatre: theatreId} )
-      .sort( [['order', 'ascending']] )
-      .exec( callback );
     }
   }, function asyncDone(err, results) {
     if (err) return;
     
     var reservation = results.reservation;
-    var sponsors = results.sponsors;
     
     // ---------------------------------------------------------------------
     // email body starts ---------------------------------------------------
@@ -482,16 +465,6 @@ function sendEmailConfirmation(id, theatreId) {
     body += reservation.total.code.replace(/<br>/g, '\n') + '\n\n';
     
     body += 'Yhteensä: ' + reservation.total.priceString + '\n\n';
-    
-    if (sponsors.length > 0) {
-      body += 'Yhteistyössä:\n\n';
-    
-      sponsors.forEach( function eachSponsor(sponsor) {
-        body += sponsor.name + '\n';
-        body += (sponsor.description) ? sponsor.description + '\n' : '';
-        body += (sponsor.urlHref) ? 'Lue lisää: ' + sponsor.urlHref + '\n\n' : '';
-      } );
-    }
 
     // ---------------------------------------------------------------------
     // email body ends -----------------------------------------------------
