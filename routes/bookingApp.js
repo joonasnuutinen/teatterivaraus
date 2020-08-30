@@ -104,7 +104,7 @@ router.get('/lomake', isLoggedIn, reservationController.publicForm);
 
 /* GET privacy page. */
 router.get('/rekisteriseloste', function(req, res, next) {
-  res.redirect(process.env.PUBLIC_URL + 'rekisteriseloste');
+  res.redirect(process.env.PRIVACY_PAGE_URL);
 });
 
 // GET theatre JSON
