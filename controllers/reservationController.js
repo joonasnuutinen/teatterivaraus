@@ -380,9 +380,53 @@ exports.customerPost = [
       }
       
       req.body.tickets = [];
-      
-      TicketClass.find({ theatre: req.params.theatreId }).sort([['price', 'descending'], ['name', 'ascending']]).exec(function(err, ticketClasses) {
 
+      async.parallel({
+        theatre: function(callback) {
+          Theatre
+            .findById(req.params.theatreId)
+            .exec(callback);
+        },
+
+        shows: function(callback) {
+          Show
+            .find({ _id: req.body.show })
+            .lean({ virtuals: true })
+            .exec(callback);
+        },
+        
+        reservations: function(callback) {
+          Reservation
+            .find({ show: req.body.show })
+            .populate('tickets.ticketClass')
+            .exec(callback);
+        },
+        
+        ticketClasses: function(callback) {
+          TicketClass
+            .find({ theatre: req.params.theatreId })
+            .sort([['price', 'descending'], ['name', 'ascending']])
+            .exec(callback);
+        }
+      }, function asyncDone(err, data) {
+        if (err) {
+          res.send({ errors: ['Palvelinvirhe'] });
+          return;
+        }
+
+        if (!data.theatre) {
+          res.send({ errors: 'Palvelinvirhe: !data.theatre == true' });
+          return;
+        }
+        
+        showController.updateShowData(data, data.theatre);
+
+        // Check if reservations for the show are closed
+        if (data.shows[0].isClosed) {
+          res.send({ errors: 'Lippujen varaus valittuun näytökseen on sulkeutunut.', update: true });
+          return;
+        }
+        
         for (let field in req.body) {
           var re = /ticketClass_(\w+)/;
           var match = field.match(re);
@@ -390,13 +434,23 @@ exports.customerPost = [
             req.body.tickets.push({
               ticketClass: match[1],
               amount: req.body[field],
-              bypassCounter: ticketClasses.find(function(tc) { return tc._id.equals(match[1]); }).bypassCounter
+              bypassCounter: data.ticketClasses.find(function(tc) { return tc._id.equals(match[1]); }).bypassCounter
             });
             delete req.body[field];
           }
         }
         
         var reservation = new Reservation(req.body);
+        reservation = reservation.populate('total');
+        console.log(reservation);
+
+        // Check if restricted tickets are available
+        // Restricted tickets will be removed in a future PR so this is not implemented
+
+
+        // TODO: Check if total is available
+        // This will be implemented in a future PR
+
         reservation.theatre = req.params.theatreId;
         reservation.source = 'webForm';
         reservation.added = Date.now();
@@ -411,6 +465,7 @@ exports.customerPost = [
             res.send({ errors: null, email: reservation.email });
           }
         });
+
       });
     });
   }
